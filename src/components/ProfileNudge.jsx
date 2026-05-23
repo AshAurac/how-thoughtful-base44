@@ -1,34 +1,51 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, X } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+
+const STORAGE_KEY = 'profileNudgeSnoozedUntil';
 
 export default function ProfileNudge() {
   const [dismissed, setDismissed] = useState(false);
 
-  if (dismissed) return null;
+  const handleSnooze = () => {
+    // Come back in 4 days
+    const snoozeUntil = Date.now() + 4 * 24 * 60 * 60 * 1000;
+    localStorage.setItem(STORAGE_KEY, String(snoozeUntil));
+    setDismissed(true);
+  };
+
+  // Check if currently snoozed
+  const snoozedUntil = Number(localStorage.getItem(STORAGE_KEY) || 0);
+  if (dismissed || Date.now() < snoozedUntil) return null;
 
   return (
-    <div className="relative bg-gradient-to-r from-sand-100 to-white border border-sand-300 rounded-2xl p-4 flex items-start gap-3">
-      <div className="w-9 h-9 rounded-full bg-terracotta/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-        <Sparkles className="w-4 h-4 text-terracotta" />
+    <div className="bg-gradient-to-br from-terracotta/8 to-butter/20 border border-terracotta/20 rounded-2xl p-5">
+      <div className="flex items-start gap-3 mb-3">
+        <div className="w-9 h-9 rounded-full bg-terracotta/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+          <Sparkles className="w-4 h-4 text-terracotta" />
+        </div>
+        <div>
+          <p className="font-heading font-semibold text-ink text-sm">Let's make this feel personal ✨</p>
+          <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+            Add a few things about yourself — your skills, what you love, how you like to give — and your AI gift ideas will feel like they were made just for you.
+          </p>
+        </div>
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="font-heading font-semibold text-ink text-sm">Make ideas more personal</p>
-        <p className="text-xs text-ink-soft mt-0.5 mb-2">Add a few things about yourself so AI gift ideas feel hand-picked.</p>
+      <div className="flex items-center gap-3 pl-12">
         <Link
           to="/profile"
           onClick={() => setDismissed(true)}
-          className="inline-block text-xs font-heading font-semibold text-terracotta hover:text-terracotta-dark transition-colors"
+          className="text-xs font-heading font-semibold bg-terracotta text-white px-4 py-1.5 rounded-full hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
         >
-          Fill in my profile →
+          Tell me about yourself →
         </Link>
+        <button
+          onClick={handleSnooze}
+          className="text-xs text-ink-soft hover:text-ink transition-colors"
+        >
+          maybe later 🙂
+        </button>
       </div>
-      <button
-        onClick={() => setDismissed(true)}
-        className="p-1 rounded-full hover:bg-sand-200 text-ink-soft transition-all flex-shrink-0"
-      >
-        <X className="w-4 h-4" />
-      </button>
     </div>
   );
 }
