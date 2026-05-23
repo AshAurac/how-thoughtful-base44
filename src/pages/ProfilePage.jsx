@@ -182,7 +182,7 @@ export default function ProfilePage({ user }) {
       </form>
 
       <button
-        onClick={() => base44.auth.logout()}
+        onClick={() => base44.auth.logout('/')}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-sand-300 text-ink-soft hover:text-ink hover:bg-sand-100 transition-all font-body text-sm"
       >
         <LogOut className="w-4 h-4" />
