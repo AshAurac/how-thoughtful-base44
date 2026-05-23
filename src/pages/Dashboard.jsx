@@ -5,8 +5,29 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus, Sparkles, ChevronRight, Package } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
+import ProfileNudge from '@/components/ProfileNudge';
 
 export default function Dashboard({ user }) {
+  const [showNudge, setShowNudge] = useState(false);
+
+  const { data: profile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
+      return profiles[0] || null;
+    },
+    enabled: !!user,
+    onSuccess: (data) => {
+      if (!data?.profile_completed) setShowNudge(true);
+    },
+  });
+
+  useEffect(() => {
+    if (profile !== undefined && !profile?.profile_completed) {
+      setShowNudge(true);
+    }
+  }, [profile]);
+
   const { data: events = [] } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list('-event_date'),
@@ -33,6 +54,9 @@ export default function Dashboard({ user }) {
             : 'Nothing upcoming — enjoy the peace'}
         </h1>
       </div>
+
+      {/* Profile nudge */}
+      {showNudge && <ProfileNudge />}
 
       {/* Budget snapshot */}
       {totalBudget > 0 && (

@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { ArrowLeft, Plus, Trash2, Check, ShoppingBag, Gift, Mail, Send, Sparkles, Lightbulb } from 'lucide-react';
 import { formatEventDate, daysUntil } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
+import EventChecklist from '@/components/EventChecklist';
+import GiftBounceAnimation from '@/components/GiftBounceAnimation';
 
 function GiftCheckbox({ checked, onChange, label }) {
   return (
@@ -33,6 +35,7 @@ export default function EventDetail() {
   const [newGift, setNewGift] = useState({ name: '', price: '', description: '', link: '' });
   const [reflection, setReflection] = useState('');
   const [editingReflection, setEditingReflection] = useState(false);
+  const [celebratingGift, setCelebratingGift] = useState(null);
 
   const { data: event, isLoading: loadingEvent } = useQuery({
     queryKey: ['event', id],
@@ -87,7 +90,20 @@ export default function EventDetail() {
   ].filter(t => t.date);
 
   const handleGiftCheck = (gift, field) => {
-    updateGiftMutation.mutate({ giftId: gift.id, data: { [field]: !gift[field] } });
+    const newValue = !gift[field];
+    updateGiftMutation.mutate({ giftId: gift.id, data: { [field]: newValue } });
+    // Trigger bounce when marking 'sent' as done (the final step)
+    if (field === 'sent' && newValue) {
+      setCelebratingGift(gift.id);
+    }
+  };
+
+  const handleCelebrationDone = (gift) => {
+    setCelebratingGift(null);
+    // If not recurring, delete the gift; if recurring, just leave it
+    if (!event?.recurring) {
+      deleteGiftMutation.mutate(gift.id);
+    }
   };
 
   const handleAddGift = (e) => {
@@ -98,6 +114,9 @@ export default function EventDetail() {
 
   return (
     <div className="space-y-5 max-w-lg mx-auto">
+      {celebratingGift && (
+        <GiftBounceAnimation onComplete={() => handleCelebrationDone(gifts.find(g => g.id === celebratingGift))} />
+      )}
       {/* Header */}
       <div className="flex items-start gap-3">
         <button onClick={() => navigate(-1)} className="mt-1 p-2 rounded-full hover:bg-sand-200 transition-all">
@@ -237,6 +256,9 @@ export default function EventDetail() {
           Free ideas
         </Link>
       </div>
+
+      {/* Day checklist */}
+      <EventChecklist occasion={event.occasion} />
 
       {/* Reflection */}
       <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
