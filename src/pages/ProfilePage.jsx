@@ -12,6 +12,7 @@ export default function ProfilePage({ user }) {
     skills: [], love_languages_give: [], love_languages_receive: [],
     personality: '', work: '', free_text: '', intention: '',
     intention_year: new Date().getFullYear(),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   });
   const [profileId, setProfileId] = useState(null);
 
@@ -36,6 +37,7 @@ export default function ProfilePage({ user }) {
         free_text: profile.free_text || '',
         intention: profile.intention || '',
         intention_year: profile.intention_year || new Date().getFullYear(),
+        timezone: profile.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
       });
     }
   }, [profile]);
@@ -140,6 +142,21 @@ export default function ProfilePage({ user }) {
             rows={3}
             className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body resize-none"
           />
+        </div>
+
+        {/* Timezone */}
+        <div>
+          <label className="block text-sm font-medium text-ink mb-1">Your timezone</label>
+          <select
+            value={form.timezone}
+            onChange={e => set('timezone', e.target.value)}
+            className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+          >
+            {Intl.supportedValuesOf('timeZone').map(tz => (
+              <option key={tz} value={tz}>{tz.replace(/_/g, ' ')}</option>
+            ))}
+          </select>
+          <p className="text-xs text-ink-soft mt-1">Used to send reminders at the right time for you.</p>
         </div>
 
         {/* Yearly intention */}

@@ -54,13 +54,18 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Get all users
+    // Get all users, events, and profiles
     const allUsers = await base44.asServiceRole.entities.User.list();
-    // Get all events
     const allEvents = await base44.asServiceRole.entities.Event.list();
+    const allProfiles = await base44.asServiceRole.entities.UserProfile.list();
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Build a map of email -> timezone
+    const timezoneMap = {};
+    for (const profile of allProfiles) {
+      if (profile.created_by && profile.timezone) {
+        timezoneMap[profile.created_by] = profile.timezone;
+      }
+    }
 
     let sent = 0;
     let skipped = 0;
@@ -68,9 +73,14 @@ Deno.serve(async (req) => {
     for (const event of allEvents) {
       if (!event.event_date) continue;
 
+      // Get "today" in the user's local timezone
+      const userTimezone = timezoneMap[event.created_by] || 'UTC';
+      const localToday = new Date(new Date().toLocaleString('en-US', { timeZone: userTimezone }));
+      localToday.setHours(0, 0, 0, 0);
+
       const eventDate = new Date(event.event_date);
       eventDate.setHours(0, 0, 0, 0);
-      const daysUntil = Math.round((eventDate - today) / (1000 * 60 * 60 * 24));
+      const daysUntil = Math.round((eventDate - localToday) / (1000 * 60 * 60 * 24));
 
       if (!REMINDER_DAYS.includes(daysUntil)) {
         skipped++;
