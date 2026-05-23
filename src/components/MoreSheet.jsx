@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Users, PiggyBank, Package, Bookmark, Star, User, Heart, X } from 'lucide-react';
+import { Users, PiggyBank, Package, Bookmark, Star, User, Heart, X, Gift } from 'lucide-react';
 
 const items = [
   { path: '/recipients', icon: Users, label: 'People', color: 'text-moss' },
   { path: '/budget', icon: PiggyBank, label: 'Budget', color: 'text-butter-dark' },
   { path: '/deliveries', icon: Package, label: 'Deliveries', color: 'text-terracotta' },
   { path: '/saved', icon: Bookmark, label: 'Saved Ideas', color: 'text-terracotta' },
+  { path: '/group-lists', icon: Gift, label: 'Group Lists', color: 'text-moss' },
   { path: '/restock', icon: Star, label: 'Restock', color: 'text-butter-dark' },
   { path: '/wishlist', icon: Heart, label: 'My Wishlist', color: 'text-moss' },
   { path: '/year-in-giving', icon: Star, label: 'Year in Giving', color: 'text-terracotta' },

@@ -27,6 +27,9 @@ import WishlistPage from './pages/WishlistPage';
 import PublicWishlist from './pages/PublicWishlist';
 import RestockPage from './pages/RestockPage';
 import LandingPage from './pages/LandingPage';
+import SharedListsPage from './pages/SharedListsPage';
+import GroupManagePage from './pages/GroupManagePage';
+import PublicGroupList from './pages/PublicGroupList';
 
 // Layout
 import AppShell from './components/AppShell';
@@ -64,6 +67,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Public routes — no auth needed */}
       <Route path="/w/:token" element={<PublicWishlist />} />
+      <Route path="/group/:token" element={<PublicGroupList />} />
       <Route path="/welcome" element={<LandingPage />} />
 
       {/* Home: show landing if not authenticated, dashboard if authenticated */}
@@ -90,6 +94,8 @@ const AuthenticatedApp = () => {
       <Route path="/season" element={<RequireAuth user={user}><AppShell user={user}><SeasonPage /></AppShell></RequireAuth>} />
       <Route path="/wishlist" element={<RequireAuth user={user}><AppShell user={user}><WishlistPage user={user} /></AppShell></RequireAuth>} />
       <Route path="/restock" element={<RequireAuth user={user}><AppShell user={user}><RestockPage /></AppShell></RequireAuth>} />
+      <Route path="/group-lists" element={<RequireAuth user={user}><AppShell user={user}><SharedListsPage /></AppShell></RequireAuth>} />
+      <Route path="/group-manage/:id" element={<RequireAuth user={user}><AppShell user={user}><GroupManagePage /></AppShell></RequireAuth>} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

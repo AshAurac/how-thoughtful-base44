@@ -1,0 +1,54 @@
+{
+  "name": "SharedList",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Used to block the recipient from viewing the list"
+    },
+    "occasion": {
+      "type": "string"
+    },
+    "share_token": {
+      "type": "string"
+    },
+    "list_type": {
+      "type": "string",
+      "enum": [
+        "group_gift",
+        "secret_santa"
+      ],
+      "default": "group_gift"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "For Secret Santa \u2014 list of participants"
+    },
+    "santa_assigned": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "recipient_name",
+    "share_token"
+  ]
+}
