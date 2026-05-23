@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
+import { LogOut } from 'lucide-react';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 
 const SKILLS = ['cooking','writing','photography','music','art','gardening','knitting','coding','fitness','yoga','sewing','language','carpentry'];
@@ -179,6 +180,14 @@ export default function ProfilePage({ user }) {
           {mutation.isPending ? 'Saving...' : 'Save profile'}
         </button>
       </form>
+
+      <button
+        onClick={() => base44.auth.logout()}
+        className="w-full flex items-center justify-center gap-2 py-3 rounded-full border border-sand-300 text-ink-soft hover:text-ink hover:bg-sand-100 transition-all font-body text-sm"
+      >
+        <LogOut className="w-4 h-4" />
+        Log out
+      </button>
     </div>
   );
 }
