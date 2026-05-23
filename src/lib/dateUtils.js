@@ -26,11 +26,10 @@ export function formatEventDate(dateStr) {
 export function urgencyLabel(daysAway) {
   if (daysAway === null) return '';
   if (daysAway < 0) return 'past';
-  if (daysAway === 0) return 'today';
-  if (daysAway <= 3) return `${daysAway}d away`;
+  if (daysAway === 0) return 'today!';
   if (daysAway <= 7) return `${daysAway}d away`;
   if (daysAway <= 30) return `${daysAway}d away`;
-  return format(parseISO(`${new Date().getFullYear()}-01-01`), 'MMM d');
+  return `${daysAway}d`;
 }
 
 export function urgencyColor(daysAway) {
