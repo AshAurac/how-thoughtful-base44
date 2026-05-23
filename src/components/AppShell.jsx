@@ -21,13 +21,15 @@ export default function AppShell({ children, user }) {
       {/* Top bar */}
       <header className="sticky top-0 z-40 bg-sand-50/90 backdrop-blur-xl border-b border-sand-300 px-4 py-3">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
               <Gift className="w-4 h-4 text-white" />
             </div>
             <span className="font-heading font-bold text-ink text-sm">How Thoughtful</span>
-          </div>
-          <span className="font-accent text-lg text-ink-soft">hi, {firstName}</span>
+          </Link>
+          <Link to="/profile" className="font-accent text-lg text-ink-soft hover:text-ink transition-colors">
+            hi, {firstName}
+          </Link>
         </div>
       </header>
 
