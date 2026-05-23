@@ -55,13 +55,26 @@
       "type": "boolean",
       "default": false
     },
+    "premium_type": {
+      "type": "string",
+      "enum": [
+        "annual",
+        "lifetime"
+      ]
+    },
+    "premium_since": {
+      "type": "string"
+    },
     "ai_credits": {
       "type": "number",
       "default": 0
     },
-    "free_ai_used": {
-      "type": "boolean",
-      "default": false
+    "monthly_ai_uses": {
+      "type": "number",
+      "default": 0
+    },
+    "monthly_ai_reset_month": {
+      "type": "string"
     },
     "timezone": {
       "type": "string"

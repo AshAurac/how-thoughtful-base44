@@ -41,8 +41,8 @@ export default function PaywallModal({ reason, onClose }) {
 
             <div className="bg-gradient-to-br from-terracotta to-terracotta-dark rounded-2xl p-4 text-white mb-4">
               <div className="flex items-baseline gap-1 mb-3">
-                <span className="font-heading font-bold text-3xl">$24.99</span>
-                <span className="text-white/80 text-sm">once, forever</span>
+                <span className="font-heading font-bold text-3xl">$29.99</span>
+                <span className="text-white/80 text-sm">lifetime · or $14.99/yr</span>
               </div>
               <div className="space-y-2">
                 {[
@@ -63,7 +63,7 @@ export default function PaywallModal({ reason, onClose }) {
               onClick={onClose}
               className="block w-full text-center bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 mb-3"
             >
-              Upgrade for $24.99
+              See upgrade options
             </Link>
             <button
               onClick={onClose}

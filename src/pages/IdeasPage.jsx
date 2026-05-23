@@ -89,27 +89,35 @@ export default function IdeasPage({ user }) {
   }, [savedIdeas]);
 
   const isPremium = profile?.is_premium;
-  const freeAiUsed = profile?.free_ai_used;
+  const isLifetime = profile?.premium_type === 'lifetime';
   const aiCredits = profile?.ai_credits || 0;
 
+  // Monthly free usage tracking
+  const currentMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
+  const monthlyUses = profile?.monthly_ai_reset_month === currentMonth ? (profile?.monthly_ai_uses || 0) : 0;
+  const freeUsesRemaining = Math.max(0, 3 - monthlyUses);
+  const canUseAI = freeUsesRemaining > 0 || isPremium;
+
   const aiButtonLabel = () => {
-    if (!freeAiUsed) return "Use my free AI try";
-    if (isPremium && aiCredits > 0) return "Generate AI ideas";
+    if (freeUsesRemaining > 0) return `Generate AI ideas (${freeUsesRemaining} free left)`;
+    if (isPremium && isLifetime && aiCredits > 0) return `Generate AI ideas (${aiCredits} credits)`;
+    if (isPremium && !isLifetime) return "Generate AI ideas";
     return "Unlock AI ideas";
   };
 
   const aiStatusBadge = () => {
-    if (!freeAiUsed) return <span className="text-xs text-terracotta font-medium">1 free try available</span>;
-    if (isPremium && aiCredits > 0) return <span className="text-xs text-ink-soft">{aiCredits} credits</span>;
-    return <span className="text-xs text-ink-soft">locked</span>;
+    if (freeUsesRemaining > 0) return <span className="text-xs text-terracotta font-medium">{freeUsesRemaining} free uses this month</span>;
+    if (isPremium && isLifetime) return <span className="text-xs text-ink-soft">{aiCredits} credits</span>;
+    if (isPremium) return <span className="text-xs text-moss font-medium">unlimited</span>;
+    return <span className="text-xs text-ink-soft">free limit reached</span>;
   };
 
   const handleGetAI = async () => {
-    if (freeAiUsed && !isPremium) {
+    if (!canUseAI) {
       setPaywallReason('paywall');
       return;
     }
-    if (isPremium && aiCredits === 0) {
+    if (isPremium && isLifetime && aiCredits === 0) {
       setPaywallReason('out_of_credits');
       return;
     }
@@ -150,20 +158,24 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
 
       setIdeas(result.ideas || []);
 
-      // Mark free AI as used
-      if (!freeAiUsed) {
-        const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
-        if (profiles[0]) {
-          await base44.entities.UserProfile.update(profiles[0].id, { free_ai_used: true });
-          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-          toast('That was your free AI taste — unlock unlimited any time.');
-        }
-      } else if (isPremium && aiCredits > 0) {
-        const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
-        if (profiles[0]) {
+      // Update usage tracking
+      const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
+      if (profiles[0]) {
+        if (freeUsesRemaining > 0) {
+          // Increment monthly free uses
+          const newUses = monthlyUses + 1;
+          await base44.entities.UserProfile.update(profiles[0].id, {
+            monthly_ai_uses: newUses,
+            monthly_ai_reset_month: currentMonth,
+          });
+          if (newUses === 3) {
+            toast('That was your 3rd free AI use this month — upgrade for unlimited!');
+          }
+        } else if (isPremium && isLifetime && aiCredits > 0) {
+          // Deduct a credit
           await base44.entities.UserProfile.update(profiles[0].id, { ai_credits: aiCredits - 1 });
-          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
         }
+        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
       }
     } catch (err) {
       toast.error('Something went wrong. Try again.');
@@ -210,7 +222,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
         >
           <Sparkles className="w-4 h-4 text-terracotta" />
           AI personalized
-          {!freeAiUsed && (
+          {freeUsesRemaining > 0 && (
             <span className="w-2 h-2 rounded-full bg-terracotta animate-shimmer" />
           )}
         </button>

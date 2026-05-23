@@ -10,20 +10,28 @@ const PAIN_POINTS = [
 
 const FREE_FEATURES = [
   'Track unlimited occasions & recipients',
-  'AI gift ideas (3 free generations)',
+  '3 free AI gift ideas every month',
+  'Curated gift ideas (always free)',
   'Gift checklist & delivery tracker',
   'Personal wishlist with shareable link',
   'Seasonal gift planning calendar',
   'Budget overview',
 ];
 
-const PREMIUM_FEATURES = [
+const ANNUAL_FEATURES = [
   'Everything in Free',
-  'Unlimited AI gift generations',
+  'Unlimited AI gift ideas',
   'Smart email reminders (30, 14 & 3 days out)',
   'Year-in-giving reflection & stats',
-  'Curated gift catalogs by love language',
-  'Gift restock suggestions',
+  'Curated catalogs by love language',
+  'Cancel any time',
+];
+
+const LIFETIME_FEATURES = [
+  'Everything in Annual',
+  '200 AI credits included',
+  'Pay once, use forever',
+  'Cheap credit top-ups when you run out',
   'Priority support',
 ];
 
@@ -190,61 +198,77 @@ export default function LandingPage() {
           <p className="text-ink-soft mt-3">No surprises. No paywalls on the essentials.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Free */}
-          <div className="bg-white border-2 border-sand-300 rounded-3xl p-8">
-            <div className="mb-6">
-              <p className="font-heading font-bold text-xl text-ink mb-1">Free</p>
+          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-ink mb-1">Free</p>
               <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-4xl text-ink">$0</span>
-                <span className="text-ink-soft">forever</span>
+                <span className="font-heading font-bold text-3xl text-ink">$0</span>
+                <span className="text-ink-soft text-sm">forever</span>
               </div>
-              <p className="text-sm text-ink-soft mt-2">Perfect for getting organised and staying on top of the people you love.</p>
+              <p className="text-xs text-ink-soft mt-2">Get organised and try every feature before committing.</p>
             </div>
-            <ul className="space-y-3 mb-8">
+            <ul className="space-y-2 mb-6">
               {FREE_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-3 text-sm text-ink">
+                <li key={f} className="flex items-start gap-2 text-sm text-ink">
                   <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
                   {f}
                 </li>
               ))}
             </ul>
-            <button
-              onClick={handleSignup}
-              className="w-full border-2 border-terracotta text-terracotta py-3.5 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all"
-            >
+            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
               Get started free
             </button>
           </div>
 
-          {/* Premium */}
-          <div className="bg-ink border-2 border-ink rounded-3xl p-8 relative overflow-hidden">
-            <div className="absolute top-4 right-4 bg-butter text-ink text-xs font-heading font-bold px-3 py-1 rounded-full">
-              Most popular
-            </div>
-            <div className="mb-6">
-              <p className="font-heading font-bold text-xl text-white mb-1">Premium</p>
+          {/* Annual */}
+          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-ink mb-1">Annual</p>
               <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-4xl text-white">$6</span>
-                <span className="text-white/60">/ month</span>
+                <span className="font-heading font-bold text-3xl text-ink">$14.99</span>
+                <span className="text-ink-soft text-sm">/ year</span>
               </div>
-              <p className="text-sm text-white/60 mt-2">For people who take thoughtful giving seriously — and want to be remembered for it.</p>
+              <p className="text-xs text-ink-soft mt-2">Unlimited AI, smart reminders, full features. Cancel any time.</p>
             </div>
-            <ul className="space-y-3 mb-8">
-              {PREMIUM_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-3 text-sm text-white">
+            <ul className="space-y-2 mb-6">
+              {ANNUAL_FEATURES.map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm text-ink">
                   <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
                   {f}
                 </li>
               ))}
             </ul>
-            <button
-              onClick={handleSignup}
-              className="w-full bg-terracotta text-white py-3.5 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
-            >
-              Start free, upgrade anytime
+            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
+              Get Annual
             </button>
-            <p className="text-center text-white/40 text-xs mt-3">Less than a coffee a month to never stress about gifts again</p>
+          </div>
+
+          {/* Lifetime */}
+          <div className="bg-ink border-2 border-ink rounded-3xl p-7 relative overflow-hidden">
+            <div className="absolute top-3 right-3 bg-butter text-ink text-xs font-heading font-bold px-2.5 py-0.5 rounded-full">
+              Best value
+            </div>
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-white mb-1">Lifetime</p>
+              <div className="flex items-baseline gap-1">
+                <span className="font-heading font-bold text-3xl text-white">$29.99</span>
+                <span className="text-white/60 text-sm">once</span>
+              </div>
+              <p className="text-xs text-white/60 mt-2">Pay once, own it forever. Top up credits cheaply when needed.</p>
+            </div>
+            <ul className="space-y-2 mb-6">
+              {LIFETIME_FEATURES.map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm text-white">
+                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
+              Get Lifetime
+            </button>
           </div>
         </div>
       </section>

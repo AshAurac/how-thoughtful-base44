@@ -48,13 +48,8 @@ Open How Thoughtful to check off your prep checklist ✅
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
 
-    if (!user || user.role !== 'admin') {
-      return Response.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    // Get all users, events, and profiles
+    // Get all users, events, and profiles using service role (no admin user required)
     const allUsers = await base44.asServiceRole.entities.User.list();
     const allEvents = await base44.asServiceRole.entities.Event.list();
     const allProfiles = await base44.asServiceRole.entities.UserProfile.list();
@@ -71,7 +66,7 @@ Deno.serve(async (req) => {
     let skipped = 0;
 
     for (const event of allEvents) {
-      if (!event.event_date) continue;
+      if (!event.event_date) { skipped++; continue; }
 
       // Get "today" in the user's local timezone
       const userTimezone = timezoneMap[event.created_by] || 'UTC';
@@ -82,24 +77,15 @@ Deno.serve(async (req) => {
       eventDate.setHours(0, 0, 0, 0);
       const daysUntil = Math.round((eventDate - localToday) / (1000 * 60 * 60 * 24));
 
-      if (!REMINDER_DAYS.includes(daysUntil)) {
-        skipped++;
-        continue;
-      }
+      if (!REMINDER_DAYS.includes(daysUntil)) { skipped++; continue; }
 
       // Find the owner of this event
       const owner = allUsers.find(u => u.email === event.created_by);
-      if (!owner?.email) {
-        skipped++;
-        continue;
-      }
+      if (!owner?.email) { skipped++; continue; }
 
       // Check if we already sent this reminder
       const reminderKey = `${daysUntil}d`;
-      if (event.reminders_sent?.includes(reminderKey)) {
-        skipped++;
-        continue;
-      }
+      if (event.reminders_sent?.includes(reminderKey)) { skipped++; continue; }
 
       const template = REMINDER_TEMPLATES[daysUntil];
       const occasion = (event.occasion || 'occasion').replace(/_/g, ' ');
@@ -120,11 +106,13 @@ Deno.serve(async (req) => {
         reminders_sent: updatedReminders,
       });
 
+      console.log(`Sent ${reminderKey} reminder for event ${event.id} to ${owner.email}`);
       sent++;
     }
 
     return Response.json({ success: true, sent, skipped });
   } catch (error) {
+    console.error('sendEventReminders error:', error.message);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
