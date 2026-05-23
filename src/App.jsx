@@ -25,6 +25,7 @@ import SeasonPage from './pages/SeasonPage';
 import WishlistPage from './pages/WishlistPage';
 import PublicWishlist from './pages/PublicWishlist';
 import RestockPage from './pages/RestockPage';
+import LandingPage from './pages/LandingPage';
 
 // Layout
 import AppShell from './components/AppShell';
@@ -51,11 +52,18 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      {/* Public wishlist — no shell */}
+      {/* Public routes — no auth needed */}
       <Route path="/w/:token" element={<PublicWishlist />} />
+      <Route path="/welcome" element={<LandingPage />} />
+
+      {/* Home: show landing if not authenticated, dashboard if authenticated */}
+      <Route path="/" element={
+        user
+          ? <AppShell user={user}><Dashboard user={user} /></AppShell>
+          : <LandingPage />
+      } />
 
       {/* All authenticated pages wrapped in AppShell */}
-      <Route path="/" element={<AppShell user={user}><Dashboard user={user} /></AppShell>} />
       <Route path="/events" element={<AppShell user={user}><EventsList /></AppShell>} />
       <Route path="/events/new" element={<AppShell user={user}><NewEvent /></AppShell>} />
       <Route path="/events/:id" element={<AppShell user={user}><EventDetail user={user} /></AppShell>} />
