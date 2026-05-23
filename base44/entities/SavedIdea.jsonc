@@ -1,0 +1,30 @@
+{
+  "name": "SavedIdea",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "estimated_price": {
+      "type": "string"
+    },
+    "why_it_works": {
+      "type": "string"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "event_id": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

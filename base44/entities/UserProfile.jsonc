@@ -1,0 +1,68 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "love_languages_give": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "love_languages_receive": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "personality": {
+      "type": "string"
+    },
+    "work": {
+      "type": "string"
+    },
+    "likes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dislikes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "free_text": {
+      "type": "string"
+    },
+    "intention": {
+      "type": "string"
+    },
+    "intention_year": {
+      "type": "number"
+    },
+    "profile_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_premium": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_credits": {
+      "type": "number",
+      "default": 0
+    },
+    "free_ai_used": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": []
+}

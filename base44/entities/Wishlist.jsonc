@@ -1,0 +1,46 @@
+{
+  "name": "Wishlist",
+  "type": "object",
+  "properties": {
+    "share_token": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "default": "My Wishlist"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      }
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,81 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "recipient_id": {
+      "type": "string"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "occasion": {
+      "type": "string",
+      "enum": [
+        "birthday",
+        "anniversary",
+        "holiday",
+        "graduation",
+        "baby_shower",
+        "wedding",
+        "housewarming",
+        "thank_you",
+        "just_because",
+        "other"
+      ]
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "budget": {
+      "type": "number"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "free",
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    },
+    "recurring": {
+      "type": "boolean",
+      "default": false
+    },
+    "notes": {
+      "type": "string"
+    },
+    "reflection": {
+      "type": "string"
+    },
+    "love_language": {
+      "type": "string",
+      "enum": [
+        "words_of_affirmation",
+        "quality_time",
+        "gifts",
+        "acts_of_service",
+        "physical_touch"
+      ]
+    },
+    "age_or_years": {
+      "type": "number"
+    },
+    "reminders_sent": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "recipient_name",
+    "occasion",
+    "event_date"
+  ]
+}

@@ -1,0 +1,124 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { toast } from 'sonner';
+import { Plus, X } from 'lucide-react';
+import { LOVE_LANGUAGES } from '@/lib/catalogs';
+
+export default function RecipientsPage() {
+  const queryClient = useQueryClient();
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ name: '', relationship: '', love_language: '', interests: '', notes: '' });
+
+  const { data: recipients = [], isLoading } = useQuery({
+    queryKey: ['recipients'],
+    queryFn: () => base44.entities.Recipient.list('name'),
+  });
+
+  const addMutation = useMutation({
+    mutationFn: (data) => base44.entities.Recipient.create({
+      ...data,
+      interests: data.interests ? data.interests.split(',').map(s => s.trim()).filter(Boolean) : [],
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['recipients'] });
+      setShowAdd(false);
+      setForm({ name: '', relationship: '', love_language: '', interests: '', notes: '' });
+      toast.success('Person added');
+    },
+  });
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-accent text-ink-soft text-lg">the people you love</p>
+          <h1 className="font-heading font-bold text-2xl text-ink">People</h1>
+        </div>
+        <button
+          onClick={() => setShowAdd(v => !v)}
+          className="flex items-center gap-2 bg-terracotta text-white px-4 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all"
+        >
+          <Plus className="w-4 h-4" /> Add
+        </button>
+      </div>
+
+      {showAdd && (
+        <form
+          onSubmit={(e) => { e.preventDefault(); addMutation.mutate(form); }}
+          className="bg-sand-100 border border-sand-300 rounded-2xl p-4 space-y-3"
+        >
+          <div className="flex items-center justify-between mb-1">
+            <h3 className="font-heading font-semibold text-ink">Add person</h3>
+            <button type="button" onClick={() => setShowAdd(false)}><X className="w-4 h-4 text-ink-soft" /></button>
+          </div>
+          <input
+            value={form.name}
+            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+            placeholder="Name *"
+            required
+            className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+          />
+          <div className="grid grid-cols-2 gap-2">
+            <input
+              value={form.relationship}
+              onChange={e => setForm(f => ({ ...f, relationship: e.target.value }))}
+              placeholder="Relationship"
+              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            />
+            <select
+              value={form.love_language}
+              onChange={e => setForm(f => ({ ...f, love_language: e.target.value }))}
+              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            >
+              <option value="">Love language</option>
+              {LOVE_LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
+            </select>
+          </div>
+          <input
+            value={form.interests}
+            onChange={e => setForm(f => ({ ...f, interests: e.target.value }))}
+            placeholder="Interests (comma-separated)"
+            className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+          />
+          <button type="submit" className="w-full bg-terracotta text-white py-2.5 rounded-full text-sm font-heading font-semibold hover:bg-terracotta-dark transition-all">
+            Add person
+          </button>
+        </form>
+      )}
+
+      {isLoading ? (
+        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-sand-200 rounded-2xl animate-pulse" />)}</div>
+      ) : recipients.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="font-accent text-2xl text-ink-soft mb-2">no one yet</p>
+          <p className="text-sm text-ink-soft">Recipients are added automatically when you create events.</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {recipients.map(r => (
+            <Link
+              key={r.id}
+              to={`/recipients/${r.id}`}
+              className="flex items-center gap-3 bg-white border border-sand-300 rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
+            >
+              <div className="w-10 h-10 rounded-full bg-terracotta/10 flex items-center justify-center text-terracotta font-heading font-bold text-lg">
+                {r.name?.[0]?.toUpperCase()}
+              </div>
+              <div className="flex-1">
+                <p className="font-heading font-semibold text-ink">{r.name}</p>
+                {r.relationship && <p className="text-sm text-ink-soft capitalize">{r.relationship}</p>}
+              </div>
+              {r.love_language && (
+                <span className="text-xs bg-sand-200 text-ink-soft px-2.5 py-1 rounded-full">
+                  {r.love_language.replace(/_/g, ' ')}
+                </span>
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

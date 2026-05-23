@@ -1,0 +1,66 @@
+{
+  "name": "Gift",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "price": {
+      "type": "number",
+      "default": 0
+    },
+    "shipping_cost": {
+      "type": "number",
+      "default": 0
+    },
+    "link": {
+      "type": "string"
+    },
+    "bought": {
+      "type": "boolean",
+      "default": false
+    },
+    "wrapped": {
+      "type": "boolean",
+      "default": false
+    },
+    "card_written": {
+      "type": "boolean",
+      "default": false
+    },
+    "sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "order_number": {
+      "type": "string"
+    },
+    "tracking_url": {
+      "type": "string"
+    },
+    "expected_arrival": {
+      "type": "string",
+      "format": "date"
+    },
+    "delivery_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "ordered",
+        "shipped",
+        "delivered"
+      ],
+      "default": "none"
+    }
+  },
+  "required": [
+    "event_id",
+    "name"
+  ]
+}
