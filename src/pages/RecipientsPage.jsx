@@ -68,6 +68,8 @@ export default function RecipientsPage() {
         </div>
       </div>
 
+      {showImport && <BulkImportRecipients onClose={() => setShowImport(false)} />}
+
       {showAdd && (
         <form
           onSubmit={(e) => { e.preventDefault(); addMutation.mutate(form); }}
