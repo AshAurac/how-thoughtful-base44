@@ -24,7 +24,7 @@ const navItems = [
 const MORE_PATHS = ['/recipients', '/budget', '/deliveries', '/saved', '/group-lists', '/restock', '/wishlist', '/year-in-giving', '/profile'];
 
 // Root-level paths — show brand logo on these
-const ROOT_PATHS = ['/', '/calendar', '/ideas', '/season', ...MORE_PATHS];
+const ROOT_PATHS = ['/', '/calendar', '/ideas', '/season', '/upgrade', ...MORE_PATHS];
 
 // Page title map for sub-pages
 const PAGE_TITLES = {

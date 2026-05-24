@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { Sparkles, Bell, Heart, Zap, Check, Star, Infinity } from 'lucide-react';
+import { Check, Home } from 'lucide-react';
 import { toast } from 'sonner';
 
 const PRODUCTS = {
@@ -211,9 +212,17 @@ export default function UpgradePage({ user }) {
         </div>
       )}
 
-      <div className="text-center text-sm text-ink-soft pb-4">
+      <div className="text-center text-sm text-muted-foreground pb-2">
         Free tier never goes away — curated ideas are always free.
       </div>
+
+      <Link
+        to="/"
+        className="flex items-center justify-center gap-2 w-full border border-border text-foreground py-3.5 rounded-full font-heading font-semibold hover:bg-muted transition-all"
+      >
+        <Home className="w-4 h-4" />
+        Back to Home
+      </Link>
     </div>
   );
 }
