@@ -2,8 +2,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 import Stripe from 'npm:stripe@14';
 
 const PRICE_IDS = {
-  annual: 'price_1TaWfQKIqRNPN7gqMYEzN7n3',
-  lifetime: 'price_1TaWfQKIqRNPN7gqH4mj344n',
+  annual: 'price_1TaZ7nKIqRNPN7gqUBqUxH63',
+  lifetime: 'price_1TaZ7nKIqRNPN7gq3XPX7mHs',
   credits_50: 'price_1TaExEKIqRNPN7gq3PvrmkyV',
   credits_150: 'price_1TaExEKIqRNPN7gqcL6XHSxf',
   credits_400: 'price_1TaExEKIqRNPN7gqp1UpMuBc',
