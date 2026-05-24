@@ -17,32 +17,42 @@ export default function MoreSheet({ open, onClose }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end" onClick={onClose}>
-      <div className="absolute inset-0 bg-ink/30 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-50 flex items-end select-none" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       <div
-        className="relative w-full bg-white rounded-t-3xl p-6 shadow-2xl"
+        className="relative w-full bg-card rounded-t-3xl shadow-2xl"
+        style={{ paddingBottom: 'var(--safe-bottom)', paddingLeft: 'var(--safe-left)', paddingRight: 'var(--safe-right)' }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="font-heading font-bold text-ink text-lg">More</h3>
-          <button onClick={onClose} className="p-1 rounded-full hover:bg-sand-100">
-            <X className="w-5 h-5 text-ink-soft" />
-          </button>
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full bg-border" />
         </div>
-        <div className="grid grid-cols-4 gap-4">
-          {items.map(({ path, icon: Icon, label, color }) => (
-            <Link
-              key={path}
-              to={path}
+        <div className="px-6 pb-6">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-heading font-bold text-foreground text-lg">More</h3>
+            <button
               onClick={onClose}
-              className="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-sand-100 transition-all"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-muted transition-all"
             >
-              <div className="w-12 h-12 rounded-2xl bg-sand-100 flex items-center justify-center">
-                <Icon className={`w-5 h-5 ${color}`} />
-              </div>
-              <span className="text-xs text-ink-soft font-body text-center leading-tight">{label}</span>
-            </Link>
-          ))}
+              <X className="w-5 h-5 text-muted-foreground" />
+            </button>
+          </div>
+          <div className="grid grid-cols-4 gap-4">
+            {items.map(({ path, icon: Icon, label, color }) => (
+              <Link
+                key={path}
+                to={path}
+                onClick={onClose}
+                className="flex flex-col items-center gap-2 p-3 rounded-2xl hover:bg-muted transition-all min-h-[72px] justify-center"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center">
+                  <Icon className={`w-5 h-5 ${color}`} />
+                </div>
+                <span className="text-xs text-muted-foreground font-body text-center leading-tight">{label}</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </div>
