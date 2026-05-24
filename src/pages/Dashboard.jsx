@@ -12,7 +12,7 @@ import ActionQueue from '@/components/ActionQueue';
 export default function Dashboard({ user }) {
   const queryClient = useQueryClient();
   const [showNudge, setShowNudge] = useState(false);
-  const [activeTab, setActiveTab] = useState('upcoming');
+  const [activeTab, setActiveTab] = useState('priority');
 
   const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
     await queryClient.invalidateQueries();
@@ -113,20 +113,20 @@ export default function Dashboard({ user }) {
       <div>
         <div className="flex bg-sand-200 rounded-full p-1 gap-1 mb-4">
           <button
-            onClick={() => setActiveTab('upcoming')}
-            className={`flex-1 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
-              activeTab === 'upcoming' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            Coming up
-          </button>
-          <button
             onClick={() => setActiveTab('priority')}
             className={`flex-1 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
               activeTab === 'priority' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             Priority
+          </button>
+          <button
+            onClick={() => setActiveTab('upcoming')}
+            className={`flex-1 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
+              activeTab === 'upcoming' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Coming up
           </button>
         </div>
 
