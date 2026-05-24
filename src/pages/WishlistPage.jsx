@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { Plus, Trash2, Share2, ExternalLink } from 'lucide-react';
+import NativePicker from '@/components/NativePicker';
 
 function generateToken() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -117,15 +118,16 @@ export default function WishlistPage({ user }) {
               type="number"
               className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
             />
-            <select
+            <NativePicker
+              label="Priority"
               value={newItem.priority}
-              onChange={e => setNewItem(f => ({ ...f, priority: e.target.value }))}
-              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
-            >
-              <option value="low">Nice to have</option>
-              <option value="medium">Would love it</option>
-              <option value="high">Really want this</option>
-            </select>
+              onChange={v => setNewItem(f => ({ ...f, priority: v }))}
+              options={[
+                { value: 'low', label: 'Nice to have' },
+                { value: 'medium', label: 'Would love it' },
+                { value: 'high', label: 'Really want this' },
+              ]}
+            />
           </div>
           <input
             value={newItem.link}

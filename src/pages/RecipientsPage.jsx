@@ -5,6 +5,8 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { Plus, X } from 'lucide-react';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
+import NativePicker from '@/components/NativePicker';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 export default function RecipientsPage() {
   const queryClient = useQueryClient();
@@ -14,6 +16,10 @@ export default function RecipientsPage() {
   const { data: recipients = [], isLoading } = useQuery({
     queryKey: ['recipients'],
     queryFn: () => base44.entities.Recipient.list('name'),
+  });
+
+  const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['recipients'] });
   });
 
   const addMutation = useMutation({
@@ -30,7 +36,15 @@ export default function RecipientsPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div
+      className="space-y-5"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      <div ref={indicatorRef} className="flex justify-center pointer-events-none" style={{ opacity: 0, transition: 'opacity 0.2s', marginBottom: '-1.5rem' }}>
+        <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
+      </div>
       <div className="flex items-center justify-between">
         <div>
           <p className="font-accent text-muted-foreground text-lg">the people you love</p>
@@ -67,14 +81,13 @@ export default function RecipientsPage() {
               placeholder="Relationship"
               className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
             />
-            <select
+            <NativePicker
+              label="Love language"
+              placeholder="Love language"
               value={form.love_language}
-              onChange={e => setForm(f => ({ ...f, love_language: e.target.value }))}
-              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
-            >
-              <option value="">Love language</option>
-              {LOVE_LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
-            </select>
+              onChange={v => setForm(f => ({ ...f, love_language: v }))}
+              options={[{ value: '', label: 'None' }, ...LOVE_LANGUAGES.map(l => ({ value: l.value, label: l.label }))]}
+            />
           </div>
           <input
             value={form.interests}

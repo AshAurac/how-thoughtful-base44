@@ -1,9 +1,17 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { format, parseISO, isValid } from 'date-fns';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 export default function BudgetPage() {
+  const queryClient = useQueryClient();
+
+  const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['events'] });
+    await queryClient.invalidateQueries({ queryKey: ['gifts'] });
+  });
+
   const { data: events = [] } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list(),
@@ -39,7 +47,15 @@ export default function BudgetPage() {
     .reduce((s, e) => s + (e.budget || 0), 0);
 
   return (
-    <div className="space-y-5">
+    <div
+      className="space-y-5"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      <div ref={indicatorRef} className="flex justify-center pointer-events-none" style={{ opacity: 0, transition: 'opacity 0.2s', marginBottom: '-1.5rem' }}>
+        <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
+      </div>
       <div>
         <p className="font-accent text-muted-foreground text-lg">where the love goes</p>
         <h1 className="font-heading font-bold text-2xl text-foreground">Budget</h1>

@@ -1,8 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { parseISO, isValid, format, addDays } from 'date-fns';
 import PriorityBadge from '@/components/PriorityBadge';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 const SEASONS = [
   { name: 'Spring', months: [3, 4, 5], color: 'bg-moss/20 text-moss-dark border-moss/30' },
@@ -12,9 +13,15 @@ const SEASONS = [
 ];
 
 export default function SeasonPage() {
+  const queryClient = useQueryClient();
+
   const { data: events = [] } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list('event_date'),
+  });
+
+  const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['events'] });
   });
 
   const getSeasonEvents = (months) =>
@@ -27,7 +34,15 @@ export default function SeasonPage() {
   const currentSeason = SEASONS.find(s => s.months.includes(currentMonth));
 
   return (
-    <div className="space-y-5">
+    <div
+      className="space-y-5"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      <div ref={indicatorRef} className="flex justify-center pointer-events-none" style={{ opacity: 0, transition: 'opacity 0.2s', marginBottom: '-1.5rem' }}>
+        <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
+      </div>
       <div>
         <p className="font-accent text-muted-foreground text-lg">plan the season</p>
         <h1 className="font-heading font-bold text-2xl text-foreground">Seasonal Prep</h1>

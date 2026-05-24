@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
 import { Plus, Users, Link as LinkIcon, Trash2, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import NativePicker from '@/components/NativePicker';
 
 function generateToken() {
   return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
@@ -97,23 +98,21 @@ export default function SharedListsPage() {
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <select
+            <NativePicker
+              label="Occasion"
               value={form.occasion}
-              onChange={e => setForm(f => ({ ...f, occasion: e.target.value }))}
-              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
-            >
-              {['birthday','anniversary','holiday','graduation','baby_shower','wedding','christmas','just_because'].map(o => (
-                <option key={o} value={o}>{o.replace(/_/g, ' ')}</option>
-              ))}
-            </select>
-            <select
+              onChange={v => setForm(f => ({ ...f, occasion: v }))}
+              options={['birthday','anniversary','holiday','graduation','baby_shower','wedding','christmas','just_because'].map(o => ({ value: o, label: o.replace(/_/g, ' ') }))}
+            />
+            <NativePicker
+              label="List type"
               value={form.list_type}
-              onChange={e => setForm(f => ({ ...f, list_type: e.target.value }))}
-              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
-            >
-              <option value="group_gift">Group gift list</option>
-              <option value="secret_santa">Secret Santa 🎅</option>
-            </select>
+              onChange={v => setForm(f => ({ ...f, list_type: v }))}
+              options={[
+                { value: 'group_gift', label: 'Group gift list' },
+                { value: 'secret_santa', label: 'Secret Santa 🎅' },
+              ]}
+            />
           </div>
           {form.list_type === 'secret_santa' && (
             <p className="text-xs text-ink-soft bg-butter/30 rounded-xl px-3 py-2">

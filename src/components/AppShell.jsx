@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart } from 'lucide-react';
+import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import MoreSheet from './MoreSheet';
 import PageTransition from './PageTransition';
@@ -10,6 +10,28 @@ const navItems = [
   { path: '/ideas', icon: Sparkles, label: 'Ideas' },
   { path: '/season', icon: Leaf, label: 'Season' },
 ];
+
+// Root-level paths — show brand logo on these
+const ROOT_PATHS = ['/', '/calendar', '/ideas', '/season', '/budget', '/events', '/profile', '/recipients', '/deliveries', '/saved', '/wishlist', '/restock', '/group-lists', '/year-in-giving'];
+
+// Page title map for sub-pages
+const PAGE_TITLES = {
+  '/events/new': 'New Occasion',
+  '/upgrade': 'Upgrade',
+  '/year-in-giving': 'Year in Giving',
+};
+
+function getSubPageTitle(pathname) {
+  if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
+  if (pathname.startsWith('/events/') && pathname !== '/events') return 'Occasion';
+  if (pathname.startsWith('/recipients/')) return 'Person';
+  if (pathname.startsWith('/group-manage/')) return 'Manage List';
+  return null;
+}
+
+function isRootPath(pathname) {
+  return ROOT_PATHS.includes(pathname);
+}
 
 // Determine which tab root a given pathname belongs to
 function getActiveTab(pathname) {
@@ -29,6 +51,8 @@ export default function AppShell({ children, user }) {
 
   const firstName = user?.full_name?.split(' ')[0] || 'there';
   const activeTab = getActiveTab(location.pathname);
+  const subPageTitle = getSubPageTitle(location.pathname);
+  const isRoot = isRootPath(location.pathname);
 
   // Keep tabHistory up to date whenever the location changes
   tabHistory.current[activeTab] = location.pathname;
@@ -59,23 +83,41 @@ export default function AppShell({ children, user }) {
         className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border select-none"
         style={{ paddingTop: 'var(--safe-top)', paddingLeft: 'var(--safe-left)', paddingRight: 'var(--safe-right)' }}
       >
-        <div className="max-w-3xl mx-auto flex items-center justify-between px-4 py-3">
-          <Link
-            to="/"
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity min-h-[44px]"
-            onClick={e => handleNavClick('/', e)}
-          >
-            <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
-          </Link>
-          <Link
-            to="/profile"
-            className="font-accent text-lg text-muted-foreground hover:text-foreground transition-colors min-h-[44px] flex items-center"
-          >
-            hi, {firstName}
-          </Link>
+        <div className="max-w-3xl mx-auto relative flex items-center justify-between px-4 py-3">
+          {isRoot ? (
+            <>
+              <Link
+                to="/"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity min-h-[44px]"
+                onClick={e => handleNavClick('/', e)}
+              >
+                <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
+                  <Heart className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
+              </Link>
+              <Link
+                to="/profile"
+                className="font-accent text-lg text-muted-foreground hover:text-foreground transition-colors min-h-[44px] flex items-center"
+              >
+                hi, {firstName}
+              </Link>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-1 min-h-[44px] min-w-[44px] -ml-2 px-2 rounded-full hover:bg-muted transition-all text-foreground"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <span className="font-heading font-semibold text-foreground text-base absolute left-1/2 -translate-x-1/2">
+                {subPageTitle || ''}
+              </span>
+              <div className="w-10" />
+            </>
+          )}
         </div>
       </header>
 

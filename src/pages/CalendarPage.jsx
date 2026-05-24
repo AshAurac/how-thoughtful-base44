@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay, parseISO, isValid } from 'date-fns';
 import PriorityBadge from '@/components/PriorityBadge';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
 const PRIORITY_COLORS = {
   high: 'bg-terracotta',
@@ -14,12 +15,17 @@ const PRIORITY_COLORS = {
 };
 
 export default function CalendarPage() {
+  const queryClient = useQueryClient();
   const [current, setCurrent] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
 
   const { data: events = [] } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list('event_date'),
+  });
+
+  const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['events'] });
   });
 
   const monthStart = startOfMonth(current);
@@ -36,7 +42,15 @@ export default function CalendarPage() {
   const selectedEvents = selectedDay ? eventsOnDay(selectedDay) : [];
 
   return (
-    <div className="space-y-5">
+    <div
+      className="space-y-5"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      <div ref={indicatorRef} className="flex justify-center pointer-events-none" style={{ opacity: 0, transition: 'opacity 0.2s', marginBottom: '-1.5rem' }}>
+        <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
+      </div>
       <div>
         <p className="font-accent text-muted-foreground text-lg">plan ahead</p>
         <h1 className="font-heading font-bold text-2xl text-foreground">Calendar</h1>
