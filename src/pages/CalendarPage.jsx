@@ -14,14 +14,15 @@ const PRIORITY_COLORS = {
   free: 'bg-moss',
 };
 
-export default function CalendarPage() {
+export default function CalendarPage({ user }) {
   const queryClient = useQueryClient();
   const [current, setCurrent] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
 
   const { data: events = [] } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('event_date'),
+    queryKey: ['events', user?.email],
+    queryFn: () => base44.entities.Event.filter({ created_by: user?.email }, 'event_date'),
+    enabled: !!user?.email,
   });
 
   const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {

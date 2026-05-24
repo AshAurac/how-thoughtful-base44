@@ -12,12 +12,13 @@ const SEASONS = [
   { name: 'Winter', months: [12, 1, 2], color: 'bg-sand-200 text-ink-soft border-sand-300' },
 ];
 
-export default function SeasonPage() {
+export default function SeasonPage({ user }) {
   const queryClient = useQueryClient();
 
   const { data: events = [] } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('event_date'),
+    queryKey: ['events', user?.email],
+    queryFn: () => base44.entities.Event.filter({ created_by: user?.email }, 'event_date'),
+    enabled: !!user?.email,
   });
 
   const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {

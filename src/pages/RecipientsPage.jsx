@@ -9,15 +9,16 @@ import NativePicker from '@/components/NativePicker';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import BulkImportRecipients from '@/components/BulkImportRecipients';
 
-export default function RecipientsPage() {
+export default function RecipientsPage({ user }) {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [form, setForm] = useState({ name: '', relationship: '', love_language: '', interests: '', notes: '' });
 
   const { data: recipients = [], isLoading } = useQuery({
-    queryKey: ['recipients'],
-    queryFn: () => base44.entities.Recipient.list('name'),
+    queryKey: ['recipients', user?.email],
+    queryFn: () => base44.entities.Recipient.filter({ created_by: user?.email }, 'name'),
+    enabled: !!user?.email,
   });
 
   const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {

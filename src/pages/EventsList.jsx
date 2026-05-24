@@ -8,7 +8,7 @@ import { daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import BulkImportEvents from '@/components/BulkImportEvents';
 
-export default function EventsList() {
+export default function EventsList({ user }) {
   const queryClient = useQueryClient();
   const [showImport, setShowImport] = useState(false);
 
@@ -17,8 +17,9 @@ export default function EventsList() {
   });
 
   const { data: events = [], isLoading } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('event_date'),
+    queryKey: ['events', user?.email],
+    queryFn: () => base44.entities.Event.filter({ created_by: user?.email }, 'event_date'),
+    enabled: !!user?.email,
   });
 
   return (

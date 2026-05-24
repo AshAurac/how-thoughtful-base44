@@ -96,20 +96,20 @@ const AuthenticatedApp = () => {
       } />
 
       {/* All authenticated pages — redirect to login if not authenticated */}
-      <Route path="/events" element={<RequireAuth user={user}><AppShell user={user}><EventsList /></AppShell></RequireAuth>} />
+      <Route path="/events" element={<RequireAuth user={user}><AppShell user={user}><EventsList user={user} /></AppShell></RequireAuth>} />
       <Route path="/events/new" element={<RequireAuth user={user}><AppShell user={user}><NewEvent /></AppShell></RequireAuth>} />
       <Route path="/events/:id" element={<RequireAuth user={user}><AppShell user={user}><EventDetail user={user} /></AppShell></RequireAuth>} />
-      <Route path="/calendar" element={<RequireAuth user={user}><AppShell user={user}><CalendarPage /></AppShell></RequireAuth>} />
+      <Route path="/calendar" element={<RequireAuth user={user}><AppShell user={user}><CalendarPage user={user} /></AppShell></RequireAuth>} />
       <Route path="/ideas" element={<RequireAuth user={user}><AppShell user={user}><IdeasPage user={user} /></AppShell></RequireAuth>} />
-      <Route path="/budget" element={<RequireAuth user={user}><AppShell user={user}><BudgetPage /></AppShell></RequireAuth>} />
+      <Route path="/budget" element={<RequireAuth user={user}><AppShell user={user}><BudgetPage user={user} /></AppShell></RequireAuth>} />
       <Route path="/year-in-giving" element={<RequireAuth user={user}><AppShell user={user}><YearInGiving user={user} /></AppShell></RequireAuth>} />
       <Route path="/upgrade" element={<RequireAuth user={user}><AppShell user={user}><UpgradePage user={user} /></AppShell></RequireAuth>} />
       <Route path="/profile" element={<RequireAuth user={user}><AppShell user={user}><ProfilePage user={user} /></AppShell></RequireAuth>} />
-      <Route path="/recipients" element={<RequireAuth user={user}><AppShell user={user}><RecipientsPage /></AppShell></RequireAuth>} />
-      <Route path="/recipients/:id" element={<RequireAuth user={user}><AppShell user={user}><RecipientDetail /></AppShell></RequireAuth>} />
-      <Route path="/deliveries" element={<RequireAuth user={user}><AppShell user={user}><DeliveriesPage /></AppShell></RequireAuth>} />
-      <Route path="/saved" element={<RequireAuth user={user}><AppShell user={user}><SavedIdeasPage /></AppShell></RequireAuth>} />
-      <Route path="/season" element={<RequireAuth user={user}><AppShell user={user}><SeasonPage /></AppShell></RequireAuth>} />
+      <Route path="/recipients" element={<RequireAuth user={user}><AppShell user={user}><RecipientsPage user={user} /></AppShell></RequireAuth>} />
+      <Route path="/recipients/:id" element={<RequireAuth user={user}><AppShell user={user}><RecipientDetail user={user} /></AppShell></RequireAuth>} />
+      <Route path="/deliveries" element={<RequireAuth user={user}><AppShell user={user}><DeliveriesPage user={user} /></AppShell></RequireAuth>} />
+      <Route path="/saved" element={<RequireAuth user={user}><AppShell user={user}><SavedIdeasPage user={user} /></AppShell></RequireAuth>} />
+      <Route path="/season" element={<RequireAuth user={user}><AppShell user={user}><SeasonPage user={user} /></AppShell></RequireAuth>} />
       <Route path="/wishlist" element={<RequireAuth user={user}><AppShell user={user}><WishlistPage user={user} /></AppShell></RequireAuth>} />
       <Route path="/restock" element={<RequireAuth user={user}><AppShell user={user}><RestockPage /></AppShell></RequireAuth>} />
       <Route path="/group-lists" element={<RequireAuth user={user}><AppShell user={user}><SharedListsPage /></AppShell></RequireAuth>} />

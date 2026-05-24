@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 
 import { format, parseISO, isValid } from 'date-fns';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 
-export default function BudgetPage() {
+export default function BudgetPage({ user }) {
   const queryClient = useQueryClient();
 
   const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
@@ -13,13 +13,15 @@ export default function BudgetPage() {
   });
 
   const { data: events = [] } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list(),
+    queryKey: ['events', user?.email],
+    queryFn: () => base44.entities.Event.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
   });
 
   const { data: gifts = [] } = useQuery({
-    queryKey: ['gifts'],
-    queryFn: () => base44.entities.Gift.list(),
+    queryKey: ['gifts', user?.email],
+    queryFn: () => base44.entities.Gift.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
   });
 
   const totalBudget = events.reduce((s, e) => s + (e.budget || 0), 0);

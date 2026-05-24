@@ -5,12 +5,13 @@ import { Bookmark, Trash2, ExternalLink } from 'lucide-react';
 
 const AFFILIATE_TAG = 'howthoughtful-20';
 
-export default function SavedIdeasPage() {
+export default function SavedIdeasPage({ user }) {
   const queryClient = useQueryClient();
 
   const { data: ideas = [], isLoading } = useQuery({
-    queryKey: ['savedIdeas'],
-    queryFn: () => base44.entities.SavedIdea.list('-created_date'),
+    queryKey: ['savedIdeas', user?.email],
+    queryFn: () => base44.entities.SavedIdea.filter({ created_by: user?.email }, '-created_date'),
+    enabled: !!user?.email,
   });
 
   const deleteMutation = useMutation({

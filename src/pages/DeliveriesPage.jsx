@@ -11,12 +11,13 @@ const STATUS_COLORS = {
   delivered: 'bg-moss/20 text-moss-dark',
 };
 
-export default function DeliveriesPage() {
+export default function DeliveriesPage({ user }) {
   const queryClient = useQueryClient();
 
   const { data: gifts = [] } = useQuery({
-    queryKey: ['gifts'],
-    queryFn: () => base44.entities.Gift.list(),
+    queryKey: ['gifts', user?.email],
+    queryFn: () => base44.entities.Gift.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
   });
 
   const updateMutation = useMutation({

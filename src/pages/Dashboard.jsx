@@ -36,13 +36,15 @@ export default function Dashboard({ user }) {
   }, [profile]);
 
   const { data: events = [] } = useQuery({
-    queryKey: ['events'],
-    queryFn: () => base44.entities.Event.list('-event_date'),
+    queryKey: ['events', user?.email],
+    queryFn: () => base44.entities.Event.filter({ created_by: user?.email }, '-event_date'),
+    enabled: !!user?.email,
   });
 
   const { data: gifts = [] } = useQuery({
-    queryKey: ['gifts'],
-    queryFn: () => base44.entities.Gift.list(),
+    queryKey: ['gifts', user?.email],
+    queryFn: () => base44.entities.Gift.filter({ created_by: user?.email }),
+    enabled: !!user?.email,
   });
 
   const upcoming = getUpcomingEvents(events);
