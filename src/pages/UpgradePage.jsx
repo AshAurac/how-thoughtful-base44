@@ -112,8 +112,8 @@ export default function UpgradePage({ user }) {
 
       <div className="text-center">
         <p className="font-accent text-2xl text-ink-soft mb-1">upgrade</p>
-        <h1 className="font-heading font-bold text-3xl text-ink">Be more thoughtful, for life</h1>
-        <p className="text-ink-soft mt-2">Simple, fair pricing. No surprises.</p>
+        <h1 className="font-heading font-bold text-3xl text-foreground">Be more thoughtful, for life</h1>
+        <p className="text-muted-foreground mt-2">Simple, fair pricing. No surprises.</p>
       </div>
 
       {isPremium && (
@@ -130,7 +130,7 @@ export default function UpgradePage({ user }) {
         {Object.values(PRODUCTS).map(plan => (
           <div
             key={plan.id}
-            className={`rounded-3xl p-6 relative overflow-hidden ${
+            className={`rounded-3xl p-6 relative mt-3 ${
               plan.recommended
                 ? 'bg-white border-2 border-terracotta'
                 : 'bg-white border-2 border-sand-300'
