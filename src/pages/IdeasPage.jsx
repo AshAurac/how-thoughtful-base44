@@ -29,7 +29,7 @@ function IdeaCard({ idea, onSave, saved }) {
         </div>
         <button
           onClick={() => onSave(idea)}
-          className="p-1.5 rounded-full hover:bg-sand-100 transition-all"
+          className="p-2.5 rounded-full hover:bg-sand-100 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
         >
           {saved ? (
             <BookmarkCheck className="w-4 h-4 text-terracotta" />

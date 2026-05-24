@@ -13,7 +13,7 @@ function GiftCheckbox({ checked, onChange, label }) {
   return (
     <button
       onClick={onChange}
-      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-all border ${
+      className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm transition-all border min-h-[44px] ${
         checked
           ? 'bg-moss/20 text-moss-dark border-moss/30'
           : 'bg-sand-100 text-ink-soft border-sand-300 hover:bg-sand-200'
@@ -233,7 +233,7 @@ export default function EventDetail() {
                   </div>
                   <button
                     onClick={() => deleteGiftMutation.mutate(gift.id)}
-                    className="p-1.5 rounded-full hover:bg-sand-100 text-ink-soft hover:text-terracotta transition-all"
+                    className="p-2.5 rounded-full hover:bg-sand-100 text-ink-soft hover:text-terracotta transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
