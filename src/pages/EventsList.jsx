@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { Plus } from 'lucide-react';
+import { Plus, Upload } from 'lucide-react';
 import { daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
+import BulkImportEvents from '@/components/BulkImportEvents';
 
 export default function EventsList() {
+  const [showImport, setShowImport] = useState(false);
   const { data: events = [], isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list('event_date'),
@@ -18,13 +21,23 @@ export default function EventsList() {
           <p className="font-accent text-ink-soft text-lg">your occasions</p>
           <h1 className="font-heading font-bold text-2xl text-ink">All Events</h1>
         </div>
-        <Link
-          to="/events/new"
-          className="flex items-center gap-2 bg-terracotta text-white px-4 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
-        >
-          <Plus className="w-4 h-4" /> Add
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowImport(true)}
+            className="flex items-center gap-1.5 border border-sand-300 text-ink-soft px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-sand-100 transition-all"
+          >
+            <Upload className="w-4 h-4" /> Import
+          </button>
+          <Link
+            to="/events/new"
+            className="flex items-center gap-2 bg-terracotta text-white px-4 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
+          >
+            <Plus className="w-4 h-4" /> Add
+          </Link>
+        </div>
       </div>
+
+      {showImport && <BulkImportEvents onClose={() => setShowImport(false)} />}
 
       {isLoading ? (
         <div className="space-y-3">

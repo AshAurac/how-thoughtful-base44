@@ -1,0 +1,155 @@
+import { Link } from 'react-router-dom';
+import { daysUntil, formatEventDate } from '@/lib/dateUtils';
+import { parseISO } from 'date-fns';
+
+// Priority weights: higher = more urgent to act on
+const PRIORITY_WEIGHT = { high: 3, medium: 2, low: 1, free: 0 };
+
+// Colors per priority for the bar
+const PRIORITY_BAR = {
+  high: 'bg-terracotta',
+  medium: 'bg-butter-dark',
+  low: 'bg-moss',
+  free: 'bg-sand-300',
+};
+
+const PRIORITY_LABEL_COLOR = {
+  high: 'text-terracotta',
+  medium: 'text-butter-dark',
+  low: 'text-moss',
+  free: 'text-ink-soft',
+};
+
+// Returns next action label based on days until event
+function getNextAction(days, gifts = []) {
+  const allBought = gifts.length > 0 && gifts.every(g => g.bought);
+  const allSent = gifts.length > 0 && gifts.every(g => g.sent);
+
+  if (days <= 0) return { label: 'Today!', urgent: true };
+  if (allSent) return { label: 'All done ✓', urgent: false };
+  if (allBought && days <= 7) return { label: 'Wrap & send', urgent: days <= 3 };
+  if (days <= 7) return { label: 'Buy now', urgent: true };
+  if (days <= 14) return { label: 'Buy soon', urgent: false };
+  if (days <= 28) return { label: 'Plan gift', urgent: false };
+  return { label: 'On horizon', urgent: false };
+}
+
+// Score: lower = needs attention sooner
+function computeScore(event) {
+  const days = daysUntil(event.event_date);
+  if (days === null || days < 0) return 9999;
+  const weight = PRIORITY_WEIGHT[event.priority] || 2;
+  // Urgency amplified by priority weight
+  return days / (weight + 0.5);
+}
+
+// How far along is this event's readiness? (based on days + gifts done)
+function readiness(days) {
+  if (days === null || days < 0) return 100;
+  if (days === 0) return 95;
+  if (days <= 7) return 70;
+  if (days <= 14) return 45;
+  if (days <= 30) return 25;
+  if (days <= 60) return 10;
+  return 5;
+}
+
+export default function ActionQueue({ events, gifts }) {
+  // Only show future events (within 90 days)
+  const active = events
+    .filter(e => {
+      const d = daysUntil(e.event_date);
+      return d !== null && d >= 0 && d <= 90;
+    })
+    .sort((a, b) => computeScore(a) - computeScore(b))
+    .slice(0, 6);
+
+  if (active.length === 0) return null;
+
+  const giftsByEvent = gifts.reduce((acc, g) => {
+    if (!acc[g.event_id]) acc[g.event_id] = [];
+    acc[g.event_id].push(g);
+    return acc;
+  }, {});
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="font-heading font-semibold text-lg text-ink">What to do next</h2>
+        <span className="text-xs text-ink-soft font-body">sorted by priority</span>
+      </div>
+
+      <div className="space-y-2">
+        {active.map((event, idx) => {
+          const days = daysUntil(event.event_date);
+          const evtGifts = giftsByEvent[event.id] || [];
+          const action = getNextAction(days, evtGifts);
+          const ready = readiness(days);
+          const priority = event.priority || 'medium';
+          const barColor = PRIORITY_BAR[priority];
+          const labelColor = PRIORITY_LABEL_COLOR[priority];
+          const isTop = idx === 0;
+
+          return (
+            <Link
+              key={event.id}
+              to={`/events/${event.id}`}
+              className={`block rounded-2xl border transition-all hover:-translate-y-0.5 ${
+                isTop
+                  ? 'bg-ink text-white border-ink hover:border-ink/80'
+                  : 'bg-white border-sand-300 hover:border-terracotta/40'
+              }`}
+            >
+              <div className="p-4">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {isTop && (
+                        <span className="text-xs bg-terracotta text-white px-2 py-0.5 rounded-full font-heading font-semibold">
+                          Most urgent
+                        </span>
+                      )}
+                      <span className={`font-heading font-semibold truncate ${isTop ? 'text-white' : 'text-ink'}`}>
+                        {event.recipient_name}
+                      </span>
+                      <span className={`text-xs font-medium capitalize ${isTop ? 'text-white/70' : labelColor}`}>
+                        {priority} priority
+                      </span>
+                    </div>
+                    <p className={`text-sm mt-0.5 capitalize ${isTop ? 'text-white/70' : 'text-ink-soft'}`}>
+                      {event.occasion?.replace(/_/g, ' ')} · {formatEventDate(event.event_date)}
+                    </p>
+                  </div>
+                  <div className="text-right flex-none">
+                    <span className={`text-xs font-heading font-semibold px-2 py-1 rounded-full ${
+                      action.urgent
+                        ? isTop ? 'bg-terracotta text-white' : 'bg-terracotta/10 text-terracotta'
+                        : isTop ? 'bg-white/20 text-white' : 'bg-sand-100 text-ink-soft'
+                    }`}>
+                      {action.label}
+                    </span>
+                    <p className={`text-xs mt-1 ${isTop ? 'text-white/60' : 'text-ink-soft'}`}>
+                      {days === 0 ? 'Today' : `${days}d away`}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className={`h-1.5 rounded-full overflow-hidden ${isTop ? 'bg-white/20' : 'bg-sand-200'}`}>
+                  <div
+                    className={`h-full rounded-full transition-all ${isTop ? 'bg-white' : barColor}`}
+                    style={{ width: `${ready}%` }}
+                  />
+                </div>
+                <div className="flex justify-between mt-1">
+                  <span className={`text-xs ${isTop ? 'text-white/50' : 'text-ink-soft'}`}>readiness</span>
+                  <span className={`text-xs font-medium ${isTop ? 'text-white/70' : 'text-ink-soft'}`}>{ready}%</span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

@@ -6,6 +6,7 @@ import { Plus, Sparkles, ChevronRight, Package } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import ProfileNudge from '@/components/ProfileNudge';
+import ActionQueue from '@/components/ActionQueue';
 
 export default function Dashboard({ user }) {
   const [showNudge, setShowNudge] = useState(false);
@@ -76,6 +77,11 @@ export default function Dashboard({ user }) {
             />
           </div>
         </Link>
+      )}
+
+      {/* Action Queue */}
+      {events.length > 0 && (
+        <ActionQueue events={events} gifts={gifts} />
       )}
 
       {/* Upcoming events */}
