@@ -83,8 +83,8 @@ export default function WishlistPage({ user }) {
         </div>
         <div className="flex gap-2">
           {shareUrl && (
-            <button onClick={copyShare} className="p-2 rounded-full bg-sand-200 hover:bg-sand-300 transition-all" title="Copy share link">
-              <Share2 className="w-4 h-4 text-ink" />
+            <button onClick={copyShare} className="p-2 rounded-full bg-muted hover:bg-secondary transition-all" title="Copy share link">
+              <Share2 className="w-4 h-4 text-foreground" />
             </button>
           )}
           <button
@@ -105,7 +105,7 @@ export default function WishlistPage({ user }) {
       {showImport && wishlist && <BulkImportWishlist wishlistId={wishlist.id} onClose={() => setShowImport(false)} />}
 
       {shareUrl && (
-        <div className="bg-sand-100 border border-sand-300 rounded-2xl p-3 flex items-center gap-2">
+        <div className="bg-muted border border-border rounded-2xl p-3 flex items-center gap-2">
           <Share2 className="w-4 h-4 text-moss flex-none" />
           <p className="text-xs text-muted-foreground flex-1 truncate">Share: {shareUrl}</p>
           <button onClick={copyShare} className="text-xs text-terracotta font-medium shrink-0">Copy</button>
@@ -113,12 +113,12 @@ export default function WishlistPage({ user }) {
       )}
 
       {showAdd && (
-        <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4 space-y-3">
+        <div className="bg-muted border border-border rounded-2xl p-4 space-y-3">
           <input
             value={newItem.name}
             onChange={e => setNewItem(f => ({ ...f, name: e.target.value }))}
             placeholder="What would you love? *"
-            className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
@@ -126,7 +126,7 @@ export default function WishlistPage({ user }) {
               onChange={e => setNewItem(f => ({ ...f, price: e.target.value }))}
               placeholder="Price hint ($)"
               type="number"
-              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+              className="border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
             />
             <NativePicker
               label="Priority"
@@ -143,13 +143,13 @@ export default function WishlistPage({ user }) {
             value={newItem.link}
             onChange={e => setNewItem(f => ({ ...f, link: e.target.value }))}
             placeholder="Link (optional)"
-            className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
           />
           <div className="flex gap-2">
             <button onClick={addItem} className="flex-1 bg-terracotta text-white py-2 rounded-full text-sm font-heading font-semibold hover:bg-terracotta-dark transition-all">
               Add
             </button>
-            <button onClick={() => setShowAdd(false)} className="px-4 py-2 rounded-full text-sm text-ink-soft hover:bg-sand-200 transition-all">
+            <button onClick={() => setShowAdd(false)} className="px-4 py-2 rounded-full text-sm text-muted-foreground hover:bg-muted transition-all">
               Cancel
             </button>
           </div>
@@ -164,7 +164,7 @@ export default function WishlistPage({ user }) {
       ) : (
         <div className="space-y-3">
           {(wishlist?.items || []).map((item, idx) => (
-            <div key={idx} className="bg-white border border-sand-300 rounded-2xl p-4">
+            <div key={idx} className="bg-card border border-border rounded-2xl p-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <p className="font-heading font-semibold text-foreground">{item.name}</p>
@@ -178,7 +178,7 @@ export default function WishlistPage({ user }) {
                     )}
                   </div>
                 </div>
-                <button onClick={() => removeItem(idx)} className="p-1.5 rounded-full hover:bg-sand-100 text-ink-soft hover:text-terracotta transition-all ml-2">
+                <button onClick={() => removeItem(idx)} className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-terracotta transition-all ml-2">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>

@@ -58,22 +58,22 @@ export default function RestockPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="font-accent text-ink-soft text-lg">always have something ready</p>
-        <h1 className="font-heading font-bold text-2xl text-ink">Restock Ideas</h1>
-        <p className="text-sm text-ink-soft mt-1">Keep a small stash of go-to gifts so you're never scrambling.</p>
+        <p className="font-accent text-muted-foreground text-lg">always have something ready</p>
+        <h1 className="font-heading font-bold text-2xl text-foreground">Restock Ideas</h1>
+        <p className="text-sm text-muted-foreground mt-1">Keep a small stash of go-to gifts so you're never scrambling.</p>
       </div>
 
       {/* Previously bought — restock */}
       {boughtGifts.length > 0 && (
         <div>
-          <h2 className="font-heading font-semibold text-lg text-ink mb-3">You've given before</h2>
+          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">You've given before</h2>
           <div className="space-y-2">
             {boughtGifts.map((g, i) => {
               const amazonUrl = `https://www.amazon.com/s?k=${encodeURIComponent(g.name)}&tag=${AFFILIATE_TAG}`;
               return (
-                <div key={i} className="bg-white border border-sand-300 rounded-2xl p-3 flex items-center gap-3">
+                <div key={i} className="bg-card border border-border rounded-2xl p-3 flex items-center gap-3">
                   <Star className="w-4 h-4 text-butter-dark flex-none" />
-                  <p className="flex-1 font-body text-sm text-ink">{g.name}</p>
+                  <p className="flex-1 font-body text-sm text-foreground">{g.name}</p>
                   <a href={amazonUrl} target="_blank" rel="noreferrer"
                     className="flex items-center gap-1 text-xs text-terracotta hover:text-terracotta-dark">
                     Restock <ExternalLink className="w-3 h-3" />
@@ -88,15 +88,15 @@ export default function RestockPage() {
       {/* Curated staples */}
       {RESTOCK_STAPLES.map(section => (
         <div key={section.category}>
-          <h2 className="font-heading font-semibold text-lg text-ink mb-3">{section.category}</h2>
+          <h2 className="font-heading font-semibold text-lg text-foreground mb-3">{section.category}</h2>
           <div className={`border rounded-2xl p-4 space-y-3 ${section.color}`}>
             {section.items.map((item, i) => {
               const amazonUrl = `https://www.amazon.com/s?k=${encodeURIComponent(item.hint)}&tag=${AFFILIATE_TAG}`;
               return (
-                <div key={i} className="bg-white border border-sand-300 rounded-xl p-3 flex items-start gap-3">
+                <div key={i} className="bg-card border border-border rounded-xl p-3 flex items-start gap-3">
                   <div className="flex-1">
-                    <p className="font-heading font-semibold text-sm text-ink">{item.name}</p>
-                    <p className="text-xs text-ink-soft italic mt-0.5">{item.why}</p>
+                    <p className="font-heading font-semibold text-sm text-foreground">{item.name}</p>
+                    <p className="text-xs text-muted-foreground italic mt-0.5">{item.why}</p>
                   </div>
                   <a href={amazonUrl} target="_blank" rel="noreferrer"
                     className="flex items-center gap-1 text-xs text-terracotta hover:text-terracotta-dark shrink-0 mt-0.5">

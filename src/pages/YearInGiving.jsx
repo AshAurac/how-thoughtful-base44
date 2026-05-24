@@ -19,7 +19,7 @@ function FloatingHeart({ style }) {
 function StatCard({ eyebrow, value, label, delay }) {
   return (
     <div
-      className="bg-white border border-sand-300 rounded-2xl p-5 animate-fade-up"
+      className="bg-card border border-border rounded-2xl p-5 animate-fade-up"
       style={{ animationDelay: `${delay}ms` }}
     >
       <p className="font-accent text-muted-foreground text-base mb-1">{eyebrow}</p>
@@ -114,7 +114,7 @@ export default function YearInGiving({ user }) {
 
         {/* Top person */}
         <div
-          className="bg-sand-100 border border-sand-300 rounded-2xl p-5 animate-fade-up"
+          className="bg-muted border border-border rounded-2xl p-5 animate-fade-up"
           style={{ animationDelay: '1300ms' }}
         >
           <p className="font-accent text-muted-foreground text-base mb-1">most celebrated</p>
@@ -124,7 +124,7 @@ export default function YearInGiving({ user }) {
 
         {/* Busiest month */}
         <div
-          className="bg-sand-100 border border-sand-300 rounded-2xl p-5 animate-fade-up"
+          className="bg-muted border border-border rounded-2xl p-5 animate-fade-up"
           style={{ animationDelay: '1500ms' }}
         >
           <p className="font-accent text-muted-foreground text-base mb-1">busiest month</p>
@@ -135,7 +135,7 @@ export default function YearInGiving({ user }) {
         {/* Intention */}
         {profile?.intention && (
           <div
-            className="bg-gradient-to-br from-terracotta/10 to-moss/10 border border-sand-300 rounded-2xl p-5 animate-fade-up"
+            className="bg-gradient-to-br from-terracotta/10 to-moss/10 border border-border rounded-2xl p-5 animate-fade-up"
             style={{ animationDelay: '1700ms' }}
           >
             <p className="font-accent text-terracotta text-base mb-1">your intention this year</p>

@@ -31,13 +31,13 @@ export default function RecipientDetail() {
   const recipientGifts = gifts.filter(g => eventIds.has(g.event_id));
   const totalSpent = recipientGifts.reduce((s, g) => s + (g.price || 0), 0);
 
-  if (!recipient) return <div className="h-32 bg-sand-200 rounded-2xl animate-pulse" />;
+  if (!recipient) return <div className="h-32 bg-muted rounded-2xl animate-pulse" />;
 
   return (
     <div className="space-y-5 max-w-lg mx-auto">
       <div className="flex items-start gap-3">
-        <button onClick={() => navigate(-1)} className="mt-1 p-2 rounded-full hover:bg-sand-200 transition-all">
-          <ArrowLeft className="w-5 h-5 text-ink" />
+        <button onClick={() => navigate(-1)} className="mt-1 p-2 rounded-full hover:bg-muted transition-all">
+          <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-1">
@@ -56,7 +56,7 @@ export default function RecipientDetail() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white border border-sand-300 rounded-2xl p-3 text-center">
+        <div className="bg-card border border-border rounded-2xl p-3 text-center">
           <p className="font-heading font-bold text-xl text-foreground">{recipientEvents.length}</p>
           <p className="text-xs text-muted-foreground">occasions</p>
         </div>
@@ -72,7 +72,7 @@ export default function RecipientDetail() {
 
       {/* Love language + interests */}
       {(recipient.love_language || (recipient.interests || []).length > 0) && (
-        <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4 space-y-2">
+        <div className="bg-muted border border-border rounded-2xl p-4 space-y-2">
           {recipient.love_language && (
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">Love language:</span>
@@ -104,7 +104,7 @@ export default function RecipientDetail() {
               <a
                 key={event.id}
                 href={`/events/${event.id}`}
-                className="flex items-center gap-3 bg-white border border-sand-300 rounded-2xl p-3 hover:border-terracotta/40 transition-all"
+                className="flex items-center gap-3 bg-card border border-border rounded-2xl p-3 hover:border-terracotta/40 transition-all"
               >
                 <Gift className="w-4 h-4 text-terracotta" />
                 <div className="flex-1">

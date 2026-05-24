@@ -30,7 +30,7 @@ export default function SavedIdeasPage({ user }) {
       </div>
 
       {isLoading ? (
-        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-24 bg-sand-200 rounded-2xl animate-pulse" />)}</div>
+        <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-24 bg-muted rounded-2xl animate-pulse" />)}</div>
       ) : ideas.length === 0 ? (
         <div className="text-center py-12">
           <Bookmark className="w-12 h-12 text-sand-300 mx-auto mb-3" />
@@ -43,7 +43,7 @@ export default function SavedIdeasPage({ user }) {
             const isFree = idea.estimated_price === '$0';
             const amazonUrl = `https://www.amazon.com/s?k=${encodeURIComponent(idea.name)}&tag=${AFFILIATE_TAG}`;
             return (
-              <div key={idea.id} className="bg-white border border-sand-300 rounded-2xl p-4">
+              <div key={idea.id} className="bg-card border border-border rounded-2xl p-4">
                 <div className="flex items-start justify-between mb-1">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -56,7 +56,7 @@ export default function SavedIdeasPage({ user }) {
                   </div>
                   <button
                     onClick={() => deleteMutation.mutate(idea.id)}
-                    className="p-1.5 rounded-full hover:bg-sand-100 text-ink-soft hover:text-terracotta transition-all"
+                    className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-terracotta transition-all"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

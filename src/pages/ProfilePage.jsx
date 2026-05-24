@@ -86,7 +86,7 @@ export default function ProfilePage({ user }) {
     mutation.mutate(form);
   };
 
-  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-sand-200 rounded-2xl animate-pulse" />)}</div>;
+  if (isLoading) return <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />)}</div>;
 
   return (
     <div className="space-y-6 max-w-lg mx-auto">
@@ -174,7 +174,7 @@ export default function ProfilePage({ user }) {
         </div>
 
         {/* Yearly intention */}
-        <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
+        <div className="bg-muted border border-border rounded-2xl p-4">
           <p className="font-accent text-muted-foreground mb-2">this year I want to give more...</p>
           <textarea
             value={form.intention}
