@@ -93,9 +93,15 @@ export default function IdeasPage({ user }) {
   const isLifetime = profile?.premium_type === 'lifetime';
   const aiCredits = profile?.ai_credits || 0;
 
-  // Monthly free usage tracking
+  // Monthly free usage tracking — use localStorage as source of truth for free users
   const currentMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
-  const monthlyUses = profile?.monthly_ai_reset_month === currentMonth ? (profile?.monthly_ai_uses || 0) : 0;
+  const lsKey = `ai_uses_${currentMonth}`;
+  const localUses = parseInt(localStorage.getItem(lsKey) || '0', 10);
+
+  // If premium, use profile data; otherwise fall back to localStorage
+  const monthlyUses = isPremium
+    ? (profile?.monthly_ai_reset_month === currentMonth ? (profile?.monthly_ai_uses || 0) : 0)
+    : localUses;
   const freeUsesRemaining = Math.max(0, 3 - monthlyUses);
   const canUseAI = freeUsesRemaining > 0 || isPremium;
 
@@ -160,23 +166,29 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
       setIdeas(result.ideas || []);
 
       // Update usage tracking
-      const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
-      if (profiles[0]) {
-        if (freeUsesRemaining > 0) {
-          // Increment monthly free uses
-          const newUses = monthlyUses + 1;
-          await base44.entities.UserProfile.update(profiles[0].id, {
-            monthly_ai_uses: newUses,
-            monthly_ai_reset_month: currentMonth,
-          });
-          if (newUses === 3) {
-            toast('That was your 3rd free AI use this month — upgrade for unlimited!');
-          }
-        } else if (isPremium && isLifetime && aiCredits > 0) {
-          // Deduct a credit
-          await base44.entities.UserProfile.update(profiles[0].id, { ai_credits: aiCredits - 1 });
+      if (!isPremium) {
+        // Always track in localStorage for free users
+        const newUses = localUses + 1;
+        localStorage.setItem(lsKey, String(newUses));
+        if (newUses >= 3) {
+          toast('That was your last free AI idea this month — upgrade for unlimited!');
         }
-        queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+      }
+
+      if (user?.email) {
+        const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
+        if (profiles[0]) {
+          if (!isPremium) {
+            const newUses = monthlyUses + 1;
+            await base44.entities.UserProfile.update(profiles[0].id, {
+              monthly_ai_uses: newUses,
+              monthly_ai_reset_month: currentMonth,
+            });
+          } else if (isPremium && isLifetime && aiCredits > 0) {
+            await base44.entities.UserProfile.update(profiles[0].id, { ai_credits: aiCredits - 1 });
+          }
+          queryClient.invalidateQueries({ queryKey: ['userProfile'] });
+        }
       }
     } catch (err) {
       toast.error('Something went wrong. Try again.');

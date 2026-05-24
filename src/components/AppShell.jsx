@@ -4,6 +4,13 @@ import { useState, useRef, useCallback } from 'react';
 import MoreSheet from './MoreSheet';
 import PageTransition from './PageTransition';
 
+// Check how many free AI uses remain this month
+function getFreeUsesRemaining() {
+  const key = `ai_uses_${new Date().toISOString().slice(0, 7)}`;
+  const used = parseInt(localStorage.getItem(key) || '0', 10);
+  return Math.max(0, 3 - used);
+}
+
 const navItems = [
   { path: '/', icon: Home, label: 'Home' },
   { path: '/calendar', icon: Calendar, label: 'Calendar' },
@@ -46,6 +53,7 @@ export default function AppShell({ children, user }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
+  const freeUsesRemaining = getFreeUsesRemaining();
   // Track the last-visited path within each tab so switching back restores it
   const tabHistory = useRef({});
 
@@ -96,13 +104,31 @@ export default function AppShell({ children, user }) {
                 </div>
                 <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
               </Link>
-              <Link
-                to="/profile"
-                className="flex items-center gap-1.5 min-h-[44px] px-2 rounded-full hover:bg-muted transition-all group"
-              >
-                <span className="font-accent text-lg text-muted-foreground group-hover:text-foreground transition-colors">hi, {firstName}</span>
-                <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-              </Link>
+              <div className="flex items-center gap-2">
+                {freeUsesRemaining === 0 && (
+                  <Link
+                    to="/upgrade"
+                    className="text-xs font-heading font-semibold text-terracotta border border-terracotta/40 px-3 py-1.5 rounded-full hover:bg-terracotta hover:text-white transition-all"
+                  >
+                    Upgrade ✨
+                  </Link>
+                )}
+                {freeUsesRemaining > 0 && freeUsesRemaining < 3 && (
+                  <Link
+                    to="/upgrade"
+                    className="text-xs font-body text-muted-foreground hover:text-terracotta transition-colors"
+                  >
+                    {freeUsesRemaining} free left
+                  </Link>
+                )}
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-1.5 min-h-[44px] px-2 rounded-full hover:bg-muted transition-all group"
+                >
+                  <span className="font-accent text-lg text-muted-foreground group-hover:text-foreground transition-colors">hi, {firstName}</span>
+                  <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                </Link>
+              </div>
             </>
           ) : (
             <>
