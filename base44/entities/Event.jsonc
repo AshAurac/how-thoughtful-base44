@@ -71,6 +71,17 @@
       "items": {
         "type": "string"
       }
+    },
+    "collaborator_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails of users who have been invited to collaborate on this event"
+    },
+    "invite_token": {
+      "type": "string",
+      "description": "Unique token used in invite links"
     }
   },
   "required": [

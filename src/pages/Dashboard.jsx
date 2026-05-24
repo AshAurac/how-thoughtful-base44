@@ -36,11 +36,20 @@ export default function Dashboard({ user }) {
     }
   }, [profile]);
 
-  const { data: events = [] } = useQuery({
+  const { data: ownEvents = [] } = useQuery({
     queryKey: ['events', user?.email],
     queryFn: () => base44.entities.Event.filter({ created_by: user?.email }, '-event_date'),
     enabled: !!user?.email,
   });
+
+  const { data: sharedEvents = [] } = useQuery({
+    queryKey: ['sharedEvents', user?.email],
+    queryFn: () => base44.entities.Event.filter({ collaborator_emails: user?.email }, '-event_date'),
+    enabled: !!user?.email,
+  });
+
+  const ownIds = new Set(ownEvents.map(e => e.id));
+  const events = [...ownEvents, ...sharedEvents.filter(e => !ownIds.has(e.id))];
 
   const { data: gifts = [] } = useQuery({
     queryKey: ['gifts', user?.email],

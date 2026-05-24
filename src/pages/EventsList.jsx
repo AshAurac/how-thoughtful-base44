@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { base44 } from '@/api/base44Client';
-import { Plus, Upload } from 'lucide-react';
+import { Plus, Upload, Users } from 'lucide-react';
 import { daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import BulkImportEvents from '@/components/BulkImportEvents';
@@ -16,11 +16,22 @@ export default function EventsList({ user }) {
     await queryClient.invalidateQueries({ queryKey: ['events'] });
   });
 
-  const { data: events = [], isLoading } = useQuery({
+  const { data: ownEvents = [] } = useQuery({
     queryKey: ['events', user?.email],
     queryFn: () => base44.entities.Event.filter({ created_by: user?.email }, 'event_date'),
     enabled: !!user?.email,
   });
+
+  const { data: sharedEvents = [] } = useQuery({
+    queryKey: ['sharedEvents', user?.email],
+    queryFn: () => base44.entities.Event.filter({ collaborator_emails: user?.email }, 'event_date'),
+    enabled: !!user?.email,
+  });
+
+  const isLoading = false;
+  const ownIds = new Set(ownEvents.map(e => e.id));
+  const events = [...ownEvents, ...sharedEvents.filter(e => !ownIds.has(e.id))]
+    .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
   return (
     <div
@@ -86,6 +97,11 @@ export default function EventsList({ user }) {
                   <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                     <span className="font-heading font-semibold text-foreground">{event.recipient_name}</span>
                     <PriorityBadge priority={event.priority} />
+                    {event.created_by !== user?.email && (
+                      <span className="inline-flex items-center gap-1 text-xs bg-moss/20 text-moss-dark px-2 py-0.5 rounded-full font-medium">
+                        <Users className="w-3 h-3" /> Shared
+                      </span>
+                    )}
                   </div>
                   <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')} · {formatEventDate(event.event_date)}</span>
                 </div>

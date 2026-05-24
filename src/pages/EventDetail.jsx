@@ -3,11 +3,12 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, Trash2, Check, ShoppingBag, Gift, Mail, Send, Sparkles, Lightbulb } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Check, Sparkles, Lightbulb } from 'lucide-react';
 import { formatEventDate, daysUntil } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import EventChecklist from '@/components/EventChecklist';
 import GiftBounceAnimation from '@/components/GiftBounceAnimation';
+import ShareEventButton from '@/components/ShareEventButton';
 
 function GiftCheckbox({ checked, onChange, label }) {
   return (
@@ -130,13 +131,13 @@ export default function EventDetail() {
       )}
       {/* Header */}
       <div className="flex items-start gap-3">
-        <button onClick={() => navigate(-1)} className="mt-1 p-2 rounded-full hover:bg-sand-200 transition-all">
-          <ArrowLeft className="w-5 h-5 text-ink" />
+        <button onClick={() => navigate(-1)} className="mt-1 p-2 rounded-full hover:bg-muted transition-all">
+          <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
         <div className="flex-1">
           <p className="font-accent text-muted-foreground text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
           <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
             <PriorityBadge priority={event.priority} />
             <span className="text-sm text-muted-foreground">{formatEventDate(event.event_date)}</span>
             {days !== null && days >= 0 && (
@@ -145,12 +146,15 @@ export default function EventDetail() {
               </span>
             )}
           </div>
+          <div className="mt-2">
+            <ShareEventButton eventId={event.id} collaboratorEmails={event.collaborator_emails || []} />
+          </div>
         </div>
       </div>
 
       {/* Buy-by timeline */}
       {timeline.length > 0 && (
-        <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
+        <div className="bg-muted border border-border rounded-2xl p-4">
           <p className="font-accent text-muted-foreground mb-3">buy-by timeline</p>
           <div className="space-y-2">
             {timeline.map(t => (
@@ -181,12 +185,12 @@ export default function EventDetail() {
         </div>
 
         {showAddGift && (
-          <form onSubmit={handleAddGift} className="bg-sand-100 border border-sand-300 rounded-2xl p-4 mb-3 space-y-3">
+          <form onSubmit={handleAddGift} className="bg-muted border border-border rounded-2xl p-4 mb-3 space-y-3">
             <input
               value={newGift.name}
               onChange={e => setNewGift(g => ({ ...g, name: e.target.value }))}
               placeholder="Gift name *"
-              className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+              className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
               required
             />
             <div className="grid grid-cols-2 gap-2">
@@ -195,20 +199,20 @@ export default function EventDetail() {
                 value={newGift.price}
                 onChange={e => setNewGift(g => ({ ...g, price: e.target.value }))}
                 placeholder="Price ($)"
-                className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+                className="border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
               />
               <input
                 value={newGift.link}
                 onChange={e => setNewGift(g => ({ ...g, link: e.target.value }))}
                 placeholder="Link (optional)"
-                className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+                className="border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
               />
             </div>
             <div className="flex gap-2">
               <button type="submit" className="flex-1 bg-terracotta text-white py-2 rounded-full text-sm font-heading font-semibold hover:bg-terracotta-dark transition-all">
                 Add
               </button>
-              <button type="button" onClick={() => setShowAddGift(false)} className="px-4 py-2 rounded-full text-sm text-ink-soft hover:bg-sand-200 transition-all">
+              <button type="button" onClick={() => setShowAddGift(false)} className="px-4 py-2 rounded-full text-sm text-muted-foreground hover:bg-secondary transition-all">
                 Cancel
               </button>
             </div>
@@ -216,13 +220,13 @@ export default function EventDetail() {
         )}
 
         {gifts.length === 0 && !showAddGift ? (
-          <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4 text-center">
+          <div className="bg-muted border border-border rounded-2xl p-4 text-center">
             <p className="text-sm text-muted-foreground">No gifts yet. Add one above or get ideas below.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {gifts.map(gift => (
-              <div key={gift.id} className="bg-white border border-sand-300 rounded-2xl p-4">
+              <div key={gift.id} className="bg-card border border-border rounded-2xl p-4">
                 <div className="flex items-start justify-between mb-2">
                   <div>
                     <p className="font-heading font-semibold text-foreground">{gift.name}</p>
@@ -233,7 +237,7 @@ export default function EventDetail() {
                   </div>
                   <button
                     onClick={() => deleteGiftMutation.mutate(gift.id)}
-                    className="p-2.5 rounded-full hover:bg-sand-100 text-ink-soft hover:text-terracotta transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
+                    className="p-2.5 rounded-full hover:bg-muted text-muted-foreground hover:text-terracotta transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -272,7 +276,7 @@ export default function EventDetail() {
       <EventChecklist occasion={event.occasion} />
 
       {/* Reflection */}
-      <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
+      <div className="bg-muted border border-border rounded-2xl p-4">
         <p className="font-accent text-muted-foreground mb-2">a moment of gratitude</p>
         {editingReflection ? (
           <div className="space-y-2">
@@ -281,7 +285,7 @@ export default function EventDetail() {
               onChange={e => setReflection(e.target.value)}
               placeholder="What do you appreciate about this person? (20 seconds is enough)"
               rows={3}
-              className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 resize-none"
+              className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50 resize-none"
             />
             <div className="flex gap-2">
               <button
@@ -294,7 +298,7 @@ export default function EventDetail() {
               >
                 Save
               </button>
-              <button onClick={() => setEditingReflection(false)} className="px-4 py-2 rounded-full text-sm text-ink-soft hover:bg-sand-200 transition-all">
+              <button onClick={() => setEditingReflection(false)} className="px-4 py-2 rounded-full text-sm text-muted-foreground hover:bg-secondary transition-all">
                 Cancel
               </button>
             </div>
