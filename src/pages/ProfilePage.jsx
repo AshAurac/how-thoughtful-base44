@@ -2,9 +2,20 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { LogOut, Trash2, AlertTriangle } from 'lucide-react';
+import { LogOut, Trash2, AlertTriangle, Sun, Moon } from 'lucide-react';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
+
+function useDarkMode() {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  const toggle = () => {
+    const next = !isDark;
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+    setIsDark(next);
+  };
+  return [isDark, toggle];
+}
 
 const SKILLS = ['cooking','writing','photography','music','art','gardening','knitting','coding','fitness','yoga','sewing','language','carpentry'];
 
@@ -18,6 +29,7 @@ export default function ProfilePage({ user }) {
   });
   const [profileId, setProfileId] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDark, toggleDark] = useDarkMode();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['userProfile'],
@@ -180,6 +192,21 @@ export default function ProfilePage({ user }) {
           {mutation.isPending ? 'Saving...' : 'Save profile'}
         </button>
       </form>
+
+      {/* Dark mode toggle */}
+      <div className="flex items-center justify-between bg-card border border-border rounded-2xl px-5 py-4">
+        <div className="flex items-center gap-3">
+          {isDark ? <Moon className="w-4 h-4 text-muted-foreground" /> : <Sun className="w-4 h-4 text-muted-foreground" />}
+          <span className="font-body text-sm text-foreground">{isDark ? 'Dark mode' : 'Light mode'}</span>
+        </div>
+        <button
+          type="button"
+          onClick={toggleDark}
+          className={`relative w-11 h-6 rounded-full transition-colors ${isDark ? 'bg-terracotta' : 'bg-border'}`}
+        >
+          <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${isDark ? 'translate-x-5' : 'translate-x-0'}`} />
+        </button>
+      </div>
 
       <button
         onClick={() => base44.auth.logout('/')}

@@ -46,6 +46,12 @@ const RequireAuth = ({ user, children }) => {
 
 function DarkModeSync() {
   useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark' || saved === 'light') {
+      document.documentElement.classList.toggle('dark', saved === 'dark');
+      return;
+    }
+    // Fall back to system preference
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const apply = (dark) => document.documentElement.classList.toggle('dark', dark);
     apply(mq.matches);

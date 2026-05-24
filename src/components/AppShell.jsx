@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft } from 'lucide-react';
+import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft, Settings } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import MoreSheet from './MoreSheet';
 import PageTransition from './PageTransition';
@@ -98,9 +98,10 @@ export default function AppShell({ children, user }) {
               </Link>
               <Link
                 to="/profile"
-                className="font-accent text-lg text-muted-foreground hover:text-foreground transition-colors min-h-[44px] flex items-center"
+                className="flex items-center gap-1.5 min-h-[44px] px-2 rounded-full hover:bg-muted transition-all group"
               >
-                hi, {firstName}
+                <span className="font-accent text-lg text-muted-foreground group-hover:text-foreground transition-colors">hi, {firstName}</span>
+                <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
               </Link>
             </>
           ) : (
