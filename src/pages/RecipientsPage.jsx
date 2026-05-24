@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Upload } from 'lucide-react';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
+import BulkImportRecipients from '@/components/BulkImportRecipients';
 
 export default function RecipientsPage() {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [form, setForm] = useState({ name: '', relationship: '', love_language: '', interests: '', notes: '' });
 
   const { data: recipients = [], isLoading } = useQuery({
@@ -50,12 +52,20 @@ export default function RecipientsPage() {
           <p className="font-accent text-muted-foreground text-lg">the people you love</p>
           <h1 className="font-heading font-bold text-2xl text-foreground">People</h1>
         </div>
-        <button
-          onClick={() => setShowAdd(v => !v)}
-          className="flex items-center gap-2 bg-terracotta text-white px-4 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all"
-        >
-          <Plus className="w-4 h-4" /> Add
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowImport(true)}
+            className="flex items-center gap-1.5 border border-sand-300 text-ink-soft px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-sand-100 transition-all"
+          >
+            <Upload className="w-4 h-4" /> Import
+          </button>
+          <button
+            onClick={() => setShowAdd(v => !v)}
+            className="flex items-center gap-2 bg-terracotta text-white px-4 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all"
+          >
+            <Plus className="w-4 h-4" /> Add
+          </button>
+        </div>
       </div>
 
       {showAdd && (

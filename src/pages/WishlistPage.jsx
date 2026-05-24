@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { Plus, Trash2, Share2, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, Share2, ExternalLink, Upload } from 'lucide-react';
 import NativePicker from '@/components/NativePicker';
+import BulkImportWishlist from '@/components/BulkImportWishlist';
 
 function generateToken() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
@@ -12,6 +13,7 @@ function generateToken() {
 export default function WishlistPage({ user }) {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', description: '', link: '', price: '', priority: 'medium' });
 
   const { data: wishlist } = useQuery({
@@ -86,6 +88,12 @@ export default function WishlistPage({ user }) {
             </button>
           )}
           <button
+            onClick={() => setShowImport(true)}
+            className="flex items-center gap-1.5 border border-border text-muted-foreground px-3 py-2 rounded-full text-sm font-heading font-semibold hover:bg-muted transition-all"
+          >
+            <Upload className="w-4 h-4" /> Import
+          </button>
+          <button
             onClick={() => setShowAdd(v => !v)}
             className="flex items-center gap-1 bg-terracotta text-white px-3 py-2 rounded-full text-sm font-heading font-semibold hover:bg-terracotta-dark transition-all"
           >
@@ -93,6 +101,8 @@ export default function WishlistPage({ user }) {
           </button>
         </div>
       </div>
+
+      {showImport && wishlist && <BulkImportWishlist wishlistId={wishlist.id} onClose={() => setShowImport(false)} />}
 
       {shareUrl && (
         <div className="bg-sand-100 border border-sand-300 rounded-2xl p-3 flex items-center gap-2">
