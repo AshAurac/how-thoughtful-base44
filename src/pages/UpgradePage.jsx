@@ -7,33 +7,37 @@ import { toast } from 'sonner';
 const PRODUCTS = {
   annual: {
     id: 'annual',
-    label: 'Thoughtful+',
+    label: 'Founding Member',
     sublabel: 'Annual',
-    price: '$14.99',
+    price: '$24.99 AUD',
     period: '/ year',
-    description: 'Unlimited AI ideas, smart reminders, full Year in Giving. Cancel any time.',
+    coffeeLine: 'Less than a coffee a month ☕',
+    description: 'Early supporter pricing — locked in for life. Cancel any time.',
     perks: [
-      'Unlimited AI gift ideas',
-      'Smart reminders (30, 14 & 3 days out)',
-      'Full Year in Giving recap',
-      'Priority support',
+      'Unlimited thoughtful gift inspiration',
+      'Smart reminders — 30, 14 & 3 days before every occasion',
+      'Look back on the meaningful moments you created',
+      'Gift inspiration based on how people feel loved',
+      'Everything in Free',
     ],
-    highlight: false,
+    highlight: true,
+    recommended: true,
   },
   lifetime: {
     id: 'lifetime',
-    label: 'Thoughtful+',
-    sublabel: 'Lifetime',
-    price: '$29.99',
+    label: 'Lifetime',
+    sublabel: 'For our earliest believers',
+    price: '$99 AUD',
     period: 'once, forever',
-    description: 'Pay once, own it forever. 200 AI credits included — top up cheaply when you run out.',
+    description: 'Support the mission and never pay again.',
     perks: [
       '200 AI credits included',
       'Smart reminders forever',
-      'Full Year in Giving recap',
+      'Look back on the meaningful moments you created',
       'Cheap credit top-ups when needed',
+      'Priority support',
     ],
-    highlight: true,
+    highlight: false,
   },
 };
 
@@ -108,8 +112,8 @@ export default function UpgradePage({ user }) {
 
       <div className="text-center">
         <p className="font-accent text-2xl text-ink-soft mb-1">upgrade</p>
-        <h1 className="font-heading font-bold text-3xl text-ink">Give better, for life</h1>
-        <p className="text-ink-soft mt-2">One payment. No surprises.</p>
+        <h1 className="font-heading font-bold text-3xl text-ink">Be more thoughtful, for life</h1>
+        <p className="text-ink-soft mt-2">Simple, fair pricing. No surprises.</p>
       </div>
 
       {isPremium && (
@@ -127,53 +131,54 @@ export default function UpgradePage({ user }) {
           <div
             key={plan.id}
             className={`rounded-3xl p-6 relative overflow-hidden ${
-              plan.highlight
-                ? 'bg-gradient-to-br from-ink to-ink/90 text-white'
+              plan.recommended
+                ? 'bg-white border-2 border-terracotta'
                 : 'bg-white border-2 border-sand-300'
             }`}
           >
-            {plan.highlight && (
-              <div className="absolute top-4 right-4 bg-butter text-ink text-xs font-heading font-bold px-3 py-1 rounded-full">
-                Best value
+            {plan.recommended && (
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-terracotta text-white text-xs font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap">
+                Recommended
               </div>
             )}
-            <p className={`font-accent text-lg mb-0.5 ${plan.highlight ? 'text-white/70' : 'text-ink-soft'}`}>
-              {plan.label}
-            </p>
+            <p className="font-heading font-bold text-lg text-ink mb-0.5">{plan.label}</p>
+            <p className="text-xs text-ink-soft mb-2">{plan.sublabel}</p>
             <div className="flex items-baseline gap-1 mb-1">
-              <span className={`font-heading font-bold text-4xl ${plan.highlight ? 'text-white' : 'text-ink'}`}>
-                {plan.price}
-              </span>
-              <span className={plan.highlight ? 'text-white/60' : 'text-ink-soft'}>{plan.period}</span>
+              <span className="font-heading font-bold text-3xl text-ink">{plan.price}</span>
+              <span className="text-ink-soft text-sm">{plan.period}</span>
             </div>
-            <p className={`text-sm mb-4 ${plan.highlight ? 'text-white/60' : 'text-ink-soft'}`}>
-              {plan.description}
-            </p>
+            {plan.coffeeLine && (
+              <p className="text-xs text-terracotta font-medium mb-1">{plan.coffeeLine}</p>
+            )}
+            <p className="text-sm mb-4 text-ink-soft">{plan.description}</p>
             <ul className="space-y-2 mb-5">
               {plan.perks.map(perk => (
-                <li key={perk} className={`flex items-center gap-2 text-sm ${plan.highlight ? 'text-white' : 'text-ink'}`}>
-                  <Check className={`w-4 h-4 flex-shrink-0 ${plan.highlight ? 'text-moss' : 'text-moss'}`} />
+                <li key={perk} className="flex items-center gap-2 text-sm text-ink">
+                  <Check className="w-4 h-4 flex-shrink-0 text-moss" />
                   {perk}
                 </li>
               ))}
             </ul>
             {isPremium ? (
-              <div className={`w-full text-center py-3 rounded-full text-sm font-medium ${
-                plan.highlight ? 'bg-white/10 text-white/60' : 'bg-sand-100 text-ink-soft'
-              }`}>
+              <div className="w-full text-center py-3 rounded-full text-sm font-medium bg-sand-100 text-ink-soft">
                 {isLifetime ? 'Already owned ✓' : (plan.id === 'annual' ? 'Active ✓' : 'Upgrade to Lifetime')}
               </div>
             ) : (
-              <CheckoutButton
-                product={plan.id}
-                user={user}
-                label={plan.highlight ? `Get Lifetime — ${plan.price}` : `Get Annual — ${plan.price}/yr`}
-                className={`w-full py-3.5 rounded-full font-heading font-semibold transition-all hover:-translate-y-0.5 ${
-                  plan.highlight
-                    ? 'bg-terracotta text-white hover:bg-terracotta-dark'
-                    : 'border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white'
-                }`}
-              />
+              <>
+                <CheckoutButton
+                  product={plan.id}
+                  user={user}
+                  label={plan.id === 'annual' ? 'Become a Founding Member' : `Get Lifetime — ${plan.price}`}
+                  className={`w-full py-3.5 rounded-full font-heading font-semibold transition-all hover:-translate-y-0.5 ${
+                    plan.recommended
+                      ? 'bg-terracotta text-white hover:bg-terracotta-dark'
+                      : 'border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white'
+                  }`}
+                />
+                {plan.id === 'annual' && (
+                  <p className="text-center text-xs text-ink-soft mt-2">Cancel any time. No questions asked.</p>
+                )}
+              </>
             )}
           </div>
         ))}

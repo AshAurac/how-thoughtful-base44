@@ -1,43 +1,43 @@
 import { base44 } from '@/api/base44Client';
-import { Gift, Calendar, Sparkles, Bell, Heart, Check, Star, ArrowRight, Package, Laugh, Clock, DollarSign } from 'lucide-react';
+import { Gift, Calendar, Sparkles, Bell, Heart, Check, Star, ArrowRight, Package, Clock, DollarSign, Smile, BookOpen } from 'lucide-react';
 
 const PAIN_POINTS = [
-  { icon: Clock, text: "Realising it's someone's birthday at 11pm the night before" },
-  { icon: DollarSign, text: "Panic-buying something generic because you ran out of time" },
-  { icon: Laugh, text: 'Giving the same gift twice and getting called out for it' },
-  { icon: Package, text: "Gifts arriving late because you forgot to order in time" },
+  { icon: Clock, text: "You remember someone's birthday at 11pm the night before and panic." },
+  { icon: DollarSign, text: "You grab something generic because you ran out of time to think." },
+  { icon: Smile, text: "You care deeply — but remembering every occasion is just a lot to hold." },
+  { icon: Package, text: "Gifts arrive late, or not at all, because life got in the way." },
 ];
 
 const FREE_FEATURES = [
-  'Track unlimited occasions & recipients',
-  '3 free AI gift ideas every month',
-  'Curated gift ideas (always free)',
+  'Keep track of the people and moments that matter most',
+  'Curated gift ideas — always free, always thoughtful',
   'Gift checklist & delivery tracker',
-  'Personal wishlist with shareable link',
-  'Seasonal gift planning calendar',
-  'Budget overview',
+  'Your personal wishlist with a shareable link',
+  'Plan birthdays, anniversaries and special moments ahead of time',
+  'Stay generous without overspending',
+  '3 AI gift ideas each month',
 ];
 
-const ANNUAL_FEATURES = [
+const FOUNDING_FEATURES = [
   'Everything in Free',
-  'Unlimited AI gift ideas',
-  'Smart email reminders (30, 14 & 3 days out)',
-  'Year-in-giving reflection & stats',
-  'Curated catalogs by love language',
-  'Cancel any time',
+  'Unlimited thoughtful gift inspiration',
+  'Smart reminders — 30, 14 & 3 days before every occasion',
+  'Look back on the meaningful moments you created',
+  'Gift inspiration based on how people feel loved',
+  'Lock in your founding price — it will never increase',
 ];
 
 const LIFETIME_FEATURES = [
-  'Everything in Annual',
+  'Everything in Founding Member',
   '200 AI credits included',
   'Pay once, use forever',
-  'Cheap credit top-ups when you run out',
+  'Cheap credit top-ups when needed',
   'Priority support',
 ];
 
 const TESTIMONIALS = [
   { quote: "I used to be the person who forgot birthdays. Now I'm the person everyone asks for gift advice.", name: 'Sarah M.' },
-  { quote: "The 14-day reminder saved me so many times. I actually feel organised about gift-giving now.", name: 'James T.' },
+  { quote: "The 14-day reminder saved me so many times. I actually feel organised about the people I love now.", name: 'James T.' },
   { quote: "My partner thinks I'm incredibly thoughtful. They don't know about How Thoughtful 😅", name: 'Priya K.' },
 ];
 
@@ -54,7 +54,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
-              <Gift className="w-4 h-4 text-white" />
+              <Heart className="w-4 h-4 text-white" />
             </div>
             <span className="font-heading font-bold text-ink">How Thoughtful</span>
           </div>
@@ -62,46 +62,46 @@ export default function LandingPage() {
             onClick={handleSignup}
             className="bg-terracotta text-white px-5 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
           >
-            Get started free
+            Start for free
           </button>
         </div>
       </nav>
 
-      {/* Hero */}
+      {/* Emotional Hero */}
       <section className="px-6 pt-20 pb-16 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 bg-terracotta/10 text-terracotta px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-          <Sparkles className="w-3.5 h-3.5" />
-          Never panic-buy a gift again
+        <div className="inline-flex items-center gap-2 bg-moss/15 text-moss-dark px-4 py-1.5 rounded-full text-sm font-medium mb-8">
+          <Heart className="w-3.5 h-3.5" />
+          A calm system for thoughtful living
         </div>
         <h1 className="font-heading font-bold text-5xl md:text-6xl text-ink leading-tight mb-6">
-          Be the person who{' '}
-          <span className="relative">
-            <span className="text-terracotta">always</span>
-          </span>{' '}
-          gets the gift right
+          Remember the little things<br />
+          <span className="text-terracotta">that matter most</span>
         </h1>
-        <p className="text-xl text-ink-soft leading-relaxed mb-10 max-w-xl mx-auto">
-          How Thoughtful helps you remember every occasion, plan ahead with intention, and give gifts people actually love — without the last-minute stress.
+        <p className="text-xl text-ink-soft leading-relaxed mb-4 max-w-xl mx-auto">
+          How Thoughtful helps you remember the people and occasions you care about — so you can show up for them with warmth, not panic.
+        </p>
+        <p className="text-base text-ink-soft/70 italic font-accent mb-10">
+          Because caring shouldn't rely on memory alone.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <button
             onClick={handleSignup}
             className="flex items-center gap-2 bg-terracotta text-white px-8 py-4 rounded-full font-heading font-bold text-lg hover:bg-terracotta-dark transition-all hover:-translate-y-1 shadow-lg shadow-terracotta/20"
           >
-            Start for free <ArrowRight className="w-5 h-5" />
+            Start being more thoughtful <ArrowRight className="w-5 h-5" />
           </button>
-          <p className="text-sm text-ink-soft">No credit card required</p>
+          <p className="text-sm text-ink-soft">Free forever. No credit card needed.</p>
         </div>
       </section>
 
-      {/* Pain points */}
-      <section className="px-6 py-12 bg-white border-y border-sand-300">
+      {/* Emotional pain points */}
+      <section className="px-6 py-14 bg-white border-y border-sand-300">
         <div className="max-w-3xl mx-auto">
-          <p className="font-accent text-xl text-center text-ink-soft mb-8">sound familiar?</p>
+          <p className="font-accent text-xl text-center text-ink-soft mb-8">you're not alone in this</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {PAIN_POINTS.map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-start gap-3 bg-sand-50 border border-sand-300 rounded-2xl p-4">
-                <div className="w-8 h-8 rounded-full bg-terracotta/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div key={text} className="flex items-start gap-3 bg-sand-50 border border-sand-300 rounded-2xl p-5">
+                <div className="w-9 h-9 rounded-full bg-terracotta/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Icon className="w-4 h-4 text-terracotta" />
                 </div>
                 <p className="text-ink text-sm leading-relaxed">{text}</p>
@@ -109,64 +109,178 @@ export default function LandingPage() {
             ))}
           </div>
           <p className="text-center text-ink-soft mt-8 text-base">
-            You're not a bad gift-giver. You're just <span className="font-semibold text-ink">disorganised</span>. There's a fix for that.
+            You're a caring person. You just need a <span className="font-semibold text-ink">gentle system</span> to hold it all.
           </p>
         </div>
       </section>
 
-      {/* Features showcase */}
-      <section className="px-6 py-20 max-w-5xl mx-auto">
-        <div className="text-center mb-14">
-          <p className="font-accent text-xl text-ink-soft mb-2">how it works</p>
-          <h2 className="font-heading font-bold text-3xl text-ink">Everything you need to give thoughtfully</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* How it relieves mental load */}
+      <section className="px-6 py-16 max-w-3xl mx-auto text-center">
+        <p className="font-accent text-xl text-ink-soft mb-3">how it helps</p>
+        <h2 className="font-heading font-bold text-3xl text-ink mb-4">Less mental load. More genuine connection.</h2>
+        <p className="text-ink-soft leading-relaxed max-w-xl mx-auto text-base">
+          How Thoughtful quietly holds the details — dates, preferences, budgets, love languages — so when a special moment arrives, you're ready. Not scrambling.
+        </p>
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5 text-left">
           {[
-            {
-              icon: Calendar,
-              color: 'bg-terracotta/10 text-terracotta',
-              title: 'Never miss an occasion',
-              desc: 'Add birthdays, anniversaries, graduations — and get reminders at exactly the right time to order online, buy locally, or wrap the gift.',
-            },
-            {
-              icon: Sparkles,
-              color: 'bg-moss/20 text-moss-dark',
-              title: 'AI ideas tailored to them',
-              desc: 'Tell us about the person, their interests, and your budget. Get personalised gift ideas in seconds — not generic Amazon lists.',
-            },
-            {
-              icon: Heart,
-              color: 'bg-butter/40 text-butter-dark',
-              title: 'Give with intention',
-              desc: 'Track love languages, set a giving intention for the year, and reflect on what made people feel truly seen. Thoughtfulness is a skill.',
-            },
-            {
-              icon: Bell,
-              color: 'bg-terracotta/10 text-terracotta',
-              title: 'Smart reminders',
-              desc: 'Get an email 30 days out (order online), 14 days out (buy locally), and 3 days out (time to wrap). Never scramble again.',
-            },
-            {
-              icon: Package,
-              color: 'bg-moss/20 text-moss-dark',
-              title: 'Delivery tracker',
-              desc: 'Track every order from purchased → shipped → delivered. Know exactly where every gift is at any time.',
-            },
-            {
-              icon: Gift,
-              color: 'bg-butter/40 text-butter-dark',
-              title: 'Shareable wishlist',
-              desc: 'Create your own wishlist and share a link with family. No more guessing what you want — and no more duplicates under the tree.',
-            },
-          ].map(({ icon: Icon, color, title, desc }) => (
-            <div key={title} className="bg-white border border-sand-300 rounded-2xl p-6 hover:border-terracotta/30 hover:-translate-y-1 transition-all">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${color}`}>
-                <Icon className="w-5 h-5" />
+            { icon: BookOpen, title: 'Remember everything', desc: 'Store meaningful details about the people you love — interests, love languages, notes from last year.' },
+            { icon: Bell, title: 'Be reminded gently', desc: 'Get a nudge 30, 14, and 3 days before every occasion. Never scramble at the last minute again.' },
+            { icon: Heart, title: 'Give with intention', desc: 'Know what to give, why it matters, and how to make someone feel truly seen.' },
+          ].map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="bg-white border border-sand-300 rounded-2xl p-5">
+              <div className="w-9 h-9 rounded-xl bg-moss/15 flex items-center justify-center mb-3">
+                <Icon className="w-4 h-4 text-moss-dark" />
               </div>
-              <h3 className="font-heading font-semibold text-ink mb-2">{title}</h3>
-              <p className="text-sm text-ink-soft leading-relaxed">{desc}</p>
+              <h3 className="font-heading font-semibold text-ink mb-2 text-sm">{title}</h3>
+              <p className="text-xs text-ink-soft leading-relaxed">{desc}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Feature showcase */}
+      <section className="px-6 py-16 bg-white border-y border-sand-300">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="font-accent text-xl text-ink-soft mb-2">everything you need</p>
+            <h2 className="font-heading font-bold text-3xl text-ink">A thoughtful companion for every occasion</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Calendar,
+                color: 'bg-terracotta/10 text-terracotta',
+                title: 'Never miss a moment',
+                desc: 'Add birthdays, anniversaries, graduations and more. Get reminders at exactly the right time to be ready — not rushed.',
+              },
+              {
+                icon: Sparkles,
+                color: 'bg-moss/15 text-moss-dark',
+                title: 'Thoughtful gift inspiration',
+                desc: 'Personalised ideas based on who they are, what they love, and how they feel cared for. Not generic lists.',
+              },
+              {
+                icon: Heart,
+                color: 'bg-butter/40 text-butter-dark',
+                title: 'Give with intention',
+                desc: 'Track love languages, set a giving intention for the year, and reflect on the moments you created.',
+              },
+              {
+                icon: Bell,
+                color: 'bg-terracotta/10 text-terracotta',
+                title: 'Gentle reminders',
+                desc: "30 days to order online. 14 days to buy locally. 3 days to wrap. You'll always feel prepared, not behind.",
+              },
+              {
+                icon: Package,
+                color: 'bg-moss/15 text-moss-dark',
+                title: 'Track every gift',
+                desc: 'From the idea to delivered. Know exactly where everything is, and never lose track of an order.',
+              },
+              {
+                icon: Gift,
+                color: 'bg-butter/40 text-butter-dark',
+                title: 'Your own wishlist',
+                desc: 'Create a wishlist and share a link with people who love you. No more guessing, no more duplicates.',
+              },
+            ].map(({ icon: Icon, color, title, desc }) => (
+              <div key={title} className="bg-sand-50 border border-sand-300 rounded-2xl p-6 hover:border-terracotta/30 hover:-translate-y-1 transition-all">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${color}`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-heading font-semibold text-ink mb-2">{title}</h3>
+                <p className="text-sm text-ink-soft leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="px-6 py-20 max-w-4xl mx-auto" id="pricing">
+        <div className="text-center mb-12">
+          <p className="font-accent text-xl text-ink-soft mb-2">simple, fair pricing</p>
+          <h2 className="font-heading font-bold text-3xl text-ink">Start for free. Stay as long as you like.</h2>
+          <p className="text-ink-soft mt-3 max-w-md mx-auto">No pressure. The free plan is genuinely useful. Upgrade when it feels right.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {/* Free */}
+          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-ink mb-1">Free</p>
+              <div className="flex items-baseline gap-1">
+                <span className="font-heading font-bold text-3xl text-ink">$0</span>
+                <span className="text-ink-soft text-sm">forever</span>
+              </div>
+              <p className="text-xs text-ink-soft mt-2">Start being more thoughtful today — no commitment needed.</p>
+            </div>
+            <ul className="space-y-2.5 mb-6">
+              {FREE_FEATURES.map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm text-ink">
+                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
+              Start for free
+            </button>
+          </div>
+
+          {/* Founding Member */}
+          <div className="bg-white border-2 border-terracotta rounded-3xl p-7 relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-terracotta text-white text-xs font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap">
+              Recommended
+            </div>
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-ink mb-1">Founding Member</p>
+              <div className="flex items-baseline gap-1">
+                <span className="font-heading font-bold text-3xl text-ink">$24.99</span>
+                <span className="text-ink-soft text-sm">AUD / year</span>
+              </div>
+              <p className="text-xs text-terracotta font-medium mt-1">Less than a coffee a month ☕</p>
+              <p className="text-xs text-ink-soft mt-1">Early supporter pricing — locked in for life.</p>
+            </div>
+            <ul className="space-y-2.5 mb-6">
+              {FOUNDING_FEATURES.map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm text-ink">
+                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
+              Become a Founding Member
+            </button>
+            <p className="text-center text-xs text-ink-soft mt-3">Cancel any time. No questions asked.</p>
+          </div>
+
+          {/* Lifetime */}
+          <div className="bg-ink border-2 border-ink rounded-3xl p-7 relative overflow-hidden">
+            <div className="absolute top-3 right-3 bg-butter text-ink text-xs font-heading font-bold px-2.5 py-0.5 rounded-full">
+              For believers
+            </div>
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-white mb-1">Lifetime</p>
+              <div className="flex items-baseline gap-1">
+                <span className="font-heading font-bold text-3xl text-white">$99</span>
+                <span className="text-white/60 text-sm">AUD, once</span>
+              </div>
+              <p className="text-xs text-white/60 mt-2">Support the mission and never pay again.</p>
+            </div>
+            <ul className="space-y-2.5 mb-6">
+              {LIFETIME_FEATURES.map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm text-white">
+                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
+              Get Lifetime Access
+            </button>
+          </div>
         </div>
       </section>
 
@@ -190,106 +304,23 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section className="px-6 py-20 max-w-4xl mx-auto" id="pricing">
-        <div className="text-center mb-12">
-          <p className="font-accent text-xl text-ink-soft mb-2">simple pricing</p>
-          <h2 className="font-heading font-bold text-3xl text-ink">Start free. Upgrade when you're ready.</h2>
-          <p className="text-ink-soft mt-3">No surprises. No paywalls on the essentials.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Free */}
-          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-ink mb-1">Free</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-ink">$0</span>
-                <span className="text-ink-soft text-sm">forever</span>
-              </div>
-              <p className="text-xs text-ink-soft mt-2">Get organised and try every feature before committing.</p>
-            </div>
-            <ul className="space-y-2 mb-6">
-              {FREE_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
-              Get started free
-            </button>
-          </div>
-
-          {/* Annual */}
-          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-ink mb-1">Annual</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-ink">$14.99</span>
-                <span className="text-ink-soft text-sm">/ year</span>
-              </div>
-              <p className="text-xs text-ink-soft mt-2">Unlimited AI, smart reminders, full features. Cancel any time.</p>
-            </div>
-            <ul className="space-y-2 mb-6">
-              {ANNUAL_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
-              Get Annual
-            </button>
-          </div>
-
-          {/* Lifetime */}
-          <div className="bg-ink border-2 border-ink rounded-3xl p-7 relative overflow-hidden">
-            <div className="absolute top-3 right-3 bg-butter text-ink text-xs font-heading font-bold px-2.5 py-0.5 rounded-full">
-              Best value
-            </div>
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-white mb-1">Lifetime</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-white">$29.99</span>
-                <span className="text-white/60 text-sm">once</span>
-              </div>
-              <p className="text-xs text-white/60 mt-2">Pay once, own it forever. Top up credits cheaply when needed.</p>
-            </div>
-            <ul className="space-y-2 mb-6">
-              {LIFETIME_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-white">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
-              Get Lifetime
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="px-6 py-20 bg-terracotta">
+      {/* Soft CTA */}
+      <section className="px-6 py-20 bg-sand-100">
         <div className="max-w-2xl mx-auto text-center">
-          <p className="font-accent text-2xl text-white/80 mb-3">ready to become that person?</p>
-          <h2 className="font-heading font-bold text-4xl text-white mb-6">
-            The one who always gets it right
+          <p className="font-accent text-2xl text-ink-soft mb-3">ready to show up for the people you love?</p>
+          <h2 className="font-heading font-bold text-4xl text-ink mb-5">
+            Thoughtfulness, remembered.
           </h2>
-          <p className="text-white/80 text-lg mb-10">
-            Join thousands of people who've stopped stressing about gifts and started giving with genuine thought.
+          <p className="text-ink-soft text-lg mb-10 leading-relaxed">
+            Join people who've stopped stressing about gifts and started giving with genuine care — one occasion at a time.
           </p>
           <button
             onClick={handleSignup}
-            className="flex items-center gap-2 bg-white text-terracotta px-10 py-4 rounded-full font-heading font-bold text-lg hover:bg-sand-100 transition-all hover:-translate-y-1 shadow-xl mx-auto"
+            className="flex items-center gap-2 bg-terracotta text-white px-10 py-4 rounded-full font-heading font-bold text-lg hover:bg-terracotta-dark transition-all hover:-translate-y-1 shadow-lg shadow-terracotta/20 mx-auto"
           >
             Create your free account <ArrowRight className="w-5 h-5" />
           </button>
-          <p className="text-white/60 text-sm mt-4">Free forever. No credit card needed.</p>
+          <p className="text-ink-soft/60 text-sm mt-4">Free forever. No credit card needed.</p>
         </div>
       </section>
 
@@ -297,7 +328,7 @@ export default function LandingPage() {
       <footer className="px-6 py-8 bg-ink text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="w-6 h-6 rounded-full bg-terracotta flex items-center justify-center">
-            <Gift className="w-3 h-3 text-white" />
+            <Heart className="w-3 h-3 text-white" />
           </div>
           <span className="font-heading font-bold text-white text-sm">How Thoughtful</span>
         </div>
