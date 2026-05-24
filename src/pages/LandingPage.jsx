@@ -46,6 +46,10 @@ export default function LandingPage() {
     base44.auth.redirectToLogin(window.location.origin);
   };
 
+  const handleLogin = () => {
+    base44.auth.redirectToLogin(window.location.origin);
+  };
+
   return (
     <div className="min-h-screen bg-sand-50 font-body">
 
@@ -58,12 +62,20 @@ export default function LandingPage() {
             </div>
             <span className="font-heading font-bold text-ink">How Thoughtful</span>
           </div>
-          <button
-            onClick={handleSignup}
-            className="bg-terracotta text-white px-5 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
-          >
-            Start for free
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleLogin}
+              className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all"
+            >
+              Log in
+            </button>
+            <button
+              onClick={handleSignup}
+              className="bg-terracotta text-white px-5 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
+            >
+              Start for free
+            </button>
+          </div>
         </div>
       </nav>
 
