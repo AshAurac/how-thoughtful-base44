@@ -112,7 +112,10 @@ export default function BulkImportEvents({ onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-      <div className="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div
+        className="bg-card rounded-t-3xl sm:rounded-3xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl"
+        style={{ paddingBottom: 'var(--safe-bottom)' }}
+      >
         <div className="p-5 border-b border-sand-200 flex items-center justify-between">
           <div>
             <h2 className="font-heading font-bold text-lg text-ink">Bulk Import Events</h2>

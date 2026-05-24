@@ -7,9 +7,12 @@ export default function PaywallModal({ reason, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl">
-        <button onClick={onClose} className="absolute top-4 right-4 p-1 rounded-full hover:bg-sand-100">
-          <X className="w-5 h-5 text-ink-soft" />
+      <div
+        className="relative w-full sm:max-w-md bg-card rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl"
+        style={{ paddingBottom: 'calc(1.5rem + var(--safe-bottom))' }}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-all min-w-[44px] min-h-[44px] flex items-center justify-center">
+          <X className="w-5 h-5 text-muted-foreground" />
         </button>
 
         {isOutOfCredits ? (
