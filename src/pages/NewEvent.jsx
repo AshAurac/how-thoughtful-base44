@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { ArrowLeft } from 'lucide-react';
 import { computeBuyDates } from '@/lib/dateUtils';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
+import NativePicker from '@/components/NativePicker';
 
 const OCCASIONS = ['birthday','anniversary','holiday','graduation','baby_shower','wedding','housewarming','thank_you','just_because','other'];
 const PRIORITIES = ['free','low','medium','high'];
@@ -73,25 +74,21 @@ export default function NewEvent() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-sm font-medium text-ink mb-1">Occasion *</label>
-            <select
+            <NativePicker
+              label="Occasion"
               value={form.occasion}
-              onChange={e => set('occasion', e.target.value)}
-              className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body capitalize"
-            >
-              {OCCASIONS.map(o => (
-                <option key={o} value={o}>{o.replace(/_/g, ' ')}</option>
-              ))}
-            </select>
+              onChange={v => set('occasion', v)}
+              options={OCCASIONS.map(o => ({ value: o, label: o.replace(/_/g, ' ') }))}
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-ink mb-1">Priority</label>
-            <select
+            <NativePicker
+              label="Priority"
               value={form.priority}
-              onChange={e => set('priority', e.target.value)}
-              className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body capitalize"
-            >
-              {PRIORITIES.map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
+              onChange={v => set('priority', v)}
+              options={PRIORITIES.map(p => ({ value: p, label: p }))}
+            />
           </div>
         </div>
 
@@ -131,14 +128,13 @@ export default function NewEvent() {
 
         <div>
           <label className="block text-sm font-medium text-ink mb-1">Their love language</label>
-          <select
+          <NativePicker
+            label="Love language"
             value={form.love_language}
-            onChange={e => set('love_language', e.target.value)}
-            className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
-          >
-            <option value="">Not sure</option>
-            {LOVE_LANGUAGES.map(l => <option key={l.value} value={l.value}>{l.label}</option>)}
-          </select>
+            onChange={v => set('love_language', v)}
+            options={[{ value: '', label: 'Not sure' }, ...LOVE_LANGUAGES.map(l => ({ value: l.value, label: l.label }))]}
+            placeholder="Not sure"
+          />
         </div>
 
         <div>

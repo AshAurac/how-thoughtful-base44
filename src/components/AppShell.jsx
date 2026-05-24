@@ -19,10 +19,14 @@ export default function AppShell({ children, user }) {
   const firstName = user?.full_name?.split(' ')[0] || 'there';
 
   const handleNavClick = (path, e) => {
-    // Reset to root: if already on this tab, scroll to top; if navigating, go there
     if (location.pathname === path) {
+      // Already on root of this tab — just scroll to top
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (location.pathname.startsWith(path) && path !== '/') {
+      // On a sub-page of this tab — navigate back to tab root
+      e.preventDefault();
+      navigate(path);
     }
   };
 

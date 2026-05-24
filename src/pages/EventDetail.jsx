@@ -65,7 +65,18 @@ export default function EventDetail() {
 
   const updateGiftMutation = useMutation({
     mutationFn: ({ giftId, data }) => base44.entities.Gift.update(giftId, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['gifts', id] }),
+    onMutate: async ({ giftId, data }) => {
+      await queryClient.cancelQueries({ queryKey: ['gifts', id] });
+      const previous = queryClient.getQueryData(['gifts', id]);
+      queryClient.setQueryData(['gifts', id], (old = []) =>
+        old.map(g => g.id === giftId ? { ...g, ...data } : g)
+      );
+      return { previous };
+    },
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) queryClient.setQueryData(['gifts', id], ctx.previous);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ['gifts', id] }),
   });
 
   const deleteGiftMutation = useMutation({

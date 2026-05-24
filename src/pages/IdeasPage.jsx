@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Sparkles, Lightbulb, Bookmark, BookmarkCheck, ExternalLink } from 'lucide-react';
 import { getCuratedIdeas } from '@/lib/catalogs';
 import PaywallModal from '@/components/PaywallModal';
+import NativePicker from '@/components/NativePicker';
 
 const AFFILIATE_TAG = 'howthoughtful-20';
 
@@ -246,15 +247,12 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
           className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
         />
         <div className="grid grid-cols-2 gap-3">
-          <select
+          <NativePicker
+            label="Occasion"
             value={occasion}
-            onChange={e => setOccasion(e.target.value)}
-            className="border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
-          >
-            {['birthday','anniversary','holiday','graduation','baby_shower','wedding','thank_you','just_because'].map(o => (
-              <option key={o} value={o}>{o.replace(/_/g, ' ')}</option>
-            ))}
-          </select>
+            onChange={v => setOccasion(v)}
+            options={['birthday','anniversary','holiday','graduation','baby_shower','wedding','thank_you','just_because'].map(o => ({ value: o, label: o.replace(/_/g, ' ') }))}
+          />
           <input
             type="number"
             value={budget}

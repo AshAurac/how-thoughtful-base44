@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { Plus, Sparkles, ChevronRight, Package } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
@@ -9,7 +10,12 @@ import ProfileNudge from '@/components/ProfileNudge';
 import ActionQueue from '@/components/ActionQueue';
 
 export default function Dashboard({ user }) {
+  const queryClient = useQueryClient();
   const [showNudge, setShowNudge] = useState(false);
+
+  const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries();
+  });
 
   const { data: profile } = useQuery({
     queryKey: ['userProfile'],
@@ -45,7 +51,20 @@ export default function Dashboard({ user }) {
   const totalSpent = gifts.reduce((s, g) => s + (g.price || 0) + (g.shipping_cost || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div
+      className="space-y-6"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      {/* Pull-to-refresh indicator */}
+      <div
+        ref={indicatorRef}
+        className="flex justify-center pointer-events-none"
+        style={{ opacity: 0, transition: 'opacity 0.2s', marginBottom: '-1.5rem' }}
+      >
+        <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
+      </div>
       {/* Hero greeting */}
       <div>
         <p className="font-accent text-2xl text-ink-soft mb-1">good to see you</p>

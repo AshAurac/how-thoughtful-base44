@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { base44 } from '@/api/base44Client';
 import { Plus, Upload } from 'lucide-react';
 import { daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
@@ -8,14 +9,33 @@ import PriorityBadge from '@/components/PriorityBadge';
 import BulkImportEvents from '@/components/BulkImportEvents';
 
 export default function EventsList() {
+  const queryClient = useQueryClient();
   const [showImport, setShowImport] = useState(false);
+
+  const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries({ queryKey: ['events'] });
+  });
+
   const { data: events = [], isLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => base44.entities.Event.list('event_date'),
   });
 
   return (
-    <div className="space-y-5">
+    <div
+      className="space-y-5"
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      {/* Pull-to-refresh indicator */}
+      <div
+        ref={indicatorRef}
+        className="flex justify-center pointer-events-none"
+        style={{ opacity: 0, transition: 'opacity 0.2s', marginBottom: '-1.25rem' }}
+      >
+        <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
+      </div>
       <div className="flex items-center justify-between">
         <div>
           <p className="font-accent text-ink-soft text-lg">your occasions</p>
