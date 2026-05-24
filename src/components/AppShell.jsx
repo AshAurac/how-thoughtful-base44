@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft, Settings, Users, PiggyBank, Package, Bookmark, Star, User, Gift } from 'lucide-react';
+import { Home, Calendar, Sparkles, MoreHorizontal, Heart, ArrowLeft, Settings, Users, PiggyBank, Package, Bookmark, Star, User, Gift } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -17,11 +17,10 @@ const navItems = [
   { path: '/', icon: Home, label: 'Home' },
   { path: '/calendar', icon: Calendar, label: 'Calendar' },
   { path: '/ideas', icon: Sparkles, label: 'Ideas' },
-  { path: '/season', icon: Leaf, label: 'Season' },
 ];
 
 // All "More" drawer paths — show brand logo on these too
-const MORE_PATHS = ['/recipients', '/budget', '/deliveries', '/saved', '/group-lists', '/restock', '/wishlist', '/year-in-giving', '/profile'];
+const MORE_PATHS = ['/recipients', '/budget', '/deliveries', '/saved', '/group-lists', '/restock', '/wishlist', '/season', '/year-in-giving', '/profile'];
 
 // Root-level paths — show brand logo on these
 const ROOT_PATHS = ['/', '/calendar', '/ideas', '/season', '/upgrade', ...MORE_PATHS];

@@ -10,7 +10,7 @@ const items = [
   { path: '/restock', icon: Star, label: 'Restock', color: 'text-butter-dark' },
   { path: '/wishlist', icon: Heart, label: 'My Wishlist', color: 'text-moss' },
   { path: '/year-in-giving', icon: Star, label: 'Year in Giving', color: 'text-terracotta' },
-  { path: '/profile', icon: User, label: 'Profile', color: 'text-ink-soft' },
+  { path: '/profile', icon: User, label: 'Profile', color: 'text-muted-foreground' },
 ];
 
 export default function MoreSheet({ open, onClose }) {

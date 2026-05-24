@@ -29,12 +29,12 @@ function IdeaCard({ idea, onSave, saved }) {
         </div>
         <button
           onClick={() => onSave(idea)}
-          className="p-2.5 rounded-full hover:bg-sand-100 transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
+          className="p-2.5 rounded-full hover:bg-muted transition-all min-w-[44px] min-h-[44px] flex items-center justify-center"
         >
           {saved ? (
             <BookmarkCheck className="w-4 h-4 text-terracotta" />
           ) : (
-            <Bookmark className="w-4 h-4 text-ink-soft" />
+            <Bookmark className="w-4 h-4 text-muted-foreground" />
           )}
         </button>
       </div>
@@ -226,7 +226,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
       </div>
 
       {/* Tab toggle */}
-      <div className="flex bg-sand-200 rounded-full p-1 gap-1">
+      <div className="flex bg-muted rounded-full p-1 gap-1">
         <button
           onClick={() => setTab('ai')}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
