@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
-import { Plus, Sparkles, ChevronRight, Package } from 'lucide-react';
+import { Plus, Sparkles, Package } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import ProfileNudge from '@/components/ProfileNudge';
@@ -89,25 +89,7 @@ export default function Dashboard({ user }) {
       {/* Profile nudge */}
       {showNudge && <ProfileNudge />}
 
-      {/* Budget snapshot */}
-      {totalBudget > 0 && (
-        <Link to="/budget" className="block bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-accent text-muted-foreground text-base">this year's giving</span>
-            <ChevronRight className="w-4 h-4 text-ink-soft" />
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="font-heading font-bold text-2xl text-foreground">${totalSpent.toFixed(0)}</span>
-            <span className="text-muted-foreground text-sm">of ${totalBudget.toFixed(0)} planned</span>
-          </div>
-          <div className="mt-2 h-1.5 bg-sand-200 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-terracotta rounded-full transition-all"
-              style={{ width: `${Math.min(100, (totalSpent / totalBudget) * 100)}%` }}
-            />
-          </div>
-        </Link>
-      )}
+
 
       {/* Tabbed views: Coming up / Priority */}
       <div>

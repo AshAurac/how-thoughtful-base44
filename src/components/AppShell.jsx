@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft, Settings } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 import MoreSheet from './MoreSheet';
 import PageTransition from './PageTransition';
 
@@ -54,6 +56,17 @@ export default function AppShell({ children, user }) {
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
   const freeUsesRemaining = getFreeUsesRemaining();
+
+  const { data: profile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ created_by: user?.email });
+      return profiles[0] || null;
+    },
+    enabled: !!user?.email,
+    staleTime: 60_000,
+  });
+  const isPremium = profile?.is_premium;
   // Track the last-visited path within each tab so switching back restores it
   const tabHistory = useRef({});
 
@@ -105,7 +118,7 @@ export default function AppShell({ children, user }) {
                 <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
               </Link>
               <div className="flex items-center gap-2">
-                {!user?.is_premium && (
+                {!isPremium && (
                   <Link
                     to="/upgrade"
                     className="text-xs font-heading font-semibold text-terracotta border border-terracotta/40 px-3 py-1.5 rounded-full hover:bg-terracotta hover:text-white transition-all"

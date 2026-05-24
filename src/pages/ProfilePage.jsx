@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { LogOut, Trash2, AlertTriangle, Sun, Moon } from 'lucide-react';
+import { LogOut, Trash2, AlertTriangle, Sun, Moon, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
 
@@ -192,6 +193,49 @@ export default function ProfilePage({ user }) {
           {mutation.isPending ? 'Saving...' : 'Save profile'}
         </button>
       </form>
+
+      {/* AI Credits bar — lifetime users */}
+      {profile?.is_premium && profile?.premium_type === 'lifetime' && (
+        <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-terracotta" />
+            <span className="font-heading font-semibold text-foreground">AI Credits</span>
+            <span className="ml-auto font-heading font-bold text-foreground">{profile?.ai_credits || 0} left</span>
+          </div>
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <div
+              className="h-full bg-terracotta rounded-full transition-all"
+              style={{ width: `${Math.min(100, ((profile?.ai_credits || 0) / 200) * 100)}%` }}
+            />
+          </div>
+          {(profile?.ai_credits || 0) <= 0 ? (
+            <div className="space-y-2 pt-1">
+              <p className="text-sm text-muted-foreground">You've used all your credits. Top up to keep going:</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: 'credits_50', credits: 50, price: '$2.99' },
+                  { id: 'credits_150', credits: 150, price: '$6.99', best: true },
+                  { id: 'credits_400', credits: 400, price: '$14.99' },
+                ].map(pack => (
+                  <Link
+                    key={pack.id}
+                    to={`/upgrade`}
+                    className={`relative flex flex-col items-center py-3 px-2 rounded-2xl border text-center hover:border-terracotta/50 transition-all ${pack.best ? 'border-terracotta' : 'border-border'}`}
+                  >
+                    {pack.best && (
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-terracotta text-white text-xs px-2 py-0.5 rounded-full font-medium whitespace-nowrap">Best value</span>
+                    )}
+                    <span className="font-heading font-bold text-foreground text-sm mt-1">{pack.price}</span>
+                    <span className="text-xs text-muted-foreground">{pack.credits} credits</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">Each AI idea generation uses 1 credit.</p>
+          )}
+        </div>
+      )}
 
       {/* Dark mode toggle */}
       <div className="flex items-center justify-between bg-card border border-border rounded-2xl px-5 py-4">

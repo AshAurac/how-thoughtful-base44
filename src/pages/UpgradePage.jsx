@@ -105,8 +105,8 @@ export default function UpgradePage({ user }) {
 
       {successProduct && (
         <div className="bg-moss/20 border border-moss rounded-2xl p-4 text-center">
-          <p className="font-heading font-semibold text-ink">🎉 Payment successful! Your account has been upgraded.</p>
-          <p className="text-sm text-ink-soft mt-1">It may take a moment to reflect — refresh if needed.</p>
+          <p className="font-heading font-semibold text-foreground">🎉 Payment successful! Your account has been upgraded.</p>
+          <p className="text-sm text-muted-foreground mt-1">It may take a moment to reflect — refresh if needed.</p>
         </div>
       )}
 
