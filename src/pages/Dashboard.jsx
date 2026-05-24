@@ -66,13 +66,21 @@ export default function Dashboard({ user }) {
         <div className="w-6 h-6 border-2 border-terracotta/40 border-t-terracotta rounded-full animate-spin" />
       </div>
       {/* Hero greeting */}
-      <div>
-        <p className="font-accent text-2xl text-muted-foreground mb-1">good to see you</p>
-        <h1 className="font-heading font-bold text-3xl text-foreground">
-          {upcoming.length > 0
-            ? `${upcoming.length} ${upcoming.length === 1 ? 'occasion' : 'occasions'} coming up`
-            : 'Nothing upcoming — enjoy the peace'}
-        </h1>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex-1">
+          <p className="font-accent text-2xl text-muted-foreground mb-1">good to see you</p>
+          <h1 className="font-heading font-bold text-3xl text-foreground">
+            {upcoming.length > 0
+              ? `${upcoming.length} ${upcoming.length === 1 ? 'occasion' : 'occasions'} coming up`
+              : 'Nothing upcoming — enjoy the peace'}
+          </h1>
+        </div>
+        <Link
+          to="/events/new"
+          className="flex items-center gap-2 bg-terracotta text-white px-4 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 whitespace-nowrap"
+        >
+          <Plus className="w-4 h-4" /> Add
+        </Link>
       </div>
 
       {/* Profile nudge */}
