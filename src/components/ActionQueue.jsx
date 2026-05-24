@@ -75,8 +75,8 @@ export default function ActionQueue({ events, gifts }) {
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-heading font-semibold text-lg text-ink">What to do next</h2>
-        <span className="text-xs text-ink-soft font-body">sorted by priority</span>
+        <h2 className="font-heading font-semibold text-lg text-foreground">What to do next</h2>
+        <span className="text-xs text-muted-foreground font-body">sorted by priority</span>
       </div>
 
       <div className="space-y-2">

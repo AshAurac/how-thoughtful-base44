@@ -67,8 +67,8 @@ export default function Dashboard({ user }) {
       </div>
       {/* Hero greeting */}
       <div>
-        <p className="font-accent text-2xl text-ink-soft mb-1">good to see you</p>
-        <h1 className="font-heading font-bold text-3xl text-ink">
+        <p className="font-accent text-2xl text-muted-foreground mb-1">good to see you</p>
+        <h1 className="font-heading font-bold text-3xl text-foreground">
           {upcoming.length > 0
             ? `${upcoming.length} ${upcoming.length === 1 ? 'occasion' : 'occasions'} coming up`
             : 'Nothing upcoming — enjoy the peace'}
@@ -106,7 +106,7 @@ export default function Dashboard({ user }) {
       {/* Upcoming events */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-heading font-semibold text-lg text-ink">Coming up</h2>
+          <h2 className="font-heading font-semibold text-lg text-foreground">Coming up</h2>
           <Link to="/events/new" className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta-dark font-medium">
             <Plus className="w-4 h-4" /> Add
           </Link>
