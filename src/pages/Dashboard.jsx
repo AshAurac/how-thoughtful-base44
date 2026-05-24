@@ -80,14 +80,14 @@ export default function Dashboard({ user }) {
 
       {/* Budget snapshot */}
       {totalBudget > 0 && (
-        <Link to="/budget" className="block bg-white border border-sand-300 rounded-2xl p-4 hover:border-terracotta/40 transition-all">
+        <Link to="/budget" className="block bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-accent text-ink-soft text-base">this year's giving</span>
+            <span className="font-accent text-muted-foreground text-base">this year's giving</span>
             <ChevronRight className="w-4 h-4 text-ink-soft" />
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-heading font-bold text-2xl text-ink">${totalSpent.toFixed(0)}</span>
-            <span className="text-ink-soft text-sm">of ${totalBudget.toFixed(0)} planned</span>
+            <span className="font-heading font-bold text-2xl text-foreground">${totalSpent.toFixed(0)}</span>
+            <span className="text-muted-foreground text-sm">of ${totalBudget.toFixed(0)} planned</span>
           </div>
           <div className="mt-2 h-1.5 bg-sand-200 rounded-full overflow-hidden">
             <div
@@ -113,9 +113,9 @@ export default function Dashboard({ user }) {
         </div>
 
         {upcoming.length === 0 ? (
-          <div className="bg-sand-100 border border-sand-300 rounded-2xl p-6 text-center">
-            <p className="font-accent text-xl text-ink-soft mb-2">nothing on the horizon</p>
-            <p className="text-sm text-ink-soft mb-4">Add your first occasion and never panic-buy again.</p>
+          <div className="bg-muted border border-border rounded-2xl p-6 text-center">
+            <p className="font-accent text-xl text-muted-foreground mb-2">nothing on the horizon</p>
+            <p className="text-sm text-muted-foreground mb-4">Add your first occasion and never panic-buy again.</p>
             <Link
               to="/events/new"
               className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
@@ -131,20 +131,20 @@ export default function Dashboard({ user }) {
                 <Link
                   key={event.id}
                   to={`/events/${event.id}`}
-                  className="flex items-center gap-3 bg-white border border-sand-300 rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
+                  className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-heading font-semibold text-ink truncate">{event.recipient_name}</span>
+                      <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
                       <PriorityBadge priority={event.priority} />
                     </div>
-                    <span className="text-sm text-ink-soft capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
+                    <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
                   </div>
                   <div className="text-right">
                     <span className={`text-sm font-medium ${urgencyColor(days)}`}>
                       {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
                     </span>
-                    <div className="text-xs text-ink-soft">{formatEventDate(event.event_date)}</div>
+                    <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
                   </div>
                 </Link>
               );
@@ -157,14 +157,14 @@ export default function Dashboard({ user }) {
       {deliveries.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-heading font-semibold text-lg text-ink">On the way</h2>
+            <h2 className="font-heading font-semibold text-lg text-foreground">On the way</h2>
             <Link to="/deliveries" className="text-sm text-terracotta hover:text-terracotta-dark font-medium">See all</Link>
           </div>
           <div className="flex gap-3 overflow-x-auto pb-1">
             {deliveries.map(g => (
-              <div key={g.id} className="flex-none w-44 bg-white border border-sand-300 rounded-2xl p-3">
+              <div key={g.id} className="flex-none w-44 bg-card border border-border rounded-2xl p-3">
                 <Package className="w-4 h-4 text-moss mb-2" />
-                <p className="font-body font-medium text-sm text-ink truncate">{g.name}</p>
+                <p className="font-body font-medium text-sm text-foreground truncate">{g.name}</p>
                 <span className={`text-xs mt-1 inline-block px-2 py-0.5 rounded-full ${
                   g.delivery_status === 'shipped' ? 'bg-butter/30 text-butter-dark' : 'bg-sand-200 text-ink-soft'
                 }`}>

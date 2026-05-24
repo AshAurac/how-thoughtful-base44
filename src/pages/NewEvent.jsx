@@ -54,26 +54,26 @@ export default function NewEvent() {
           <ArrowLeft className="w-5 h-5 text-ink" />
         </button>
         <div>
-          <p className="font-accent text-ink-soft">new</p>
-          <h1 className="font-heading font-bold text-2xl text-ink">Add Occasion</h1>
+          <p className="font-accent text-muted-foreground">new</p>
+          <h1 className="font-heading font-bold text-2xl text-foreground">Add Occasion</h1>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-ink mb-1">Who is this for? *</label>
+          <label className="block text-sm font-medium text-foreground mb-1">Who is this for? *</label>
           <input
             value={form.recipient_name}
             onChange={e => set('recipient_name', e.target.value)}
             placeholder="e.g. Mom, Alex, Sarah"
-            className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+            className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
             required
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Occasion *</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Occasion *</label>
             <NativePicker
               label="Occasion"
               value={form.occasion}
@@ -82,7 +82,7 @@ export default function NewEvent() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Priority</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Priority</label>
             <NativePicker
               label="Priority"
               value={form.priority}
@@ -93,41 +93,41 @@ export default function NewEvent() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ink mb-1">Date *</label>
+          <label className="block text-sm font-medium text-foreground mb-1">Date *</label>
           <input
             type="date"
             value={form.event_date}
             onChange={e => set('event_date', e.target.value)}
-            className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+            className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
             required
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Budget ($)</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Budget ($)</label>
             <input
               type="number"
               value={form.budget}
               onChange={e => set('budget', e.target.value)}
               placeholder="0"
-              className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+              className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ink mb-1">Age / Years</label>
+            <label className="block text-sm font-medium text-foreground mb-1">Age / Years</label>
             <input
               type="number"
               value={form.age_or_years}
               onChange={e => set('age_or_years', e.target.value)}
               placeholder="Optional"
-              className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+              className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ink mb-1">Their love language</label>
+          <label className="block text-sm font-medium text-foreground mb-1">Their love language</label>
           <NativePicker
             label="Love language"
             value={form.love_language}
@@ -138,13 +138,13 @@ export default function NewEvent() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ink mb-1">Notes</label>
+          <label className="block text-sm font-medium text-foreground mb-1">Notes</label>
           <textarea
             value={form.notes}
             onChange={e => set('notes', e.target.value)}
             placeholder="Ideas, context, anything..."
             rows={3}
-            className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body resize-none"
+            className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body resize-none"
           />
         </div>
 
@@ -156,7 +156,7 @@ export default function NewEvent() {
             onChange={e => set('recurring', e.target.checked)}
             className="w-4 h-4 accent-terracotta"
           />
-          <label htmlFor="recurring" className="text-sm text-ink font-body">Repeats every year</label>
+          <label htmlFor="recurring" className="text-sm text-foreground font-body">Repeats every year</label>
         </div>
 
         <button

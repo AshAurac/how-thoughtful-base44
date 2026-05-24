@@ -45,9 +45,9 @@ export default function RecipientDetail() {
               {recipient.name?.[0]?.toUpperCase()}
             </div>
             <div>
-              <h1 className="font-heading font-bold text-2xl text-ink">{recipient.name}</h1>
+              <h1 className="font-heading font-bold text-2xl text-foreground">{recipient.name}</h1>
               {recipient.relationship && (
-                <p className="text-sm text-ink-soft capitalize">{recipient.relationship}</p>
+                <p className="text-sm text-muted-foreground capitalize">{recipient.relationship}</p>
               )}
             </div>
           </div>
@@ -57,16 +57,16 @@ export default function RecipientDetail() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="bg-white border border-sand-300 rounded-2xl p-3 text-center">
-          <p className="font-heading font-bold text-xl text-ink">{recipientEvents.length}</p>
-          <p className="text-xs text-ink-soft">occasions</p>
+          <p className="font-heading font-bold text-xl text-foreground">{recipientEvents.length}</p>
+          <p className="text-xs text-muted-foreground">occasions</p>
         </div>
-        <div className="bg-white border border-sand-300 rounded-2xl p-3 text-center">
-          <p className="font-heading font-bold text-xl text-ink">{recipientGifts.filter(g => g.bought).length}</p>
-          <p className="text-xs text-ink-soft">gifts given</p>
+        <div className="bg-card border border-border rounded-2xl p-3 text-center">
+          <p className="font-heading font-bold text-xl text-foreground">{recipientGifts.filter(g => g.bought).length}</p>
+          <p className="text-xs text-muted-foreground">gifts given</p>
         </div>
-        <div className="bg-white border border-sand-300 rounded-2xl p-3 text-center">
+        <div className="bg-card border border-border rounded-2xl p-3 text-center">
           <p className="font-heading font-bold text-xl text-terracotta">${Math.round(totalSpent)}</p>
-          <p className="text-xs text-ink-soft">total spent</p>
+          <p className="text-xs text-muted-foreground">total spent</p>
         </div>
       </div>
 
@@ -75,8 +75,8 @@ export default function RecipientDetail() {
         <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4 space-y-2">
           {recipient.love_language && (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-ink-soft">Love language:</span>
-              <span className="text-xs bg-white border border-sand-300 px-2.5 py-1 rounded-full text-ink capitalize">
+              <span className="text-xs text-muted-foreground">Love language:</span>
+              <span className="text-xs bg-card border border-border px-2.5 py-1 rounded-full text-foreground capitalize">
                 {recipient.love_language.replace(/_/g, ' ')}
               </span>
             </div>
@@ -84,7 +84,7 @@ export default function RecipientDetail() {
           {recipient.interests?.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {recipient.interests.map(i => (
-                <span key={i} className="text-xs bg-white border border-sand-300 px-2.5 py-1 rounded-full text-ink">
+                <span key={i} className="text-xs bg-card border border-border px-2.5 py-1 rounded-full text-foreground">
                   {i}
                 </span>
               ))}
@@ -95,9 +95,9 @@ export default function RecipientDetail() {
 
       {/* Events */}
       <div>
-        <h2 className="font-heading font-semibold text-lg text-ink mb-3">Occasions</h2>
+        <h2 className="font-heading font-semibold text-lg text-foreground mb-3">Occasions</h2>
         {recipientEvents.length === 0 ? (
-          <p className="text-sm text-ink-soft">No events yet for {recipient.name}.</p>
+          <p className="text-sm text-muted-foreground">No events yet for {recipient.name}.</p>
         ) : (
           <div className="space-y-2">
             {recipientEvents.map(event => (
@@ -108,10 +108,10 @@ export default function RecipientDetail() {
               >
                 <Gift className="w-4 h-4 text-terracotta" />
                 <div className="flex-1">
-                  <p className="font-medium text-ink text-sm capitalize">{event.occasion?.replace(/_/g, ' ')}</p>
-                  <p className="text-xs text-ink-soft">{formatEventDate(event.event_date)}</p>
+                  <p className="font-medium text-foreground text-sm capitalize">{event.occasion?.replace(/_/g, ' ')}</p>
+                  <p className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</p>
                 </div>
-                {event.budget > 0 && <span className="text-xs text-ink-soft">${event.budget}</span>}
+                {event.budget > 0 && <span className="text-xs text-muted-foreground">${event.budget}</span>}
               </a>
             ))}
           </div>

@@ -75,8 +75,8 @@ export default function WishlistPage({ user }) {
     <div className="space-y-5 max-w-lg mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-accent text-ink-soft text-lg">what you'd love</p>
-          <h1 className="font-heading font-bold text-2xl text-ink">My Wishlist</h1>
+          <p className="font-accent text-muted-foreground text-lg">what you'd love</p>
+          <h1 className="font-heading font-bold text-2xl text-foreground">My Wishlist</h1>
         </div>
         <div className="flex gap-2">
           {shareUrl && (
@@ -96,7 +96,7 @@ export default function WishlistPage({ user }) {
       {shareUrl && (
         <div className="bg-sand-100 border border-sand-300 rounded-2xl p-3 flex items-center gap-2">
           <Share2 className="w-4 h-4 text-moss flex-none" />
-          <p className="text-xs text-ink-soft flex-1 truncate">Share: {shareUrl}</p>
+          <p className="text-xs text-muted-foreground flex-1 truncate">Share: {shareUrl}</p>
           <button onClick={copyShare} className="text-xs text-terracotta font-medium shrink-0">Copy</button>
         </div>
       )}
@@ -146,8 +146,8 @@ export default function WishlistPage({ user }) {
 
       {(wishlist?.items || []).length === 0 && !showAdd ? (
         <div className="text-center py-12">
-          <p className="font-accent text-2xl text-ink-soft mb-2">your wishlist is empty</p>
-          <p className="text-sm text-ink-soft">Add what you'd love — share the link with people who ask.</p>
+          <p className="font-accent text-2xl text-muted-foreground mb-2">your wishlist is empty</p>
+          <p className="text-sm text-muted-foreground">Add what you'd love — share the link with people who ask.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -155,10 +155,10 @@ export default function WishlistPage({ user }) {
             <div key={idx} className="bg-white border border-sand-300 rounded-2xl p-4">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <p className="font-heading font-semibold text-ink">{item.name}</p>
-                  {item.description && <p className="text-sm text-ink-soft mt-0.5">{item.description}</p>}
+                  <p className="font-heading font-semibold text-foreground">{item.name}</p>
+                  {item.description && <p className="text-sm text-muted-foreground mt-0.5">{item.description}</p>}
                   <div className="flex items-center gap-3 mt-1">
-                    {item.price && <p className="text-sm text-ink-soft">~${item.price}</p>}
+                    {item.price && <p className="text-sm text-muted-foreground">~${item.price}</p>}
                     {item.link && (
                       <a href={item.link} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-xs text-terracotta hover:text-terracotta-dark">
                         View <ExternalLink className="w-3 h-3" />

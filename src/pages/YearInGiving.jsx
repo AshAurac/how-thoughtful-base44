@@ -22,9 +22,9 @@ function StatCard({ eyebrow, value, label, delay }) {
       className="bg-white border border-sand-300 rounded-2xl p-5 animate-fade-up"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <p className="font-accent text-ink-soft text-base mb-1">{eyebrow}</p>
-      <p className="font-heading font-bold text-3xl text-ink">{value}</p>
-      <p className="text-sm text-ink-soft mt-0.5">{label}</p>
+      <p className="font-accent text-muted-foreground text-base mb-1">{eyebrow}</p>
+      <p className="font-heading font-bold text-3xl text-foreground">{value}</p>
+      <p className="text-sm text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
@@ -98,8 +98,8 @@ export default function YearInGiving({ user }) {
       <div className="relative z-10 space-y-6">
         <div className="text-center pt-4">
           <p className="font-accent text-2xl text-terracotta mb-2">your {year}</p>
-          <h1 className="font-heading font-bold text-4xl text-ink">Year in Giving</h1>
-          <p className="text-ink-soft mt-2">
+          <h1 className="font-heading font-bold text-4xl text-foreground">Year in Giving</h1>
+          <p className="text-muted-foreground mt-2">
             {firstName}, here's how you showed up for the people you love.
           </p>
         </div>
@@ -117,9 +117,9 @@ export default function YearInGiving({ user }) {
           className="bg-sand-100 border border-sand-300 rounded-2xl p-5 animate-fade-up"
           style={{ animationDelay: '1300ms' }}
         >
-          <p className="font-accent text-ink-soft text-base mb-1">most celebrated</p>
-          <p className="font-heading font-bold text-2xl text-ink">{topPerson}</p>
-          <p className="text-sm text-ink-soft mt-0.5">{recipientCount[topPerson] || 0} occasion{(recipientCount[topPerson] || 0) !== 1 ? 's' : ''} this year</p>
+          <p className="font-accent text-muted-foreground text-base mb-1">most celebrated</p>
+          <p className="font-heading font-bold text-2xl text-foreground">{topPerson}</p>
+          <p className="text-sm text-muted-foreground mt-0.5">{recipientCount[topPerson] || 0} occasion{(recipientCount[topPerson] || 0) !== 1 ? 's' : ''} this year</p>
         </div>
 
         {/* Busiest month */}
@@ -127,9 +127,9 @@ export default function YearInGiving({ user }) {
           className="bg-sand-100 border border-sand-300 rounded-2xl p-5 animate-fade-up"
           style={{ animationDelay: '1500ms' }}
         >
-          <p className="font-accent text-ink-soft text-base mb-1">busiest month</p>
-          <p className="font-heading font-bold text-2xl text-ink">{busiestMonth}</p>
-          <p className="text-sm text-ink-soft mt-0.5">{monthCount[busiestMonthIdx] || 0} occasions</p>
+          <p className="font-accent text-muted-foreground text-base mb-1">busiest month</p>
+          <p className="font-heading font-bold text-2xl text-foreground">{busiestMonth}</p>
+          <p className="text-sm text-muted-foreground mt-0.5">{monthCount[busiestMonthIdx] || 0} occasions</p>
         </div>
 
         {/* Intention */}
@@ -139,7 +139,7 @@ export default function YearInGiving({ user }) {
             style={{ animationDelay: '1700ms' }}
           >
             <p className="font-accent text-terracotta text-base mb-1">your intention this year</p>
-            <p className="font-heading font-semibold text-ink text-lg">"{profile.intention}"</p>
+            <p className="font-heading font-semibold text-foreground text-lg">"{profile.intention}"</p>
           </div>
         )}
 
@@ -148,10 +148,10 @@ export default function YearInGiving({ user }) {
           className="text-center py-6 animate-fade-up"
           style={{ animationDelay: '1900ms' }}
         >
-          <p className="font-accent text-xl text-ink-soft leading-relaxed">
+          <p className="font-accent text-xl text-muted-foreground leading-relaxed">
             "Thank you for being thoughtful."
           </p>
-          <p className="text-sm text-ink-soft mt-2">
+          <p className="text-sm text-muted-foreground mt-2">
             — from {yearEvents.length} people, in spirit ♥
           </p>
         </div>

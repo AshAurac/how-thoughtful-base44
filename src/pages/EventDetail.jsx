@@ -16,7 +16,7 @@ function GiftCheckbox({ checked, onChange, label }) {
       className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm transition-all border min-h-[44px] ${
         checked
           ? 'bg-moss/20 text-moss-dark border-moss/30'
-          : 'bg-sand-100 text-ink-soft border-sand-300 hover:bg-sand-200'
+          : 'bg-muted text-muted-foreground border-border hover:bg-secondary'
       }`}
     >
       <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${checked ? 'bg-moss border-moss' : 'border-sand-300'}`}>
@@ -90,7 +90,7 @@ export default function EventDetail() {
   if (loadingEvent) {
     return <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 bg-sand-200 rounded-2xl animate-pulse" />)}</div>;
   }
-  if (!event) return <div className="text-center py-12 text-ink-soft">Event not found</div>;
+  if (!event) return <div className="text-center py-12 text-muted-foreground">Event not found</div>;
 
   const days = daysUntil(event.event_date);
 
@@ -134,13 +134,13 @@ export default function EventDetail() {
           <ArrowLeft className="w-5 h-5 text-ink" />
         </button>
         <div className="flex-1">
-          <p className="font-accent text-ink-soft text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
-          <h1 className="font-heading font-bold text-2xl text-ink">{event.recipient_name}</h1>
+          <p className="font-accent text-muted-foreground text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
+          <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
           <div className="flex items-center gap-2 mt-1">
             <PriorityBadge priority={event.priority} />
-            <span className="text-sm text-ink-soft">{formatEventDate(event.event_date)}</span>
+            <span className="text-sm text-muted-foreground">{formatEventDate(event.event_date)}</span>
             {days !== null && days >= 0 && (
-              <span className={`text-sm font-medium ${days <= 7 ? 'text-terracotta' : 'text-ink-soft'}`}>
+              <span className={`text-sm font-medium ${days <= 7 ? 'text-terracotta' : 'text-muted-foreground'}`}>
                 {days === 0 ? 'Today!' : `${days} days away`}
               </span>
             )}
@@ -151,14 +151,14 @@ export default function EventDetail() {
       {/* Buy-by timeline */}
       {timeline.length > 0 && (
         <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
-          <p className="font-accent text-ink-soft mb-3">buy-by timeline</p>
+          <p className="font-accent text-muted-foreground mb-3">buy-by timeline</p>
           <div className="space-y-2">
             {timeline.map(t => (
               <div key={t.label} className="flex items-center justify-between">
-                <span className="text-sm text-ink font-medium">{t.label}</span>
+                <span className="text-sm text-foreground font-medium">{t.label}</span>
                 <span className={`text-sm font-medium ${
                   t.days !== null && t.days <= 3 ? 'text-terracotta' :
-                  t.days !== null && t.days <= 7 ? 'text-butter-dark' : 'text-ink-soft'
+                  t.days !== null && t.days <= 7 ? 'text-butter-dark' : 'text-muted-foreground'
                 }`}>
                   {t.days !== null && t.days < 0 ? 'Passed' : t.days === 0 ? 'Today' : t.days !== null ? `in ${t.days}d` : formatEventDate(t.date)}
                 </span>
@@ -171,7 +171,7 @@ export default function EventDetail() {
       {/* Gifts */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-heading font-semibold text-lg text-ink">Gifts</h2>
+          <h2 className="font-heading font-semibold text-lg text-foreground">Gifts</h2>
           <button
             onClick={() => setShowAddGift(v => !v)}
             className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta-dark font-medium"
@@ -217,7 +217,7 @@ export default function EventDetail() {
 
         {gifts.length === 0 && !showAddGift ? (
           <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4 text-center">
-            <p className="text-sm text-ink-soft">No gifts yet. Add one above or get ideas below.</p>
+            <p className="text-sm text-muted-foreground">No gifts yet. Add one above or get ideas below.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -225,8 +225,8 @@ export default function EventDetail() {
               <div key={gift.id} className="bg-white border border-sand-300 rounded-2xl p-4">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="font-heading font-semibold text-ink">{gift.name}</p>
-                    {gift.price > 0 && <p className="text-sm text-ink-soft">${gift.price}</p>}
+                    <p className="font-heading font-semibold text-foreground">{gift.name}</p>
+                    {gift.price > 0 && <p className="text-sm text-muted-foreground">${gift.price}</p>}
                     {gift.link && (
                       <a href={gift.link} target="_blank" rel="noreferrer" className="text-xs text-terracotta hover:underline">View link</a>
                     )}
@@ -261,7 +261,7 @@ export default function EventDetail() {
         </Link>
         <Link
           to={`/ideas?event_id=${event.id}&recipient=${encodeURIComponent(event.recipient_name)}&tab=curated`}
-          className="flex items-center justify-center gap-2 bg-sand-100 border border-sand-300 text-ink py-3 rounded-2xl font-heading font-semibold text-sm hover:bg-sand-200 transition-all hover:-translate-y-0.5"
+          className="flex items-center justify-center gap-2 bg-muted border border-border text-foreground py-3 rounded-2xl font-heading font-semibold text-sm hover:bg-secondary transition-all hover:-translate-y-0.5"
         >
           <Lightbulb className="w-4 h-4 text-moss" />
           Free ideas
@@ -273,7 +273,7 @@ export default function EventDetail() {
 
       {/* Reflection */}
       <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
-        <p className="font-accent text-ink-soft mb-2">a moment of gratitude</p>
+        <p className="font-accent text-muted-foreground mb-2">a moment of gratitude</p>
         {editingReflection ? (
           <div className="space-y-2">
             <textarea
@@ -302,9 +302,9 @@ export default function EventDetail() {
         ) : (
           <div onClick={() => { setReflection(event.reflection || ''); setEditingReflection(true); }} className="cursor-pointer">
             {event.reflection ? (
-              <p className="text-sm text-ink italic">"{event.reflection}"</p>
+              <p className="text-sm text-foreground italic">"{event.reflection}"</p>
             ) : (
-              <p className="text-sm text-ink-soft">Tap to write a 20-second note about why you're grateful for them.</p>
+              <p className="text-sm text-muted-foreground">Tap to write a 20-second note about why you're grateful for them.</p>
             )}
           </div>
         )}

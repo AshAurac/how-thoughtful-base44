@@ -33,8 +33,8 @@ export default function RecipientsPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-accent text-ink-soft text-lg">the people you love</p>
-          <h1 className="font-heading font-bold text-2xl text-ink">People</h1>
+          <p className="font-accent text-muted-foreground text-lg">the people you love</p>
+          <h1 className="font-heading font-bold text-2xl text-foreground">People</h1>
         </div>
         <button
           onClick={() => setShowAdd(v => !v)}
@@ -50,7 +50,7 @@ export default function RecipientsPage() {
           className="bg-sand-100 border border-sand-300 rounded-2xl p-4 space-y-3"
         >
           <div className="flex items-center justify-between mb-1">
-            <h3 className="font-heading font-semibold text-ink">Add person</h3>
+            <h3 className="font-heading font-semibold text-foreground">Add person</h3>
             <button type="button" onClick={() => setShowAdd(false)}><X className="w-4 h-4 text-ink-soft" /></button>
           </div>
           <input
@@ -92,8 +92,8 @@ export default function RecipientsPage() {
         <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-sand-200 rounded-2xl animate-pulse" />)}</div>
       ) : recipients.length === 0 ? (
         <div className="text-center py-12">
-          <p className="font-accent text-2xl text-ink-soft mb-2">no one yet</p>
-          <p className="text-sm text-ink-soft">Recipients are added automatically when you create events.</p>
+          <p className="font-accent text-2xl text-muted-foreground mb-2">no one yet</p>
+          <p className="text-sm text-muted-foreground">Recipients are added automatically when you create events.</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -107,11 +107,11 @@ export default function RecipientsPage() {
                 {r.name?.[0]?.toUpperCase()}
               </div>
               <div className="flex-1">
-                <p className="font-heading font-semibold text-ink">{r.name}</p>
-                {r.relationship && <p className="text-sm text-ink-soft capitalize">{r.relationship}</p>}
+                <p className="font-heading font-semibold text-foreground">{r.name}</p>
+                {r.relationship && <p className="text-sm text-muted-foreground capitalize">{r.relationship}</p>}
               </div>
               {r.love_language && (
-                <span className="text-xs bg-sand-200 text-ink-soft px-2.5 py-1 rounded-full">
+                <span className="text-xs bg-secondary text-muted-foreground px-2.5 py-1 rounded-full">
                   {r.love_language.replace(/_/g, ' ')}
                 </span>
               )}

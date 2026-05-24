@@ -32,15 +32,15 @@ export default function DeliveriesPage() {
   return (
     <div className="space-y-5">
       <div>
-        <p className="font-accent text-ink-soft text-lg">on the way</p>
-        <h1 className="font-heading font-bold text-2xl text-ink">Deliveries</h1>
+        <p className="font-accent text-muted-foreground text-lg">on the way</p>
+        <h1 className="font-heading font-bold text-2xl text-foreground">Deliveries</h1>
       </div>
 
       {activeDeliveries.length === 0 ? (
         <div className="text-center py-12">
           <Package className="w-12 h-12 text-sand-300 mx-auto mb-3" />
-          <p className="font-accent text-xl text-ink-soft">nothing in transit</p>
-          <p className="text-sm text-ink-soft mt-1">When you mark a gift as ordered, it'll appear here.</p>
+          <p className="font-accent text-xl text-muted-foreground">nothing in transit</p>
+          <p className="text-sm text-muted-foreground mt-1">When you mark a gift as ordered, it'll appear here.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -48,12 +48,12 @@ export default function DeliveriesPage() {
             <div key={gift.id} className="bg-white border border-sand-300 rounded-2xl p-4">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <p className="font-heading font-semibold text-ink">{gift.name}</p>
+                  <p className="font-heading font-semibold text-foreground">{gift.name}</p>
                   {gift.order_number && (
-                    <p className="text-xs text-ink-soft">Order: {gift.order_number}</p>
+                    <p className="text-xs text-muted-foreground">Order: {gift.order_number}</p>
                   )}
                   {gift.expected_arrival && (
-                    <p className="text-xs text-ink-soft">Expected: {gift.expected_arrival}</p>
+                    <p className="text-xs text-muted-foreground">Expected: {gift.expected_arrival}</p>
                   )}
                 </div>
                 {gift.tracking_url && (
@@ -75,7 +75,7 @@ export default function DeliveriesPage() {
                     className={`px-3 py-1 rounded-full text-xs font-medium transition-all capitalize ${
                       gift.delivery_status === status
                         ? STATUS_COLORS[status]
-                        : 'bg-sand-100 text-ink-soft hover:bg-sand-200'
+                        : 'bg-muted text-muted-foreground hover:bg-secondary'
                     }`}
                   >
                     {status}

@@ -14,17 +14,17 @@ function IdeaCard({ idea, onSave, saved }) {
   const isFree = idea.estimated_price === '$0' || idea.is_free;
 
   return (
-    <div className="bg-white border border-sand-300 rounded-2xl p-4 hover:border-terracotta/40 transition-all">
+    <div className="bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all">
       <div className="flex items-start justify-between mb-2">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-heading font-semibold text-ink text-sm">{idea.name}</h3>
+            <h3 className="font-heading font-semibold text-foreground text-sm">{idea.name}</h3>
             {isFree && (
               <span className="px-2 py-0.5 bg-moss/20 text-moss-dark text-xs rounded-full font-medium">free</span>
             )}
           </div>
           {idea.estimated_price && !isFree && (
-            <span className="text-xs text-ink-soft">{idea.estimated_price}</span>
+            <span className="text-xs text-muted-foreground">{idea.estimated_price}</span>
           )}
         </div>
         <button
@@ -38,7 +38,7 @@ function IdeaCard({ idea, onSave, saved }) {
           )}
         </button>
       </div>
-      {idea.description && <p className="text-sm text-ink-soft mb-2">{idea.description}</p>}
+      {idea.description && <p className="text-sm text-muted-foreground mb-2">{idea.description}</p>}
       {idea.why_it_works && (
         <p className="text-xs text-moss-dark italic mb-2">{idea.why_it_works}</p>
       )}
@@ -108,9 +108,9 @@ export default function IdeasPage({ user }) {
 
   const aiStatusBadge = () => {
     if (freeUsesRemaining > 0) return <span className="text-xs text-terracotta font-medium">{freeUsesRemaining} free uses this month</span>;
-    if (isPremium && isLifetime) return <span className="text-xs text-ink-soft">{aiCredits} credits</span>;
+    if (isPremium && isLifetime) return <span className="text-xs text-muted-foreground">{aiCredits} credits</span>;
     if (isPremium) return <span className="text-xs text-moss font-medium">unlimited</span>;
-    return <span className="text-xs text-ink-soft">free limit reached</span>;
+    return <span className="text-xs text-muted-foreground">free limit reached</span>;
   };
 
   const handleGetAI = async () => {
@@ -209,8 +209,8 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
   return (
     <div className="space-y-5">
       <div>
-        <p className="font-accent text-ink-soft text-lg">find something meaningful</p>
-        <h1 className="font-heading font-bold text-2xl text-ink">Gift Ideas</h1>
+        <p className="font-accent text-muted-foreground text-lg">find something meaningful</p>
+        <h1 className="font-heading font-bold text-2xl text-foreground">Gift Ideas</h1>
       </div>
 
       {/* Tab toggle */}
@@ -218,7 +218,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
         <button
           onClick={() => setTab('ai')}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
-            tab === 'ai' ? 'bg-white text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
+            tab === 'ai' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
           <Sparkles className="w-4 h-4 text-terracotta" />
@@ -230,7 +230,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
         <button
           onClick={() => setTab('curated')}
           className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
-            tab === 'curated' ? 'bg-white text-ink shadow-sm' : 'text-ink-soft hover:text-ink'
+            tab === 'curated' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
           <Lightbulb className="w-4 h-4 text-moss" />
@@ -244,7 +244,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
           value={recipient}
           onChange={e => setRecipient(e.target.value)}
           placeholder="Who is this for?"
-          className="w-full border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+          className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
         />
         <div className="grid grid-cols-2 gap-3">
           <NativePicker
@@ -258,7 +258,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
             value={budget}
             onChange={e => setBudget(e.target.value)}
             placeholder="Budget ($)"
-            className="border border-sand-300 rounded-2xl px-4 py-3 text-ink bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+            className="border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
           />
         </div>
       </div>
@@ -298,7 +298,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
       {/* Results */}
       {ideas.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-heading font-semibold text-ink">
+          <h2 className="font-heading font-semibold text-foreground">
             {ideas.length} ideas for {recipient || 'them'}
           </h2>
           {ideas.map((idea, i) => (

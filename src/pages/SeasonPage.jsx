@@ -29,9 +29,9 @@ export default function SeasonPage() {
   return (
     <div className="space-y-5">
       <div>
-        <p className="font-accent text-ink-soft text-lg">plan the season</p>
-        <h1 className="font-heading font-bold text-2xl text-ink">Seasonal Prep</h1>
-        <p className="text-sm text-ink-soft mt-1">Group your upcoming occasions by season for smarter batch-buying.</p>
+        <p className="font-accent text-muted-foreground text-lg">plan the season</p>
+        <h1 className="font-heading font-bold text-2xl text-foreground">Seasonal Prep</h1>
+        <p className="text-sm text-muted-foreground mt-1">Group your upcoming occasions by season for smarter batch-buying.</p>
       </div>
 
       {SEASONS.map(season => {
@@ -47,10 +47,10 @@ export default function SeasonPage() {
                 {season.name}
               </span>
               {isCurrent && <span className="text-xs text-terracotta font-medium">now</span>}
-              <span className="text-xs text-ink-soft ml-auto">{seasonEvents.length} occasion{seasonEvents.length !== 1 ? 's' : ''}</span>
+              <span className="text-xs text-muted-foreground ml-auto">{seasonEvents.length} occasion{seasonEvents.length !== 1 ? 's' : ''}</span>
             </div>
             {seasonEvents.length === 0 ? (
-              <p className="text-sm text-ink-soft">Nothing in {season.name.toLowerCase()} yet.</p>
+              <p className="text-sm text-muted-foreground">Nothing in {season.name.toLowerCase()} yet.</p>
             ) : (
               <div className="space-y-2">
                 {seasonEvents.map(event => (
@@ -60,8 +60,8 @@ export default function SeasonPage() {
                     className="flex items-center gap-3 bg-white border border-sand-300 rounded-xl p-3 hover:border-terracotta/40 transition-all"
                   >
                     <div className="flex-1">
-                      <p className="font-heading font-semibold text-ink text-sm">{event.recipient_name}</p>
-                      <p className="text-xs text-ink-soft capitalize">{event.occasion?.replace(/_/g, ' ')} · {format(parseISO(event.event_date), 'MMM d')}</p>
+                      <p className="font-heading font-semibold text-foreground text-sm">{event.recipient_name}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')} · {format(parseISO(event.event_date), 'MMM d')}</p>
                     </div>
                     <PriorityBadge priority={event.priority} />
                   </Link>

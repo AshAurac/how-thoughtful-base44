@@ -84,7 +84,7 @@ export default function EventChecklist({ occasion }) {
         className="w-full flex items-center justify-between p-4"
       >
         <div className="flex items-center gap-2">
-          <p className="font-heading font-semibold text-ink">Day checklist</p>
+          <p className="font-heading font-semibold text-foreground">Day checklist</p>
           {doneCount > 0 && (
             <span className="text-xs bg-moss/20 text-moss-dark px-2 py-0.5 rounded-full font-medium">
               {doneCount}/{items.length}
@@ -113,7 +113,7 @@ export default function EventChecklist({ occasion }) {
                 ? <CheckCircle2 className="w-5 h-5 text-moss flex-shrink-0" />
                 : <Circle className="w-5 h-5 text-sand-300 flex-shrink-0" />
               }
-              <span className={`text-sm ${checked[item.id] ? 'line-through text-ink-soft' : 'text-ink'}`}>
+              <span className={`text-sm ${checked[item.id] ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                 {item.label}
               </span>
             </button>

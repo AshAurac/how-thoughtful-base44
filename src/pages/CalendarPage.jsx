@@ -38,8 +38,8 @@ export default function CalendarPage() {
   return (
     <div className="space-y-5">
       <div>
-        <p className="font-accent text-ink-soft text-lg">plan ahead</p>
-        <h1 className="font-heading font-bold text-2xl text-ink">Calendar</h1>
+        <p className="font-accent text-muted-foreground text-lg">plan ahead</p>
+        <h1 className="font-heading font-bold text-2xl text-foreground">Calendar</h1>
       </div>
 
       {/* Month nav */}
@@ -50,7 +50,7 @@ export default function CalendarPage() {
         >
           <ChevronLeft className="w-5 h-5 text-ink" />
         </button>
-        <h2 className="font-heading font-semibold text-ink text-lg">
+        <h2 className="font-heading font-semibold text-foreground text-lg">
           {format(current, 'MMMM yyyy')}
         </h2>
         <button
@@ -64,7 +64,7 @@ export default function CalendarPage() {
       {/* Day headers */}
       <div className="grid grid-cols-7 gap-1">
         {['S','M','T','W','T','F','S'].map((d, i) => (
-          <div key={i} className="text-center text-xs text-ink-soft font-medium py-1">{d}</div>
+          <div key={i} className="text-center text-xs text-muted-foreground font-medium py-1">{d}</div>
         ))}
         {/* Padding */}
         {Array.from({ length: startPad }).map((_, i) => (
@@ -80,8 +80,8 @@ export default function CalendarPage() {
               onClick={() => setSelectedDay(isSameDay(day, selectedDay) ? null : day)}
               className={`flex flex-col items-center py-1.5 rounded-xl transition-all ${
                 isSelected ? 'bg-terracotta text-white' :
-                isToday ? 'bg-sand-200 text-ink font-semibold' :
-                'hover:bg-sand-100 text-ink'
+                isToday ? 'bg-secondary text-foreground font-semibold' :
+                'hover:bg-muted text-foreground'
               }`}
             >
               <span className="text-sm">{format(day, 'd')}</span>
@@ -103,11 +103,11 @@ export default function CalendarPage() {
       {/* Selected day events */}
       {selectedDay && (
         <div>
-          <h3 className="font-heading font-semibold text-ink mb-3">
+          <h3 className="font-heading font-semibold text-foreground mb-3">
             {format(selectedDay, 'MMMM d')}
           </h3>
           {selectedEvents.length === 0 ? (
-            <p className="text-sm text-ink-soft">Nothing on this day.</p>
+            <p className="text-sm text-muted-foreground">Nothing on this day.</p>
           ) : (
             <div className="space-y-2">
               {selectedEvents.map(event => (
@@ -117,8 +117,8 @@ export default function CalendarPage() {
                   className="flex items-center gap-3 bg-white border border-sand-300 rounded-2xl p-3 hover:border-terracotta/40 transition-all"
                 >
                   <div className="flex-1">
-                    <p className="font-heading font-semibold text-ink">{event.recipient_name}</p>
-                    <p className="text-sm text-ink-soft capitalize">{event.occasion?.replace(/_/g, ' ')}</p>
+                    <p className="font-heading font-semibold text-foreground">{event.recipient_name}</p>
+                    <p className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</p>
                   </div>
                   <PriorityBadge priority={event.priority} />
                 </Link>
