@@ -69,6 +69,11 @@ export default function IdeasPage({ user }) {
   const [budget, setBudget] = useState('50');
   const [savedIds, setSavedIds] = useState(new Set());
 
+  // Track local uses in state so the gate re-evaluates on every render
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const lsKey = `ai_uses_${currentMonth}`;
+  const [localUses, setLocalUses] = useState(() => parseInt(localStorage.getItem(lsKey) || '0', 10));
+
   const queryClient = useQueryClient();
 
   const { data: profile } = useQuery({
@@ -92,11 +97,6 @@ export default function IdeasPage({ user }) {
   const isPremium = profile?.is_premium;
   const isLifetime = profile?.premium_type === 'lifetime';
   const aiCredits = profile?.ai_credits || 0;
-
-  // Monthly free usage tracking — use localStorage as source of truth for free users
-  const currentMonth = new Date().toISOString().slice(0, 7); // "YYYY-MM"
-  const lsKey = `ai_uses_${currentMonth}`;
-  const localUses = parseInt(localStorage.getItem(lsKey) || '0', 10);
 
   // If premium, use profile data; otherwise fall back to localStorage
   const monthlyUses = isPremium
@@ -167,9 +167,9 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
 
       // Update usage tracking
       if (!isPremium) {
-        // Always track in localStorage for free users
         const newUses = localUses + 1;
         localStorage.setItem(lsKey, String(newUses));
+        setLocalUses(newUses); // update state so gate re-evaluates immediately
         if (newUses >= 3) {
           toast('That was your last free AI idea this month — upgrade for unlimited!');
         }
