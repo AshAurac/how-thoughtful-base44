@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { LogOut, Trash2, AlertTriangle, Sun, Moon, Sparkles } from 'lucide-react';
+import { LogOut, Trash2, AlertTriangle, Sun, Moon, Sparkles, Mail, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
@@ -31,6 +31,7 @@ export default function ProfilePage({ user }) {
   const [profileId, setProfileId] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDark, toggleDark] = useDarkMode();
+  const [verifyState, setVerifyState] = useState('idle'); // idle | sending | sent
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['userProfile'],
@@ -236,6 +237,40 @@ export default function ProfilePage({ user }) {
           )}
         </div>
       )}
+
+      {/* Email verification */}
+      <div className="bg-card border border-border rounded-2xl px-5 py-4 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Mail className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <div>
+            <p className="text-sm font-body text-foreground">{user?.email}</p>
+            <p className="text-xs text-muted-foreground">Send a test email to verify delivery</p>
+          </div>
+        </div>
+        {verifyState === 'sent' ? (
+          <div className="flex items-center gap-1 text-moss text-xs font-medium shrink-0">
+            <CheckCircle2 className="w-4 h-4" /> Sent!
+          </div>
+        ) : (
+          <button
+            type="button"
+            disabled={verifyState === 'sending'}
+            onClick={async () => {
+              setVerifyState('sending');
+              await base44.integrations.Core.SendEmail({
+                to: user.email,
+                subject: 'How Thoughtful — email verified ✅',
+                body: `Hi ${user?.full_name?.split(' ')[0] || 'there'},\n\nYour email is working perfectly! You'll receive reminders and invites at this address.\n\n— How Thoughtful 💛`,
+              });
+              setVerifyState('sent');
+              toast.success('Test email sent — check your inbox!');
+            }}
+            className="shrink-0 text-xs font-heading font-semibold text-terracotta border border-terracotta/40 px-3 py-1.5 rounded-full hover:bg-terracotta hover:text-white transition-all disabled:opacity-60"
+          >
+            {verifyState === 'sending' ? 'Sending…' : 'Send test'}
+          </button>
+        )}
+      </div>
 
       {/* Dark mode toggle */}
       <div className="flex items-center justify-between bg-card border border-border rounded-2xl px-5 py-4">

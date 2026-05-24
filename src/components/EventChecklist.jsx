@@ -78,7 +78,7 @@ export default function EventChecklist({ occasion }) {
   const toggle = (id) => setChecked(prev => ({ ...prev, [id]: !prev[id] }));
 
   return (
-    <div className="bg-white border border-sand-300 rounded-2xl overflow-hidden">
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
       <button
         onClick={() => setExpanded(v => !v)}
         className="w-full flex items-center justify-between p-4"
@@ -91,7 +91,7 @@ export default function EventChecklist({ occasion }) {
             </span>
           )}
         </div>
-        {expanded ? <ChevronUp className="w-4 h-4 text-ink-soft" /> : <ChevronDown className="w-4 h-4 text-ink-soft" />}
+        {expanded ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
       </button>
 
       {expanded && (
@@ -106,12 +106,12 @@ export default function EventChecklist({ occasion }) {
               key={item.id}
               onClick={() => toggle(item.id)}
               className={`w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all ${
-                checked[item.id] ? 'bg-moss/10' : 'bg-sand-50 hover:bg-sand-100'
+                checked[item.id] ? 'bg-moss/10' : 'bg-muted hover:bg-secondary'
               }`}
             >
               {checked[item.id]
                 ? <CheckCircle2 className="w-5 h-5 text-moss flex-shrink-0" />
-                : <Circle className="w-5 h-5 text-sand-300 flex-shrink-0" />
+                : <Circle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
               }
               <span className={`text-sm ${checked[item.id] ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                 {item.label}

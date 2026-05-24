@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
-import { Plus, Sparkles, Package } from 'lucide-react';
+import { Plus, Sparkles, Package, Mail } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import ProfileNudge from '@/components/ProfileNudge';
@@ -172,14 +172,36 @@ export default function Dashboard({ user }) {
         )}
 
         {activeTab === 'priority' && (
-          events.length > 0
-            ? <ActionQueue events={events} gifts={gifts} />
-            : (
-              <div className="bg-muted border border-border rounded-2xl p-6 text-center">
-                <p className="font-accent text-xl text-muted-foreground mb-2">nothing to prioritise</p>
-                <p className="text-sm text-muted-foreground">Add occasions to see your action queue here.</p>
+          <>
+            {/* Email verification nudge */}
+            {!localStorage.getItem('email_verified') && (
+              <div className="bg-card border border-border rounded-2xl p-4 flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-terracotta/10 flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-4 h-4 text-terracotta" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-heading font-semibold text-foreground">Verify your email</p>
+                  <p className="text-xs text-muted-foreground">Make sure reminders reach you</p>
+                </div>
+                <Link
+                  to="/profile"
+                  onClick={() => localStorage.setItem('email_verified', '1')}
+                  className="shrink-0 text-xs font-heading font-semibold text-terracotta border border-terracotta/40 px-3 py-1.5 rounded-full hover:bg-terracotta hover:text-white transition-all"
+                >
+                  Go →
+                </Link>
               </div>
-            )
+            )}
+            {events.length > 0
+              ? <ActionQueue events={events} gifts={gifts} />
+              : (
+                <div className="bg-muted border border-border rounded-2xl p-6 text-center">
+                  <p className="font-accent text-xl text-muted-foreground mb-2">nothing to prioritise</p>
+                  <p className="text-sm text-muted-foreground">Add occasions to see your action queue here.</p>
+                </div>
+              )
+            }
+          </>
         )}
       </div>
 

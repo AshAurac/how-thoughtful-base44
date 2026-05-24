@@ -3,9 +3,13 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, Trash2, Check, Sparkles, Lightbulb } from 'lucide-react';
-import { formatEventDate, daysUntil } from '@/lib/dateUtils';
+import { ArrowLeft, Plus, Trash2, Check, Sparkles, Lightbulb, Pencil, X } from 'lucide-react';
+import { formatEventDate, daysUntil, computeBuyDates } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
+import NativePicker from '@/components/NativePicker';
+
+const OCCASIONS = ['birthday','anniversary','holiday','graduation','baby_shower','wedding','housewarming','thank_you','just_because','other'];
+const PRIORITIES = ['free','low','medium','high'];
 import EventChecklist from '@/components/EventChecklist';
 import GiftBounceAnimation from '@/components/GiftBounceAnimation';
 import ShareEventButton from '@/components/ShareEventButton';
@@ -20,7 +24,7 @@ function GiftCheckbox({ checked, onChange, label }) {
           : 'bg-muted text-muted-foreground border-border hover:bg-secondary'
       }`}
     >
-      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${checked ? 'bg-moss border-moss' : 'border-sand-300'}`}>
+      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all ${checked ? 'bg-moss border-moss' : 'border-border'}`}>
         {checked && <Check className="w-2.5 h-2.5 text-white" />}
       </div>
       {label}
@@ -37,6 +41,8 @@ export default function EventDetail() {
   const [reflection, setReflection] = useState('');
   const [editingReflection, setEditingReflection] = useState(false);
   const [celebratingGift, setCelebratingGift] = useState(null);
+  const [editingEvent, setEditingEvent] = useState(false);
+  const [editForm, setEditForm] = useState({});
 
   const { data: event, isLoading: loadingEvent } = useQuery({
     queryKey: ['event', id],
@@ -89,7 +95,7 @@ export default function EventDetail() {
   });
 
   if (loadingEvent) {
-    return <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 bg-sand-200 rounded-2xl animate-pulse" />)}</div>;
+    return <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 bg-muted rounded-2xl animate-pulse" />)}</div>;
   }
   if (!event) return <div className="text-center py-12 text-muted-foreground">Event not found</div>;
 
@@ -135,20 +141,90 @@ export default function EventDetail() {
           <ArrowLeft className="w-5 h-5 text-foreground" />
         </button>
         <div className="flex-1">
-          <p className="font-accent text-muted-foreground text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
-          <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <PriorityBadge priority={event.priority} />
-            <span className="text-sm text-muted-foreground">{formatEventDate(event.event_date)}</span>
-            {days !== null && days >= 0 && (
-              <span className={`text-sm font-medium ${days <= 7 ? 'text-terracotta' : 'text-muted-foreground'}`}>
-                {days === 0 ? 'Today!' : `${days} days away`}
-              </span>
-            )}
-          </div>
-          <div className="mt-2">
-            <ShareEventButton eventId={event.id} collaboratorEmails={event.collaborator_emails || []} />
-          </div>
+          {editingEvent ? (
+            <div className="space-y-3">
+              <input
+                value={editForm.recipient_name}
+                onChange={e => setEditForm(f => ({ ...f, recipient_name: e.target.value }))}
+                className="w-full border border-border rounded-xl px-3 py-2 text-foreground bg-card font-heading font-bold text-xl focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <NativePicker
+                  label="Occasion"
+                  value={editForm.occasion}
+                  onChange={v => setEditForm(f => ({ ...f, occasion: v }))}
+                  options={OCCASIONS.map(o => ({ value: o, label: o.replace(/_/g, ' ') }))}
+                />
+                <NativePicker
+                  label="Priority"
+                  value={editForm.priority}
+                  onChange={v => setEditForm(f => ({ ...f, priority: v }))}
+                  options={PRIORITIES.map(p => ({ value: p, label: p }))}
+                />
+              </div>
+              <input
+                type="date"
+                value={editForm.event_date}
+                onChange={e => setEditForm(f => ({ ...f, event_date: e.target.value }))}
+                className="w-full border border-border rounded-xl px-3 py-2 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+              />
+              <input
+                type="number"
+                value={editForm.budget}
+                onChange={e => setEditForm(f => ({ ...f, budget: e.target.value }))}
+                placeholder="Budget ($)"
+                className="w-full border border-border rounded-xl px-3 py-2 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+              />
+              <textarea
+                value={editForm.notes}
+                onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
+                placeholder="Notes..."
+                rows={2}
+                className="w-full border border-border rounded-xl px-3 py-2 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 resize-none text-sm"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    const buyDates = editForm.event_date ? computeBuyDates(editForm.event_date) : {};
+                    updateEventMutation.mutate({ ...editForm, budget: editForm.budget ? parseFloat(editForm.budget) : 0, ...buyDates });
+                    setEditingEvent(false);
+                    toast.success('Occasion updated');
+                  }}
+                  className="flex-1 bg-terracotta text-white py-2 rounded-full text-sm font-heading font-semibold hover:bg-terracotta-dark transition-all"
+                >
+                  Save
+                </button>
+                <button onClick={() => setEditingEvent(false)} className="px-4 py-2 rounded-full text-sm text-muted-foreground hover:bg-muted transition-all">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className="font-accent text-muted-foreground text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
+              <div className="flex items-center gap-2">
+                <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
+                <button
+                  onClick={() => { setEditForm({ recipient_name: event.recipient_name, occasion: event.occasion, event_date: event.event_date, priority: event.priority, budget: event.budget || '', notes: event.notes || '' }); setEditingEvent(true); }}
+                  className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
+                <PriorityBadge priority={event.priority} />
+                <span className="text-sm text-muted-foreground">{formatEventDate(event.event_date)}</span>
+                {days !== null && days >= 0 && (
+                  <span className={`text-sm font-medium ${days <= 7 ? 'text-terracotta' : 'text-muted-foreground'}`}>
+                    {days === 0 ? 'Today!' : `${days} days away`}
+                  </span>
+                )}
+              </div>
+              <div className="mt-2">
+                <ShareEventButton eventId={event.id} collaboratorEmails={event.collaborator_emails || []} />
+              </div>
+            </>
+          )}
         </div>
       </div>
 
