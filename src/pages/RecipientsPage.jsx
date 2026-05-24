@@ -56,7 +56,7 @@ export default function RecipientsPage({ user }) {
         <div className="flex gap-2">
           <button
             onClick={() => setShowImport(true)}
-            className="flex items-center gap-1.5 border border-sand-300 text-ink-soft px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-sand-100 transition-all"
+            className="flex items-center gap-1.5 border border-border text-muted-foreground px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-muted transition-all"
           >
             <Upload className="w-4 h-4" /> Import
           </button>
@@ -74,25 +74,25 @@ export default function RecipientsPage({ user }) {
       {showAdd && (
         <form
           onSubmit={(e) => { e.preventDefault(); addMutation.mutate(form); }}
-          className="bg-sand-100 border border-sand-300 rounded-2xl p-4 space-y-3"
+          className="bg-muted border border-border rounded-2xl p-4 space-y-3"
         >
           <div className="flex items-center justify-between mb-1">
             <h3 className="font-heading font-semibold text-foreground">Add person</h3>
-            <button type="button" onClick={() => setShowAdd(false)}><X className="w-4 h-4 text-ink-soft" /></button>
+            <button type="button" onClick={() => setShowAdd(false)}><X className="w-4 h-4 text-muted-foreground" /></button>
           </div>
           <input
             value={form.name}
             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
             placeholder="Name *"
             required
-            className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
           />
           <div className="grid grid-cols-2 gap-2">
             <input
               value={form.relationship}
               onChange={e => setForm(f => ({ ...f, relationship: e.target.value }))}
               placeholder="Relationship"
-              className="border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+              className="border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
             />
             <NativePicker
               label="Love language"
@@ -106,7 +106,7 @@ export default function RecipientsPage({ user }) {
             value={form.interests}
             onChange={e => setForm(f => ({ ...f, interests: e.target.value }))}
             placeholder="Interests (comma-separated)"
-            className="w-full border border-sand-300 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
           />
           <button type="submit" className="w-full bg-terracotta text-white py-2.5 rounded-full text-sm font-heading font-semibold hover:bg-terracotta-dark transition-all">
             Add person
@@ -127,7 +127,7 @@ export default function RecipientsPage({ user }) {
             <Link
               key={r.id}
               to={`/recipients/${r.id}`}
-              className="flex items-center gap-3 bg-white border border-sand-300 rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
+              className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
             >
               <div className="w-10 h-10 rounded-full bg-terracotta/10 flex items-center justify-center text-terracotta font-heading font-bold text-lg">
                 {r.name?.[0]?.toUpperCase()}

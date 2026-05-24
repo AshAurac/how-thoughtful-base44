@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft, Settings } from 'lucide-react';
+import { Home, Calendar, Sparkles, Leaf, MoreHorizontal, Heart, ArrowLeft, Settings, Users, PiggyBank, Package, Bookmark, Star, User, Gift } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -20,8 +20,11 @@ const navItems = [
   { path: '/season', icon: Leaf, label: 'Season' },
 ];
 
+// All "More" drawer paths — show brand logo on these too
+const MORE_PATHS = ['/recipients', '/budget', '/deliveries', '/saved', '/group-lists', '/restock', '/wishlist', '/year-in-giving', '/profile'];
+
 // Root-level paths — show brand logo on these
-const ROOT_PATHS = ['/', '/calendar', '/ideas', '/season', '/budget', '/events', '/profile', '/recipients', '/deliveries', '/saved', '/wishlist', '/restock', '/group-lists', '/year-in-giving'];
+const ROOT_PATHS = ['/', '/calendar', '/ideas', '/season', ...MORE_PATHS];
 
 // Page title map for sub-pages
 const PAGE_TITLES = {
@@ -29,6 +32,19 @@ const PAGE_TITLES = {
   '/upgrade': 'Upgrade',
   '/year-in-giving': 'Year in Giving',
 };
+
+// More drawer items (mirrors MoreSheet)
+const MORE_ITEMS = [
+  { path: '/recipients', icon: Users, label: 'People' },
+  { path: '/budget', icon: PiggyBank, label: 'Budget' },
+  { path: '/deliveries', icon: Package, label: 'Deliveries' },
+  { path: '/saved', icon: Bookmark, label: 'Saved' },
+  { path: '/group-lists', icon: Gift, label: 'Groups' },
+  { path: '/restock', icon: Star, label: 'Restock' },
+  { path: '/wishlist', icon: Heart, label: 'Wishlist' },
+  { path: '/year-in-giving', icon: Star, label: 'Year' },
+  { path: '/profile', icon: User, label: 'Profile' },
+];
 
 function getSubPageTitle(pathname) {
   if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
@@ -49,6 +65,11 @@ function getActiveTab(pathname) {
     if (path !== '/' && pathname.startsWith(path)) return path;
   }
   return '/';
+}
+
+// Find if current path is a "More" drawer item
+function getActiveMoreItem(pathname) {
+  return MORE_ITEMS.find(item => pathname === item.path || pathname.startsWith(item.path + '/')) || null;
 }
 
 export default function AppShell({ children, user }) {
@@ -74,6 +95,7 @@ export default function AppShell({ children, user }) {
   const activeTab = getActiveTab(location.pathname);
   const subPageTitle = getSubPageTitle(location.pathname);
   const isRoot = isRootPath(location.pathname);
+  const activeMoreItem = getActiveMoreItem(location.pathname);
 
   // Keep tabHistory up to date whenever the location changes
   tabHistory.current[activeTab] = location.pathname;
@@ -170,16 +192,61 @@ export default function AppShell({ children, user }) {
       >
         <div className="flex justify-center pb-3 pt-1">
           <div className="bg-card/90 backdrop-blur-xl border border-border rounded-full px-3 py-1.5 shadow-lg flex items-center gap-0.5">
-            {navItems.map(({ path, icon: Icon, label }) => {
+            {/* Home always first */}
+            {(() => {
+              const { path, icon: Icon, label } = navItems[0];
+              const active = activeTab === path && !activeMoreItem;
+              return (
+                <button
+                  key={path}
+                  onClick={e => handleNavClick(path, e)}
+                  className={`flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full transition-all select-none ${
+                    active ? 'bg-terracotta text-white' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-xs mt-0.5 font-body">{label}</span>
+                </button>
+              );
+            })()}
+
+            {/* 2nd slot: active More item OR the normal 2nd nav item */}
+            {activeMoreItem ? (
+              <button
+                onClick={e => handleNavClick(activeMoreItem.path, e)}
+                className="flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full transition-all select-none bg-terracotta text-white"
+              >
+                <activeMoreItem.icon className="w-5 h-5" />
+                <span className="text-xs mt-0.5 font-body">{activeMoreItem.label}</span>
+              </button>
+            ) : (
+              (() => {
+                const { path, icon: Icon, label } = navItems[1];
+                const active = activeTab === path;
+                return (
+                  <button
+                    key={path}
+                    onClick={e => handleNavClick(path, e)}
+                    className={`flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full transition-all select-none ${
+                      active ? 'bg-terracotta text-white' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="text-xs mt-0.5 font-body">{label}</span>
+                  </button>
+                );
+              })()
+            )}
+
+            {/* Remaining nav items (3rd and 4th) */}
+            {navItems.slice(2).map(({ path, icon: Icon, label }) => {
               const active = activeTab === path;
               return (
                 <button
                   key={path}
                   onClick={e => handleNavClick(path, e)}
                   className={`flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full transition-all select-none ${
-                    active
-                      ? 'bg-terracotta text-white'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                    active ? 'bg-terracotta text-white' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -187,9 +254,12 @@ export default function AppShell({ children, user }) {
                 </button>
               );
             })}
+
             <button
               onClick={() => setShowMore(true)}
-              className="flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-all select-none"
+              className={`flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full transition-all select-none ${
+                activeMoreItem ? 'text-terracotta' : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+              }`}
             >
               <MoreHorizontal className="w-5 h-5" />
               <span className="text-xs mt-0.5 font-body">More</span>

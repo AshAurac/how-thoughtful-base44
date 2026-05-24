@@ -65,7 +65,7 @@ export default function BudgetPage({ user }) {
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white border border-sand-300 rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-2xl p-4">
           <p className="text-xs text-muted-foreground mb-1 font-medium">Total budget</p>
           <p className="font-heading font-bold text-2xl text-foreground">${totalBudget.toFixed(0)}</p>
         </div>
@@ -73,11 +73,11 @@ export default function BudgetPage({ user }) {
           <p className="text-xs text-muted-foreground mb-1 font-medium">Spent so far</p>
           <p className="font-heading font-bold text-2xl text-terracotta">${totalSpent.toFixed(0)}</p>
         </div>
-        <div className="bg-white border border-sand-300 rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-2xl p-4">
           <p className="text-xs text-muted-foreground mb-1 font-medium">Remaining</p>
           <p className="font-heading font-bold text-2xl text-moss">${remaining.toFixed(0)}</p>
         </div>
-        <div className="bg-white border border-sand-300 rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-2xl p-4">
           <p className="text-xs text-muted-foreground mb-1 font-medium">Next 30 days</p>
           <p className="font-heading font-bold text-2xl text-butter-dark">${upcoming30.toFixed(0)}</p>
         </div>
@@ -85,12 +85,12 @@ export default function BudgetPage({ user }) {
 
       {/* Progress bar */}
       {totalBudget > 0 && (
-        <div className="bg-sand-100 border border-sand-300 rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-2xl p-4">
           <div className="flex justify-between text-sm mb-2">
             <span className="text-muted-foreground">Budget used</span>
             <span className="text-foreground font-medium">{Math.round((totalSpent / totalBudget) * 100)}%</span>
           </div>
-          <div className="h-3 bg-sand-200 rounded-full overflow-hidden">
+          <div className="h-3 bg-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-terracotta rounded-full transition-all"
               style={{ width: `${Math.min(100, (totalSpent / totalBudget) * 100)}%` }}
@@ -101,7 +101,7 @@ export default function BudgetPage({ user }) {
 
       {/* Monthly chart */}
       {monthlyData.length > 0 && (
-        <div className="bg-white border border-sand-300 rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-2xl p-4">
           <h2 className="font-heading font-semibold text-foreground mb-4">Monthly spend</h2>
           <ResponsiveContainer width="100%" height={160}>
             <BarChart data={monthlyData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
