@@ -12,6 +12,7 @@ import ActionQueue from '@/components/ActionQueue';
 export default function Dashboard({ user }) {
   const queryClient = useQueryClient();
   const [showNudge, setShowNudge] = useState(false);
+  const [activeTab, setActiveTab] = useState('upcoming');
 
   const { onTouchStart, onTouchMove, onTouchEnd, indicatorRef } = usePullToRefresh(async () => {
     await queryClient.invalidateQueries();
@@ -108,58 +109,86 @@ export default function Dashboard({ user }) {
         </Link>
       )}
 
-      {/* Action Queue */}
-      {events.length > 0 && (
-        <ActionQueue events={events} gifts={gifts} />
-      )}
-
-      {/* Upcoming events */}
+      {/* Tabbed views: Coming up / Priority */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-heading font-semibold text-lg text-foreground">Coming up</h2>
-          <Link to="/events/new" className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta-dark font-medium">
-            <Plus className="w-4 h-4" /> Add
-          </Link>
+        <div className="flex bg-sand-200 rounded-full p-1 gap-1 mb-4">
+          <button
+            onClick={() => setActiveTab('upcoming')}
+            className={`flex-1 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
+              activeTab === 'upcoming' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Coming up
+          </button>
+          <button
+            onClick={() => setActiveTab('priority')}
+            className={`flex-1 py-2 rounded-full text-sm font-heading font-semibold transition-all ${
+              activeTab === 'priority' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Priority
+          </button>
         </div>
 
-        {upcoming.length === 0 ? (
-          <div className="bg-muted border border-border rounded-2xl p-6 text-center">
-            <p className="font-accent text-xl text-muted-foreground mb-2">nothing on the horizon</p>
-            <p className="text-sm text-muted-foreground mb-4">Add your first occasion and never panic-buy again.</p>
-            <Link
-              to="/events/new"
-              className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
-            >
-              <Plus className="w-4 h-4" /> Add an occasion
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {upcoming.map(event => {
-              const days = daysUntil(event.event_date);
-              return (
+        {activeTab === 'upcoming' && (
+          <>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-heading font-semibold text-lg text-foreground">Coming up</h2>
+              <Link to="/events/new" className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta-dark font-medium">
+                <Plus className="w-4 h-4" /> Add
+              </Link>
+            </div>
+            {upcoming.length === 0 ? (
+              <div className="bg-muted border border-border rounded-2xl p-6 text-center">
+                <p className="font-accent text-xl text-muted-foreground mb-2">nothing on the horizon</p>
+                <p className="text-sm text-muted-foreground mb-4">Add your first occasion and never panic-buy again.</p>
                 <Link
-                  key={event.id}
-                  to={`/events/${event.id}`}
-                  className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
+                  to="/events/new"
+                  className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
                 >
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
-                      <PriorityBadge priority={event.priority} />
-                    </div>
-                    <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
-                  </div>
-                  <div className="text-right">
-                    <span className={`text-sm font-medium ${urgencyColor(days)}`}>
-                      {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
-                    </span>
-                    <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
-                  </div>
+                  <Plus className="w-4 h-4" /> Add an occasion
                 </Link>
-              );
-            })}
-          </div>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {upcoming.map(event => {
+                  const days = daysUntil(event.event_date);
+                  return (
+                    <Link
+                      key={event.id}
+                      to={`/events/${event.id}`}
+                      className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
+                          <PriorityBadge priority={event.priority} />
+                        </div>
+                        <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-sm font-medium ${urgencyColor(days)}`}>
+                          {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
+                        </span>
+                        <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        )}
+
+        {activeTab === 'priority' && (
+          events.length > 0
+            ? <ActionQueue events={events} gifts={gifts} />
+            : (
+              <div className="bg-muted border border-border rounded-2xl p-6 text-center">
+                <p className="font-accent text-xl text-muted-foreground mb-2">nothing to prioritise</p>
+                <p className="text-sm text-muted-foreground">Add occasions to see your action queue here.</p>
+              </div>
+            )
         )}
       </div>
 
