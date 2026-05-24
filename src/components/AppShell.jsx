@@ -134,7 +134,7 @@ export default function AppShell({ children, user }) {
 
       {/* Bottom nav — safe area bottom */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 select-none"
+        className="fixed bottom-0 left-0 right-0 z-40 select-none"
         style={{ paddingBottom: 'var(--safe-bottom)', paddingLeft: 'var(--safe-left)', paddingRight: 'var(--safe-right)' }}
       >
         <div className="flex justify-center pb-3 pt-1">
