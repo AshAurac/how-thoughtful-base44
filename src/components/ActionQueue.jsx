@@ -112,11 +112,11 @@ export default function ActionQueue({ events, gifts }) {
                       <span className={`font-heading font-semibold truncate ${isTop ? 'text-white' : 'text-ink'}`}>
                         {event.recipient_name}
                       </span>
-                      <span className={`text-xs font-medium capitalize ${isTop ? 'text-white/70' : labelColor}`}>
+                      <span className={`text-xs font-medium capitalize ${isTop ? 'text-white/90' : labelColor}`}>
                         {priority} priority
                       </span>
                     </div>
-                    <p className={`text-sm mt-0.5 capitalize ${isTop ? 'text-white/70' : 'text-ink-soft'}`}>
+                    <p className={`text-sm mt-0.5 capitalize ${isTop ? 'text-white/85' : 'text-ink-soft'}`}>
                       {event.occasion?.replace(/_/g, ' ')} · {formatEventDate(event.event_date)}
                     </p>
                   </div>
@@ -124,11 +124,11 @@ export default function ActionQueue({ events, gifts }) {
                     <span className={`text-xs font-heading font-semibold px-2 py-1 rounded-full ${
                       action.urgent
                         ? isTop ? 'bg-terracotta text-white' : 'bg-terracotta/10 text-terracotta'
-                        : isTop ? 'bg-white/20 text-white' : 'bg-sand-100 text-ink-soft'
+                        : isTop ? 'bg-white/25 text-white' : 'bg-sand-100 text-ink-soft'
                     }`}>
                       {action.label}
                     </span>
-                    <p className={`text-xs mt-1 ${isTop ? 'text-white/60' : 'text-ink-soft'}`}>
+                    <p className={`text-xs mt-1 ${isTop ? 'text-white/80' : 'text-ink-soft'}`}>
                       {days === 0 ? 'Today' : `${days}d away`}
                     </p>
                   </div>
@@ -142,8 +142,8 @@ export default function ActionQueue({ events, gifts }) {
                   />
                 </div>
                 <div className="flex justify-between mt-1">
-                  <span className={`text-xs ${isTop ? 'text-white/50' : 'text-ink-soft'}`}>readiness</span>
-                  <span className={`text-xs font-medium ${isTop ? 'text-white/70' : 'text-ink-soft'}`}>{ready}%</span>
+                  <span className={`text-xs ${isTop ? 'text-white/75' : 'text-ink-soft'}`}>readiness</span>
+                  <span className={`text-xs font-medium ${isTop ? 'text-white/90' : 'text-ink-soft'}`}>{ready}%</span>
                 </div>
               </div>
             </Link>

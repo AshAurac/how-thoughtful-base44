@@ -19,14 +19,14 @@ export default function ProfileNudge() {
   if (dismissed || Date.now() < snoozedUntil) return null;
 
   return (
-    <div className="bg-gradient-to-br from-terracotta/8 to-butter/20 border border-terracotta/20 rounded-2xl p-5">
+    <div className="bg-terracotta/10 border border-terracotta/30 rounded-2xl p-5 dark:bg-terracotta/15 dark:border-terracotta/40">
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-9 h-9 rounded-full bg-terracotta/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+        <div className="w-9 h-9 rounded-full bg-terracotta/20 flex items-center justify-center flex-shrink-0 mt-0.5">
           <Sparkles className="w-4 h-4 text-terracotta" />
         </div>
         <div>
-          <p className="font-heading font-semibold text-ink text-sm">Let's make this feel personal ✨</p>
-          <p className="text-xs text-ink-soft mt-1 leading-relaxed">
+          <p className="font-heading font-semibold text-foreground text-sm">Let's make this feel personal ✨</p>
+          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
             Add a few things about yourself — your skills, what you love, how you like to give — and your AI gift ideas will feel like they were made just for you.
           </p>
         </div>
@@ -35,13 +35,13 @@ export default function ProfileNudge() {
         <Link
           to="/profile"
           onClick={() => setDismissed(true)}
-          className="text-xs font-heading font-semibold bg-terracotta text-white px-4 py-1.5 rounded-full hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
+          className="text-xs font-heading font-semibold bg-terracotta text-white px-4 py-2 rounded-full hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 min-h-[36px] flex items-center"
         >
           Tell me about yourself →
         </Link>
         <button
           onClick={handleSnooze}
-          className="text-xs text-ink-soft hover:text-ink transition-colors"
+          className="text-xs text-foreground/70 hover:text-foreground transition-colors dark:text-foreground/80"
         >
           maybe later 🙂
         </button>
