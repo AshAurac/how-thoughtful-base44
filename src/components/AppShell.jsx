@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Calendar, Sparkles, MoreHorizontal, Heart, ArrowLeft, Settings, Users, PiggyBank, Package, Bookmark, Star, User, Gift } from 'lucide-react';
+import { Home, Calendar, Sparkles, MoreHorizontal, ArrowLeft, Settings, Users, PiggyBank, Package, Bookmark, Star, User, Gift } from 'lucide-react';
 import { useState, useRef, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -40,7 +40,7 @@ const MORE_ITEMS = [
   { path: '/saved', icon: Bookmark, label: 'Saved' },
   { path: '/group-lists', icon: Gift, label: 'Groups' },
   { path: '/restock', icon: Star, label: 'Restock' },
-  { path: '/wishlist', icon: Heart, label: 'Wishlist' },
+  { path: '/wishlist', icon: Star, label: 'Wishlist' },
   { path: '/year-in-giving', icon: Star, label: 'Year' },
   { path: '/profile', icon: User, label: 'Profile' },
 ];
@@ -133,9 +133,7 @@ export default function AppShell({ children, user }) {
                 className="flex items-center gap-2 hover:opacity-80 transition-opacity min-h-[44px]"
                 onClick={e => handleNavClick('/', e)}
               >
-                <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
-                  <Heart className="w-4 h-4 text-white" />
-                </div>
+                <img src="https://media.base44.com/images/public/6a1188b0e669a81e5b3530ea/5247e49c3_RealLogo.png" alt="How Thoughtful" className="w-8 h-8" />
                 <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
               </Link>
               <div className="flex items-center gap-2">
