@@ -93,7 +93,7 @@ export default function Dashboard({ user }) {
 
       {/* Tabbed views: Coming up / Priority */}
       <div>
-        <div className="flex bg-sand-200 rounded-full p-1 gap-1 mb-4">
+        <div className="flex bg-sand-200 dark:bg-muted rounded-full p-1 gap-1 mb-4">
           <button
             onClick={() => setActiveTab('priority')}
             className={`flex-1 py-2 rounded-full text-sm font-heading font-semibold transition-all ${

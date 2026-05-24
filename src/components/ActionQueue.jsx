@@ -97,7 +97,7 @@ export default function ActionQueue({ events, gifts }) {
               className={`block rounded-2xl border transition-all hover:-translate-y-0.5 ${
                 isTop
                   ? 'bg-ink text-white border-ink hover:border-ink/80'
-                  : 'bg-white border-sand-300 hover:border-terracotta/40'
+                  : 'bg-card border-border hover:border-terracotta/40'
               }`}
             >
               <div className="p-4">
@@ -109,14 +109,14 @@ export default function ActionQueue({ events, gifts }) {
                           Most urgent
                         </span>
                       )}
-                      <span className={`font-heading font-semibold truncate ${isTop ? 'text-white' : 'text-ink'}`}>
+                      <span className={`font-heading font-semibold truncate ${isTop ? 'text-white' : 'text-foreground'}`}>
                         {event.recipient_name}
                       </span>
                       <span className={`text-xs font-medium capitalize ${isTop ? 'text-white/90' : labelColor}`}>
                         {priority} priority
                       </span>
                     </div>
-                    <p className={`text-sm mt-0.5 capitalize ${isTop ? 'text-white/85' : 'text-ink-soft'}`}>
+                    <p className={`text-sm mt-0.5 capitalize ${isTop ? 'text-white/85' : 'text-muted-foreground'}`}>
                       {event.occasion?.replace(/_/g, ' ')} · {formatEventDate(event.event_date)}
                     </p>
                   </div>
@@ -124,26 +124,26 @@ export default function ActionQueue({ events, gifts }) {
                     <span className={`text-xs font-heading font-semibold px-2 py-1 rounded-full ${
                       action.urgent
                         ? isTop ? 'bg-terracotta text-white' : 'bg-terracotta/10 text-terracotta'
-                        : isTop ? 'bg-white/25 text-white' : 'bg-sand-100 text-ink-soft'
+                        : isTop ? 'bg-white/25 text-white' : 'bg-muted text-muted-foreground'
                     }`}>
                       {action.label}
                     </span>
-                    <p className={`text-xs mt-1 ${isTop ? 'text-white/80' : 'text-ink-soft'}`}>
+                    <p className={`text-xs mt-1 ${isTop ? 'text-white/80' : 'text-muted-foreground'}`}>
                       {days === 0 ? 'Today' : `${days}d away`}
                     </p>
                   </div>
                 </div>
 
                 {/* Progress bar */}
-                <div className={`h-1.5 rounded-full overflow-hidden ${isTop ? 'bg-white/20' : 'bg-sand-200'}`}>
+                <div className={`h-1.5 rounded-full overflow-hidden ${isTop ? 'bg-white/20' : 'bg-muted'}`}>
                   <div
                     className={`h-full rounded-full transition-all ${isTop ? 'bg-white' : barColor}`}
                     style={{ width: `${ready}%` }}
                   />
                 </div>
                 <div className="flex justify-between mt-1">
-                  <span className={`text-xs ${isTop ? 'text-white/75' : 'text-ink-soft'}`}>readiness</span>
-                  <span className={`text-xs font-medium ${isTop ? 'text-white/90' : 'text-ink-soft'}`}>{ready}%</span>
+                  <span className={`text-xs ${isTop ? 'text-white/75' : 'text-muted-foreground'}`}>readiness</span>
+                  <span className={`text-xs font-medium ${isTop ? 'text-white/90' : 'text-muted-foreground'}`}>{ready}%</span>
                 </div>
               </div>
             </Link>
