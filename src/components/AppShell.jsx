@@ -105,20 +105,12 @@ export default function AppShell({ children, user }) {
                 <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
               </Link>
               <div className="flex items-center gap-2">
-                {freeUsesRemaining === 0 && (
+                {!user?.is_premium && (
                   <Link
                     to="/upgrade"
                     className="text-xs font-heading font-semibold text-terracotta border border-terracotta/40 px-3 py-1.5 rounded-full hover:bg-terracotta hover:text-white transition-all"
                   >
                     Upgrade ✨
-                  </Link>
-                )}
-                {freeUsesRemaining > 0 && freeUsesRemaining < 3 && (
-                  <Link
-                    to="/upgrade"
-                    className="text-xs font-body text-muted-foreground hover:text-terracotta transition-colors"
-                  >
-                    {freeUsesRemaining} free left
                   </Link>
                 )}
                 <Link
