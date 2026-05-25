@@ -11,7 +11,7 @@ import { base44 } from '@/api/base44Client';
 // Pages
 import Dashboard from './pages/Dashboard';
 import EventsList from './pages/EventsList';
-import NewEvent from './pages/NewEvent';
+import CreateEvent from './pages/CreateEvent';
 import EventDetail from './pages/EventDetail';
 import CalendarPage from './pages/CalendarPage';
 import IdeasPage from './pages/IdeasPage';
@@ -103,7 +103,7 @@ const AuthenticatedApp = () => {
 
       {/* All authenticated pages — redirect to login if not authenticated */}
       <Route path="/events" element={<RequireAuth user={user}><AppShell user={user}><EventsList user={user} /></AppShell></RequireAuth>} />
-      <Route path="/events/new" element={<RequireAuth user={user}><AppShell user={user}><NewEvent /></AppShell></RequireAuth>} />
+      <Route path="/events/new" element={<RequireAuth user={user}><AppShell user={user}><CreateEvent /></AppShell></RequireAuth>} />
       <Route path="/events/:id" element={<RequireAuth user={user}><AppShell user={user}><EventDetail user={user} /></AppShell></RequireAuth>} />
       <Route path="/calendar" element={<RequireAuth user={user}><AppShell user={user}><CalendarPage user={user} /></AppShell></RequireAuth>} />
       <Route path="/ideas" element={<RequireAuth user={user}><AppShell user={user}><IdeasPage user={user} /></AppShell></RequireAuth>} />

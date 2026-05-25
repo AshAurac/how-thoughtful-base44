@@ -2,6 +2,11 @@
   "name": "SharedList",
   "type": "object",
   "properties": {
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional description for this shared list"
+    },
     "title": {
       "type": "string"
     },

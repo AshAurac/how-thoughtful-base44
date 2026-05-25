@@ -11,7 +11,7 @@ import NativePicker from '@/components/NativePicker';
 const OCCASIONS = ['birthday','anniversary','holiday','graduation','baby_shower','wedding','housewarming','thank_you','just_because','other'];
 const PRIORITIES = ['free','low','medium','high'];
 
-export default function NewEvent() {
+export default function CreateEvent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [form, setForm] = useState({

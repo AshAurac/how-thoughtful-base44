@@ -2,6 +2,11 @@
   "name": "UserProfile",
   "type": "object",
   "properties": {
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optional personal description"
+    },
     "skills": {
       "type": "array",
       "items": {
