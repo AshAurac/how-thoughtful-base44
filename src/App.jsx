@@ -32,6 +32,8 @@ import SharedListsPage from './pages/SharedListsPage';
 import GroupManagePage from './pages/GroupManagePage';
 import PublicGroupList from './pages/PublicGroupList';
 import JoinEventPage from './pages/JoinEventPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 
 // Layout
 import AppShell from './components/AppShell';
@@ -88,6 +90,8 @@ const AuthenticatedApp = () => {
       <Route path="/w/:token" element={<PublicWishlist />} />
       <Route path="/group/:token" element={<PublicGroupList />} />
       <Route path="/join-event/:token" element={<JoinEventPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
       <Route path="/welcome" element={<LandingPage />} />
 
       {/* Home: show landing if not authenticated, dashboard if authenticated */}

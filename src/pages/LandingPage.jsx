@@ -1,4 +1,5 @@
 import { base44 } from '@/api/base44Client';
+import { Link } from 'react-router-dom';
 import { Gift, Calendar, Sparkles, Bell, Heart, Check, Star, ArrowRight, Package, Clock, DollarSign, Smile, BookOpen } from 'lucide-react';
 
 const PAIN_POINTS = [
@@ -63,6 +64,8 @@ export default function LandingPage() {
             <span className="font-heading font-bold text-ink">How Thoughtful</span>
           </div>
           <div className="flex items-center gap-3">
+            <Link to="/about" className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all hidden sm:block">About</Link>
+            <Link to="/contact" className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all hidden sm:block">Contact</Link>
             <button
               onClick={handleLogin}
               className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all"
@@ -343,6 +346,10 @@ export default function LandingPage() {
             <Heart className="w-3 h-3 text-white" />
           </div>
           <span className="font-heading font-bold text-white text-sm">How Thoughtful</span>
+        </div>
+        <div className="flex items-center justify-center gap-4 mt-3 mb-2">
+          <Link to="/about" className="text-white/60 text-xs hover:text-white transition-all">About</Link>
+          <Link to="/contact" className="text-white/60 text-xs hover:text-white transition-all">Contact</Link>
         </div>
         <p className="text-white/40 text-xs">Made for people who care about the people they love.</p>
       </footer>
