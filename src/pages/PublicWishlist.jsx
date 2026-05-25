@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -12,6 +13,20 @@ const PRIORITY_COLOR = {
 
 export default function PublicWishlist() {
   const { token } = useParams();
+
+  // Auto-unlock wishlist feature if the user is authenticated
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(async (authed) => {
+      if (!authed) return;
+      try {
+        const profiles = await base44.entities.UserProfile.list();
+        const profile = profiles[0];
+        if (profile && !profile.feature_wishlist) {
+          await base44.entities.UserProfile.update(profile.id, { feature_wishlist: true });
+        }
+      } catch {}
+    });
+  }, []);
 
   const { data: wishlist, isLoading } = useQuery({
     queryKey: ['publicWishlist', token],

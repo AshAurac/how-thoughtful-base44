@@ -20,6 +20,18 @@ export default function JoinEventPage() {
       }
 
       try {
+        // Auto-unlock deliveries & saved for collaborative users
+        try {
+          const profiles = await base44.entities.UserProfile.list();
+          const profile = profiles[0];
+          if (profile) {
+            const updates = {};
+            if (!profile.feature_deliveries) updates.feature_deliveries = true;
+            if (!profile.feature_saved) updates.feature_saved = true;
+            if (Object.keys(updates).length) await base44.entities.UserProfile.update(profile.id, updates);
+          }
+        } catch {}
+
         const res = await base44.functions.invoke('acceptEventInvite', { token });
         if (res.data?.event_id) {
           setStatus('success');

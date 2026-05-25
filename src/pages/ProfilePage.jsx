@@ -6,6 +6,7 @@ import { LogOut, Trash2, AlertTriangle, Sun, Moon, Sparkles, Mail, CheckCircle2 
 import { Link } from 'react-router-dom';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
+import { useFeatureFlags, FEATURES } from '@/hooks/useFeatureFlags';
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
@@ -32,6 +33,7 @@ export default function ProfilePage({ user }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDark, toggleDark] = useDarkMode();
   const [verifyState, setVerifyState] = useState('idle'); // idle | sending | sent
+  const { isUnlocked, toggle: toggleFeature } = useFeatureFlags(user);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['userProfile'],
@@ -270,6 +272,34 @@ export default function ProfilePage({ user }) {
             {verifyState === 'sending' ? 'Sending…' : 'Send test'}
           </button>
         )}
+      </div>
+
+      {/* Features panel */}
+      <div className="bg-card border border-border rounded-2xl px-5 py-4 space-y-4">
+        <div>
+          <p className="font-heading font-semibold text-foreground">Features</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Turn on sections you're ready to explore, or let them unlock naturally as you use the app.</p>
+        </div>
+        <div className="space-y-3">
+          {Object.entries(FEATURES).map(([key, feat]) => {
+            const on = isUnlocked(key);
+            return (
+              <div key={key} className="flex items-center justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-body text-foreground">{feat.label}</p>
+                  <p className="text-xs text-muted-foreground leading-tight">{feat.description}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toggleFeature(key, !on)}
+                  className={`relative shrink-0 w-11 h-6 rounded-full transition-colors ${on ? 'bg-terracotta' : 'bg-border'}`}
+                >
+                  <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0'}`} />
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Dark mode toggle */}

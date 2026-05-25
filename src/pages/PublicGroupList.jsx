@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -8,6 +8,20 @@ import { Gift, Check, ExternalLink } from 'lucide-react';
 export default function PublicGroupList() {
   const { token } = useParams();
   const queryClient = useQueryClient();
+
+  // Auto-unlock group gifting feature if user is authenticated
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(async (authed) => {
+      if (!authed) return;
+      try {
+        const profiles = await base44.entities.UserProfile.list();
+        const profile = profiles[0];
+        if (profile && !profile.feature_group_lists) {
+          await base44.entities.UserProfile.update(profile.id, { feature_group_lists: true });
+        }
+      } catch {}
+    });
+  }, []);
   const [claimName, setClaimName] = useState('');
   const [claimEmail, setClaimEmail] = useState('');
   const [claimingId, setClaimingId] = useState(null);

@@ -83,6 +83,34 @@
     },
     "timezone": {
       "type": "string"
+    },
+    "feature_budget": {
+      "type": "boolean",
+      "default": false
+    },
+    "feature_deliveries": {
+      "type": "boolean",
+      "default": false
+    },
+    "feature_saved": {
+      "type": "boolean",
+      "default": false
+    },
+    "feature_group_lists": {
+      "type": "boolean",
+      "default": false
+    },
+    "feature_restock": {
+      "type": "boolean",
+      "default": false
+    },
+    "feature_wishlist": {
+      "type": "boolean",
+      "default": false
+    },
+    "feature_year_in_giving": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": []
