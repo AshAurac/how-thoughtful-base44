@@ -19,21 +19,22 @@ const FREE_FEATURES = [
   '3 AI gift ideas each month',
 ];
 
-const FOUNDING_FEATURES = [
+const MONTHLY_FEATURES = [
   'Everything in Free',
-  'Unlimited thoughtful gift inspiration',
+  'Unlimited AI gift inspiration',
   'Smart reminders — 30, 14 & 3 days before every occasion',
-  'Look back on the meaningful moments you created',
-  'Gift inspiration based on how people feel loved',
-  'Lock in your founding price — it will never increase',
+  'Gift inspiration based on love languages',
+  'Budget & delivery tracking',
+  'Group gifting & wishlists',
+  'Saved ideas library',
 ];
 
-const LIFETIME_FEATURES = [
-  'Everything in Founding Member',
-  '200 AI credits included',
-  'Pay once, use forever',
-  'Cheap credit top-ups when needed',
-  'Priority support',
+const ANNUAL_FEATURES = [
+  'Everything in Monthly',
+  'Year in Giving — your annual gifting story',
+  'Founding member rate, locked in forever',
+  'All future features included',
+  'Just $2.08/month when split across the year',
 ];
 
 const TESTIMONIALS = [
@@ -243,22 +244,45 @@ export default function LandingPage() {
             </button>
           </div>
 
-          {/* Founding Member */}
+          {/* Monthly */}
+          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
+            <div className="mb-5">
+              <p className="font-heading font-bold text-lg text-ink mb-1">Monthly</p>
+              <div className="flex items-baseline gap-1">
+                <span className="font-heading font-bold text-3xl text-ink">$3.99</span>
+                <span className="text-ink-soft text-sm">AUD / month</span>
+              </div>
+              <p className="text-xs text-ink-soft mt-2">Flexible, cancel any time.</p>
+            </div>
+            <ul className="space-y-2.5 mb-6">
+              {MONTHLY_FEATURES.map(f => (
+                <li key={f} className="flex items-start gap-2 text-sm text-ink">
+                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
+              Start Monthly
+            </button>
+          </div>
+
+          {/* Annual */}
           <div className="bg-white border-2 border-terracotta rounded-3xl p-7 relative">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-terracotta text-white text-xs font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap">
               Recommended
             </div>
             <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-ink mb-1">Founding Member</p>
+              <p className="font-heading font-bold text-lg text-ink mb-1">Annual</p>
               <div className="flex items-baseline gap-1">
                 <span className="font-heading font-bold text-3xl text-ink">$24.99</span>
                 <span className="text-ink-soft text-sm">AUD / year</span>
               </div>
-              <p className="text-xs text-terracotta font-medium mt-1">Less than a coffee a month ☕</p>
-              <p className="text-xs text-ink-soft mt-1">Early supporter pricing — locked in for life.</p>
+              <p className="text-xs text-moss font-medium mt-1">Save 48% vs monthly ✓</p>
+              <p className="text-xs text-terracotta font-medium">Just $2.08/month ☕</p>
             </div>
             <ul className="space-y-2.5 mb-6">
-              {FOUNDING_FEATURES.map(f => (
+              {ANNUAL_FEATURES.map(f => (
                 <li key={f} className="flex items-start gap-2 text-sm text-ink">
                   <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
                   {f}
@@ -266,35 +290,9 @@ export default function LandingPage() {
               ))}
             </ul>
             <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
-              Become a Founding Member
+              Get Annual — Best Value
             </button>
             <p className="text-center text-xs text-ink-soft mt-3">Cancel any time. No questions asked.</p>
-          </div>
-
-          {/* Lifetime */}
-          <div className="bg-ink border-2 border-ink rounded-3xl p-7 relative overflow-hidden">
-            <div className="absolute top-3 right-3 bg-butter text-ink text-xs font-heading font-bold px-2.5 py-0.5 rounded-full">
-              For believers
-            </div>
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-white mb-1">Lifetime</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-white">$99</span>
-                <span className="text-white/60 text-sm">AUD, once</span>
-              </div>
-              <p className="text-xs text-white/60 mt-2">Support the mission and never pay again.</p>
-            </div>
-            <ul className="space-y-2.5 mb-6">
-              {LIFETIME_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-white">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
-              Get Lifetime Access
-            </button>
           </div>
         </div>
       </section>
