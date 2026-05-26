@@ -151,7 +151,7 @@ export default function Dashboard({ user }) {
     enabled: !!user?.email,
   });
 
-  const upcoming = getUpcomingEvents(events);
+  const upcoming = getUpcomingEvents(events, 365 * 3);
   const deliveries = gifts.filter(g => g.delivery_status === 'ordered' || g.delivery_status === 'shipped');
   const totalBudget = events.reduce((s, e) => s + (e.budget || 0), 0);
   const totalSpent = gifts.reduce((s, g) => s + (g.price || 0) + (g.shipping_cost || 0), 0);
