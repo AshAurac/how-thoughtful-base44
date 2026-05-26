@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { ArrowLeft, Plus, Trash2, Check, Sparkles, Lightbulb, Pencil, X } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Check, Sparkles, Lightbulb, Pencil, X, ChevronDown } from 'lucide-react';
 import { formatEventDate, daysUntil, computeBuyDates } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import NativePicker from '@/components/NativePicker';
@@ -45,6 +45,7 @@ export default function EventDetail() {
   const [editingEvent, setEditingEvent] = useState(false);
   const [editForm, setEditForm] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
 
   const { data: event, isLoading: loadingEvent } = useQuery({
     queryKey: ['event', id],
@@ -263,17 +264,6 @@ export default function EventDetail() {
         <GiftTimeline daysLeft={days !== null ? days : 999} />
       )}
 
-      {/* Delete occasion */}
-      {!editingEvent && (
-        <button
-          onClick={() => setConfirmDelete(true)}
-          className="w-full flex items-center justify-center gap-2 border border-destructive/40 text-destructive py-3 rounded-2xl font-heading font-semibold text-sm hover:bg-destructive/5 transition-all"
-        >
-          <Trash2 className="w-4 h-4" />
-          Delete this occasion
-        </button>
-      )}
-
       {/* Buy-by timeline */}
       {timeline.length > 0 && (
         <div className="bg-muted border border-border rounded-2xl p-4">
@@ -397,6 +387,24 @@ export default function EventDetail() {
       {/* Day checklist */}
       <EventChecklist occasion={event.occasion} />
 
+      {/* Notes dropdown */}
+      {event.notes && !editingEvent && (
+        <div className="bg-muted border border-border rounded-2xl overflow-hidden">
+          <button
+            onClick={() => setShowNotes(v => !v)}
+            className="w-full flex items-center justify-between px-4 py-3 text-left"
+          >
+            <span className="font-heading font-semibold text-sm text-foreground">Notes</span>
+            <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${showNotes ? 'rotate-180' : ''}`} />
+          </button>
+          {showNotes && (
+            <div className="px-4 pb-4">
+              <p className="text-sm text-foreground whitespace-pre-wrap">{event.notes}</p>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Reflection */}
       <div className="bg-muted border border-border rounded-2xl p-4">
         <p className="font-accent text-muted-foreground mb-2">a moment of gratitude</p>
@@ -435,6 +443,17 @@ export default function EventDetail() {
           </div>
         )}
       </div>
+      {/* Delete occasion */}
+      {!editingEvent && (
+        <button
+          onClick={() => setConfirmDelete(true)}
+          className="w-full flex items-center justify-center gap-2 border border-destructive/40 text-destructive py-3 rounded-2xl font-heading font-semibold text-sm hover:bg-destructive/5 transition-all"
+        >
+          <Trash2 className="w-4 h-4" />
+          Delete this occasion
+        </button>
+      )}
+
       {/* Delete confirmation sheet */}
       {confirmDelete && (
         <div className="fixed inset-0 z-50 flex items-end" onClick={() => setConfirmDelete(false)}>
