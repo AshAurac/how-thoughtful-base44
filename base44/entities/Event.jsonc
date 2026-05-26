@@ -51,6 +51,11 @@
       "type": "boolean",
       "default": false
     },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when the gift has been given and the occasion is archived"
+    },
     "notes": {
       "type": "string"
     },

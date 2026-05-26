@@ -31,6 +31,7 @@ export default function EventsList({ user }) {
   const isLoading = false;
   const ownIds = new Set(ownEvents.map(e => e.id));
   const events = [...ownEvents, ...sharedEvents.filter(e => !ownIds.has(e.id))]
+    .filter(e => !e.completed)
     .sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
 
   return (

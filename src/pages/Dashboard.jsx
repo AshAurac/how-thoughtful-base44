@@ -165,7 +165,7 @@ export default function Dashboard({ user }) {
   });
 
   const ownIds = new Set(ownEvents.map(e => e.id));
-  const events = [...ownEvents, ...sharedEvents.filter(e => !ownIds.has(e.id))];
+  const events = [...ownEvents, ...sharedEvents.filter(e => !ownIds.has(e.id))].filter(e => !e.completed);
 
   const { data: gifts = [] } = useQuery({
     queryKey: ['gifts', user?.email],

@@ -130,6 +130,9 @@ export default function EventDetail() {
       total_spent: totalSpent,
       gifts_given: gifts.map(g => ({ name: g.name, price: g.price || 0, description: g.description || '' })),
     });
+    // Archive the occasion so it disappears from the dashboard
+    await base44.entities.Event.update(id, { completed: true });
+    queryClient.invalidateQueries({ queryKey: ['events'] });
     setShowGiftWrap(true);
   };
 
@@ -177,7 +180,7 @@ export default function EventDetail() {
       {showGiftWrap && (
         <GiftWrapAnimation
           recipientName={event?.recipient_name}
-          onComplete={() => { setShowGiftWrap(false); navigate('/year-in-giving'); }}
+          onComplete={() => { setShowGiftWrap(false); navigate('/'); }}
         />
       )}
       {/* Header */}
