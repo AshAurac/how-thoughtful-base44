@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { LogOut, Trash2, AlertTriangle, Sun, Moon, Sparkles, Mail, CheckCircle2 } from 'lucide-react';
+import { LogOut, Trash2, AlertTriangle, Sun, Moon, Sparkles, Mail, CheckCircle2, Plus, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
@@ -33,6 +33,8 @@ export default function ProfilePage({ user }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDark, toggleDark] = useDarkMode();
   const [verifyState, setVerifyState] = useState('idle'); // idle | sending | sent
+  const [customSkill, setCustomSkill] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const { isUnlocked, toggle: toggleFeature } = useFeatureFlags(user);
 
   const { data: profile, isLoading } = useQuery({
@@ -80,7 +82,9 @@ export default function ProfilePage({ user }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });
-      toast.success('Profile saved');
+      setSaveSuccess(true);
+      toast.success('Profile saved!');
+      setTimeout(() => setSaveSuccess(false), 3000);
     },
   });
 
@@ -103,7 +107,7 @@ export default function ProfilePage({ user }) {
         {/* Skills */}
         <div>
           <label className="block font-heading font-semibold text-foreground mb-2">Your skills & interests</label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-3">
             {SKILLS.map(skill => (
               <button
                 key={skill}
@@ -118,6 +122,45 @@ export default function ProfilePage({ user }) {
                 {skill}
               </button>
             ))}
+            {/* Custom skills */}
+            {form.skills.filter(s => !SKILLS.includes(s)).map(skill => (
+              <button
+                key={skill}
+                type="button"
+                onClick={() => toggleArray('skills', skill)}
+                className="px-3 py-1.5 rounded-full text-sm transition-all capitalize bg-terracotta text-white flex items-center gap-1"
+              >
+                {skill} <X className="w-3 h-3" />
+              </button>
+            ))}
+          </div>
+          {/* Add custom skill */}
+          <div className="flex gap-2">
+            <input
+              value={customSkill}
+              onChange={e => setCustomSkill(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  const val = customSkill.trim().toLowerCase();
+                  if (val && !form.skills.includes(val)) toggleArray('skills', val);
+                  setCustomSkill('');
+                }
+              }}
+              placeholder="Add your own..."
+              className="flex-1 border border-border rounded-full px-4 py-2 text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                const val = customSkill.trim().toLowerCase();
+                if (val && !form.skills.includes(val)) toggleArray('skills', val);
+                setCustomSkill('');
+              }}
+              className="w-9 h-9 rounded-full bg-terracotta text-white flex items-center justify-center hover:bg-terracotta-dark transition-all shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -191,9 +234,11 @@ export default function ProfilePage({ user }) {
         <button
           type="submit"
           disabled={mutation.isPending}
-          className="w-full bg-terracotta text-white py-4 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 disabled:opacity-50"
+          className={`w-full py-4 rounded-full font-heading font-semibold transition-all hover:-translate-y-0.5 disabled:opacity-50 flex items-center justify-center gap-2 ${
+            saveSuccess ? 'bg-moss text-white' : 'bg-terracotta text-white hover:bg-terracotta-dark'
+          }`}
         >
-          {mutation.isPending ? 'Saving...' : 'Save profile'}
+          {mutation.isPending ? 'Saving...' : saveSuccess ? <><CheckCircle2 className="w-4 h-4" /> Saved!</> : 'Save profile'}
         </button>
       </form>
 

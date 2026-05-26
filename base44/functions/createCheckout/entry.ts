@@ -2,18 +2,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 import Stripe from 'npm:stripe@14';
 
 const PRICE_IDS = {
+  monthly: 'price_1TbCIRKIqRNPN7gqcwG4vG4I',
   annual: 'price_1TaZ7nKIqRNPN7gqUBqUxH63',
-  lifetime: 'price_1TaZ7nKIqRNPN7gq3XPX7mHs',
-  credits_50: 'price_1TaExEKIqRNPN7gq3PvrmkyV',
-  credits_150: 'price_1TaExEKIqRNPN7gqcL6XHSxf',
-  credits_400: 'price_1TaExEKIqRNPN7gqp1UpMuBc',
-};
-
-const CREDITS_GRANTED = {
-  lifetime: 200,
-  credits_50: 50,
-  credits_150: 150,
-  credits_400: 400,
 };
 
 Deno.serve(async (req) => {
@@ -27,7 +17,7 @@ Deno.serve(async (req) => {
     }
 
     const priceId = PRICE_IDS[product];
-    const isSubscription = product === 'annual';
+    const isSubscription = product === 'annual' || product === 'monthly';
 
     const sessionParams = {
       payment_method_types: ['card'],

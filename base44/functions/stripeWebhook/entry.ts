@@ -1,12 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 import Stripe from 'npm:stripe@14';
 
-const CREDITS_GRANTED = {
-  lifetime: 200,
-  credits_50: 50,
-  credits_150: 150,
-  credits_400: 400,
-};
 
 Deno.serve(async (req) => {
   const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
@@ -47,32 +41,13 @@ Deno.serve(async (req) => {
         return Response.json({ received: true });
       }
 
-      if (product === 'annual') {
-        // Annual subscription — mark premium, no credits
+      if (product === 'annual' || product === 'monthly') {
         await base44.asServiceRole.entities.UserProfile.update(profile.id, {
           is_premium: true,
-          premium_type: 'annual',
+          premium_type: product,
           premium_since: new Date().toISOString(),
         });
-        console.log(`Activated annual premium for ${userEmail}`);
-
-      } else if (product === 'lifetime') {
-        // Lifetime — premium forever + 200 credits
-        await base44.asServiceRole.entities.UserProfile.update(profile.id, {
-          is_premium: true,
-          premium_type: 'lifetime',
-          premium_since: new Date().toISOString(),
-          ai_credits: (profile.ai_credits || 0) + CREDITS_GRANTED.lifetime,
-        });
-        console.log(`Activated lifetime premium for ${userEmail} with 200 credits`);
-
-      } else if (CREDITS_GRANTED[product]) {
-        // Credit top-up
-        const newCredits = (profile.ai_credits || 0) + CREDITS_GRANTED[product];
-        await base44.asServiceRole.entities.UserProfile.update(profile.id, {
-          ai_credits: newCredits,
-        });
-        console.log(`Added ${CREDITS_GRANTED[product]} credits to ${userEmail}, new total: ${newCredits}`);
+        console.log(`Activated ${product} premium for ${userEmail}`);
       }
     }
 

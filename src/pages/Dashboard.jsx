@@ -3,11 +3,96 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
-import { Plus, Sparkles, Package, Mail } from 'lucide-react';
+import { Plus, Sparkles, Package, Mail, ChevronDown, ChevronRight } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import ProfileNudge from '@/components/ProfileNudge';
 import ActionQueue from '@/components/ActionQueue';
+
+function groupByMonth(events) {
+  const groups = {};
+  events.forEach(event => {
+    const d = new Date(event.event_date);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    const label = d.toLocaleString('default', { month: 'long', year: 'numeric' });
+    if (!groups[key]) groups[key] = { label, events: [] };
+    groups[key].events.push(event);
+  });
+  return Object.entries(groups).sort(([a], [b]) => a.localeCompare(b));
+}
+
+function UpcomingByMonth({ upcoming }) {
+  const groups = groupByMonth(upcoming);
+  // Auto-open the first group (soonest month)
+  const [openGroups, setOpenGroups] = useState(() => groups.length > 0 ? { [groups[0][0]]: true } : {});
+
+  const toggle = (key) => setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
+
+  if (upcoming.length === 0) {
+    return (
+      <div className="bg-muted border border-border rounded-2xl p-6 text-center">
+        <p className="font-accent text-xl text-muted-foreground mb-2">nothing on the horizon</p>
+        <p className="text-sm text-muted-foreground mb-4">Add your first occasion and never panic-buy again.</p>
+        <Link
+          to="/events/new"
+          className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
+        >
+          <Plus className="w-4 h-4" /> Add an occasion
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {groups.map(([key, { label, events }]) => {
+        const isOpen = !!openGroups[key];
+        return (
+          <div key={key} className="border border-border rounded-2xl overflow-hidden">
+            <button
+              onClick={() => toggle(key)}
+              className="w-full flex items-center justify-between px-4 py-3 bg-card hover:bg-muted transition-all"
+            >
+              <div className="flex items-center gap-2">
+                {isOpen ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
+                <span className="font-heading font-semibold text-foreground">{label}</span>
+              </div>
+              <span className="text-xs text-muted-foreground">{events.length} {events.length === 1 ? 'occasion' : 'occasions'}</span>
+            </button>
+            {isOpen && (
+              <div className="divide-y divide-border">
+                {events.map(event => {
+                  const days = daysUntil(event.event_date);
+                  return (
+                    <Link
+                      key={event.id}
+                      to={`/events/${event.id}`}
+                      className="flex items-center gap-3 bg-card px-4 py-3 hover:bg-muted transition-all"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
+                          <PriorityBadge priority={event.priority} />
+                        </div>
+                        <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className={`text-sm font-medium ${urgencyColor(days)}`}>
+                          {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
+                        </span>
+                        <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function Dashboard({ user }) {
   const queryClient = useQueryClient();
@@ -122,53 +207,7 @@ export default function Dashboard({ user }) {
         </div>
 
         {activeTab === 'upcoming' && (
-          <>
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-heading font-semibold text-lg text-foreground">Coming up</h2>
-              <Link to="/events/new" className="flex items-center gap-1 text-sm text-terracotta hover:text-terracotta-dark font-medium">
-                <Plus className="w-4 h-4" /> Add
-              </Link>
-            </div>
-            {upcoming.length === 0 ? (
-              <div className="bg-muted border border-border rounded-2xl p-6 text-center">
-                <p className="font-accent text-xl text-muted-foreground mb-2">nothing on the horizon</p>
-                <p className="text-sm text-muted-foreground mb-4">Add your first occasion and never panic-buy again.</p>
-                <Link
-                  to="/events/new"
-                  className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
-                >
-                  <Plus className="w-4 h-4" /> Add an occasion
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {upcoming.map(event => {
-                  const days = daysUntil(event.event_date);
-                  return (
-                    <Link
-                      key={event.id}
-                      to={`/events/${event.id}`}
-                      className="flex items-center gap-3 bg-card border border-border rounded-2xl p-4 hover:border-terracotta/40 transition-all hover:-translate-y-0.5"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
-                          <PriorityBadge priority={event.priority} />
-                        </div>
-                        <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className={`text-sm font-medium ${urgencyColor(days)}`}>
-                          {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
-                        </span>
-                        <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </>
+          <UpcomingByMonth upcoming={upcoming} />
         )}
 
         {activeTab === 'priority' && (
