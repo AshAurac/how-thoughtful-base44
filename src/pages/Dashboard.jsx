@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePullToRefresh } from '@/hooks/usePullToRefresh';
-import { Plus, Sparkles, Package, Mail, ChevronDown, ChevronRight } from 'lucide-react';
+import { Plus, Sparkles, Package, Mail } from 'lucide-react';
 import { getUpcomingEvents, daysUntil, urgencyColor, formatEventDate } from '@/lib/dateUtils';
 import PriorityBadge from '@/components/PriorityBadge';
 import ProfileNudge from '@/components/ProfileNudge';
@@ -23,10 +23,7 @@ function groupByMonth(events) {
 
 function UpcomingByMonth({ upcoming }) {
   const groups = groupByMonth(upcoming);
-  // Auto-open the first group (soonest month)
-  const [openGroups, setOpenGroups] = useState(() => groups.length > 0 ? { [groups[0][0]]: true } : {});
-
-  const toggle = (key) => setOpenGroups(prev => ({ ...prev, [key]: !prev[key] }));
+  const [selectedKey, setSelectedKey] = useState(() => groups.length > 0 ? groups[0][0] : null);
 
   if (upcoming.length === 0) {
     return (
@@ -43,53 +40,65 @@ function UpcomingByMonth({ upcoming }) {
     );
   }
 
+  const selectedGroup = groups.find(([key]) => key === selectedKey);
+
   return (
-    <div className="space-y-2">
-      {groups.map(([key, { label, events }]) => {
-        const isOpen = !!openGroups[key];
-        return (
-          <div key={key} className="border border-border rounded-2xl overflow-hidden">
+    <div>
+      {/* Month selector buttons */}
+      <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-none">
+        {groups.map(([key, { label, events }]) => {
+          const shortLabel = label.replace(/\s\d{4}$/, ''); // e.g. "June" instead of "June 2026"
+          const isSelected = key === selectedKey;
+          return (
             <button
-              onClick={() => toggle(key)}
-              className="w-full flex items-center justify-between px-4 py-3 bg-card hover:bg-muted transition-all"
+              key={key}
+              onClick={() => setSelectedKey(key)}
+              className={`flex-none px-4 py-2 rounded-full text-sm font-heading font-semibold transition-all whitespace-nowrap ${
+                isSelected
+                  ? 'bg-terracotta text-white'
+                  : 'bg-card border border-border text-muted-foreground hover:text-foreground hover:border-terracotta/40'
+              }`}
             >
-              <div className="flex items-center gap-2">
-                {isOpen ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
-                <span className="font-heading font-semibold text-foreground">{label}</span>
-              </div>
-              <span className="text-xs text-muted-foreground">{events.length} {events.length === 1 ? 'occasion' : 'occasions'}</span>
+              {shortLabel}
+              <span className={`ml-1.5 text-xs ${isSelected ? 'text-white/70' : 'text-muted-foreground'}`}>
+                {events.length}
+              </span>
             </button>
-            {isOpen && (
-              <div className="divide-y divide-border">
-                {events.map(event => {
-                  const days = daysUntil(event.event_date);
-                  return (
-                    <Link
-                      key={event.id}
-                      to={`/events/${event.id}`}
-                      className="flex items-center gap-3 bg-card px-4 py-3 hover:bg-muted transition-all"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
-                          <PriorityBadge priority={event.priority} />
-                        </div>
-                        <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
-                      </div>
-                      <div className="text-right">
-                        <span className={`text-sm font-medium ${urgencyColor(days)}`}>
-                          {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
-                        </span>
-                        <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
+          );
+        })}
+      </div>
+
+      {/* Events for selected month */}
+      {selectedGroup && (
+        <div className="border border-border rounded-2xl overflow-hidden">
+          <div className="divide-y divide-border">
+            {selectedGroup[1].events.map(event => {
+              const days = daysUntil(event.event_date);
+              return (
+                <Link
+                  key={event.id}
+                  to={`/events/${event.id}`}
+                  className="flex items-center gap-3 bg-card px-4 py-3 hover:bg-muted transition-all"
+                >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
+                      <PriorityBadge priority={event.priority} />
+                    </div>
+                    <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className={`text-sm font-medium ${urgencyColor(days)}`}>
+                      {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
+                    </span>
+                    <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 }
