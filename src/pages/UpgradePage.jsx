@@ -5,47 +5,63 @@ import { base44 } from '@/api/base44Client';
 import { Check, Home, Star } from 'lucide-react';
 import { toast } from 'sonner';
 
-const PRODUCTS = {
-  monthly: {
-    id: 'monthly',
-    label: 'Monthly',
-    sublabel: 'Flexible, cancel any time',
-    price: '$3.99 AUD',
-    period: '/ month',
-    description: 'Access all premium features month to month.',
-    perks: [
-      'Smart reminders — 30, 14 & 3 days out',
-      'Gift inspiration based on love languages',
-      'Budget & delivery tracking',
-      'Group gifting & wishlists',
-      'Saved ideas library',
+const PLANS = [
+  {
+    id: 'free',
+    name: 'Free',
+    tagline: 'Start being thoughtful today.',
+    monthly: { price: '$0', period: 'forever', note: '' },
+    annual: { price: '$0', period: 'forever', note: '' },
+    features: [
+      'Up to 6 occasions to track',
+      '3 AI gift ideas each month',
+      'Curated gift ideas — always free',
+      'Gift checklist & delivery tracker',
+      'Personal wishlist with shareable link',
     ],
     highlight: false,
-    recommended: false,
+    ctaLabel: 'You\'re on Free',
+    isFree: true,
   },
-  annual: {
-    id: 'annual',
-    label: 'Annual',
-    sublabel: 'Best value — save $23.89',
-    price: '$24.99 AUD',
-    period: '/ year',
-    coffeeLine: 'Just $2.08/month ☕',
-    savingsLine: 'Save 48% vs monthly',
-    description: 'Founding member pricing — locked in for life.',
-    perks: [
-      'Everything in Monthly',
+  {
+    id: 'individual',
+    name: 'Individual',
+    tagline: 'For people who want to show up fully.',
+    monthly: { price: '$3.99', period: '/ month AUD', note: 'Cancel any time.', savings: null },
+    annual: { price: '$24.99', period: '/ year AUD', note: 'Just $2.08/month ☕', savings: 'Save 48% ✓' },
+    features: [
+      'Unlimited occasions',
+      '30 personalised AI gift ideas per month',
+      'Smart reminders — 30, 14 & 3 days out',
+      'Full budget & delivery tracking',
+      'Invite 1 collaborator per occasion',
+      'Bulk import occasions & people',
       'Year in Giving — your annual gifting story',
-      'AI-powered gift idea generation',
-      'Priority support',
       'All future features included',
-      'Founding member rate, locked in forever',
     ],
     highlight: true,
-    recommended: true,
+    badge: 'Most Popular',
   },
-};
+  {
+    id: 'family',
+    name: 'Family',
+    tagline: 'Thoughtfulness, shared across your whole family.',
+    monthly: { price: '$5.99', period: '/ month AUD', note: 'Cancel any time.', savings: null },
+    annual: { price: '$49.99', period: '/ year AUD', note: 'Just $4.17/month', savings: 'Save 30% ✓' },
+    features: [
+      'Everything in Individual',
+      'Up to 6 family member accounts',
+      'Up to 4 kid accounts — learn to be thoughtful',
+      'Shared family occasions & group gifting',
+      'Surprise Protection — recipients can\'t see their gifts',
+      'Invite up to 6 collaborators per occasion',
+    ],
+    highlight: false,
+    badge: 'Best for Families',
+  },
+];
 
-function CheckoutButton({ product, label, className, user }) {
+function CheckoutButton({ product, billing, label, className, user }) {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
@@ -54,11 +70,10 @@ function CheckoutButton({ product, label, className, user }) {
       alert('Checkout only works from the published app — please open it directly in your browser.');
       return;
     }
-
     setLoading(true);
     try {
       const res = await base44.functions.invoke('createCheckout', {
-        product,
+        product: `${product}_${billing}`,
         user_email: user?.email || '',
         success_url: `${window.location.origin}/upgrade?success=true&product=${product}`,
         cancel_url: `${window.location.origin}/upgrade`,
@@ -68,7 +83,7 @@ function CheckoutButton({ product, label, className, user }) {
       } else {
         toast.error('Could not start checkout. Please try again.');
       }
-    } catch (err) {
+    } catch {
       toast.error('Something went wrong. Please try again.');
     }
     setLoading(false);
@@ -82,6 +97,7 @@ function CheckoutButton({ product, label, className, user }) {
 }
 
 export default function UpgradePage({ user }) {
+  const [billing, setBilling] = useState('annual');
   const urlParams = new URLSearchParams(window.location.search);
   const successProduct = urlParams.get('success') === 'true' ? urlParams.get('product') : null;
 
@@ -98,7 +114,7 @@ export default function UpgradePage({ user }) {
   const premiumType = profile?.premium_type;
 
   return (
-    <div className="space-y-8 max-w-lg mx-auto">
+    <div className="space-y-8 max-w-2xl mx-auto">
 
       {successProduct && (
         <div className="bg-moss/20 border border-moss rounded-2xl p-4 text-center">
@@ -110,7 +126,23 @@ export default function UpgradePage({ user }) {
       <div className="text-center">
         <p className="font-accent text-2xl text-ink-soft mb-1">upgrade</p>
         <h1 className="font-heading font-bold text-3xl text-foreground">Be more thoughtful</h1>
-        <p className="text-muted-foreground mt-2">Simple, fair pricing. Cancel any time.</p>
+        <p className="text-muted-foreground mt-2 mb-6">Simple, fair pricing. Cancel any time.</p>
+
+        {/* Billing toggle */}
+        <div className="inline-flex bg-muted rounded-full p-1">
+          <button
+            onClick={() => setBilling('monthly')}
+            className={`px-5 py-2 rounded-full text-sm font-heading font-semibold transition-all ${billing === 'monthly' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            Monthly
+          </button>
+          <button
+            onClick={() => setBilling('annual')}
+            className={`px-5 py-2 rounded-full text-sm font-heading font-semibold transition-all ${billing === 'annual' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            Annual <span className="text-moss font-bold ml-1">Save up to 48%</span>
+          </button>
+        </div>
       </div>
 
       {isPremium && (
@@ -123,64 +155,74 @@ export default function UpgradePage({ user }) {
 
       {/* Plan cards */}
       <div className="space-y-4">
-        {Object.values(PRODUCTS).map(plan => (
-          <div
-            key={plan.id}
-            className={`rounded-3xl p-6 relative mt-3 ${
-              plan.recommended
-                ? 'bg-white dark:bg-card border-2 border-terracotta'
-                : 'bg-white dark:bg-card border-2 border-sand-300 dark:border-border'
-            }`}
-          >
-            {plan.recommended && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-terracotta text-white text-xs font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1">
-                <Star className="w-3 h-3" /> Recommended
+        {PLANS.map(plan => {
+          const price = plan[billing];
+          const isActive = isPremium && (premiumType === plan.id || premiumType?.startsWith(plan.id));
+          return (
+            <div
+              key={plan.id}
+              className={`rounded-3xl p-6 relative mt-3 bg-white dark:bg-card ${
+                plan.highlight
+                  ? 'border-2 border-terracotta'
+                  : 'border-2 border-sand-300 dark:border-border'
+              }`}
+            >
+              {plan.badge && (
+                <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-white text-xs font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap flex items-center gap-1 ${plan.highlight ? 'bg-terracotta' : 'bg-ink'}`}>
+                  <Star className="w-3 h-3" /> {plan.badge}
+                </div>
+              )}
+
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div>
+                  <p className="font-heading font-bold text-lg text-ink dark:text-foreground">{plan.name}</p>
+                  <p className="text-xs text-ink-soft dark:text-muted-foreground">{plan.tagline}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <div className="flex items-baseline gap-1 justify-end">
+                    <span className="font-heading font-bold text-2xl text-ink dark:text-foreground">{price.price}</span>
+                    <span className="text-ink-soft dark:text-muted-foreground text-xs">{price.period}</span>
+                  </div>
+                  {price.savings && <p className="text-xs text-moss font-semibold">{price.savings}</p>}
+                  {price.note && <p className="text-xs text-terracotta font-medium">{price.note}</p>}
+                </div>
               </div>
-            )}
-            <p className="font-heading font-bold text-lg text-ink dark:text-foreground mb-0.5">{plan.label}</p>
-            <p className="text-xs text-ink-soft dark:text-muted-foreground mb-2">{plan.sublabel}</p>
-            <div className="flex items-baseline gap-1 mb-1">
-              <span className="font-heading font-bold text-3xl text-ink dark:text-foreground">{plan.price}</span>
-              <span className="text-ink-soft dark:text-muted-foreground text-sm">{plan.period}</span>
-            </div>
-            {plan.coffeeLine && (
-              <p className="text-xs text-terracotta font-medium">{plan.coffeeLine}</p>
-            )}
-            {plan.savingsLine && (
-              <p className="text-xs font-heading font-semibold text-moss mb-1">{plan.savingsLine}</p>
-            )}
-            <p className="text-sm mb-4 text-ink-soft dark:text-muted-foreground mt-1">{plan.description}</p>
-            <ul className="space-y-2 mb-5">
-              {plan.perks.map(perk => (
-                <li key={perk} className="flex items-center gap-2 text-sm text-ink dark:text-foreground">
-                  <Check className="w-4 h-4 flex-shrink-0 text-moss" />
-                  {perk}
-                </li>
-              ))}
-            </ul>
-            {isPremium ? (
-              <div className="w-full text-center py-3 rounded-full text-sm font-medium bg-sand-100 dark:bg-muted text-ink-soft dark:text-muted-foreground">
-                {premiumType === plan.id ? 'Active ✓' : 'Switch plan via billing portal'}
-              </div>
-            ) : (
-              <>
+
+              <ul className="space-y-2 mb-5">
+                {plan.features.map(perk => (
+                  <li key={perk} className="flex items-center gap-2 text-sm text-ink dark:text-foreground">
+                    <Check className="w-4 h-4 flex-shrink-0 text-moss" />
+                    {perk}
+                  </li>
+                ))}
+              </ul>
+
+              {plan.isFree ? (
+                <div className="w-full text-center py-3 rounded-full text-sm font-medium bg-sand-100 dark:bg-muted text-ink-soft dark:text-muted-foreground">
+                  {isActive || !isPremium ? 'Your current plan' : 'Downgrade'}
+                </div>
+              ) : isActive ? (
+                <div className="w-full text-center py-3 rounded-full text-sm font-medium bg-sand-100 dark:bg-muted text-ink-soft dark:text-muted-foreground">
+                  Active ✓
+                </div>
+              ) : (
                 <CheckoutButton
                   product={plan.id}
+                  billing={billing}
                   user={user}
-                  label={plan.id === 'annual' ? 'Get Annual — best value' : 'Start Monthly'}
-                  className={`w-full py-3.5 rounded-full font-heading font-semibold transition-all hover:-translate-y-0.5 ${
-                    plan.recommended
+                  label={`Get ${plan.name} — ${billing === 'annual' ? 'best value' : 'monthly'}`}
+                  className={`w-full py-3.5 rounded-full font-heading font-semibold transition-all hover:-translate-y-0.5 text-sm ${
+                    plan.highlight
                       ? 'bg-terracotta text-white hover:bg-terracotta-dark'
-                      : 'border-2 border-border text-foreground hover:bg-muted'
+                      : plan.id === 'family'
+                        ? 'bg-ink text-white hover:bg-ink/90'
+                        : 'border-2 border-border text-foreground hover:bg-muted'
                   }`}
                 />
-                {plan.id === 'annual' && (
-                  <p className="text-center text-xs text-ink-soft dark:text-muted-foreground mt-2">Cancel any time. No questions asked.</p>
-                )}
-              </>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          );
+        })}
       </div>
 
       <div className="text-center text-sm text-muted-foreground pb-2">

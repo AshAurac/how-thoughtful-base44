@@ -57,9 +57,9 @@ export default function RecipientsPage({ user }) {
         <div className="flex gap-2">
           <button
             onClick={() => setShowImport(true)}
-            className="flex items-center gap-1.5 border border-border text-muted-foreground px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-muted transition-all"
+            className="flex items-center gap-1.5 bg-moss/15 border border-moss/30 text-moss-dark px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-moss/25 transition-all"
           >
-            <Upload className="w-4 h-4" /> Import
+            <Upload className="w-4 h-4" /> Import all
           </button>
           <button
             onClick={() => setShowAdd(v => !v)}
@@ -127,9 +127,23 @@ export default function RecipientsPage({ user }) {
       {isLoading ? (
         <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 bg-sand-200 rounded-2xl animate-pulse" />)}</div>
       ) : recipients.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="font-accent text-2xl text-muted-foreground mb-2">no one yet</p>
-          <p className="text-sm text-muted-foreground">Recipients are added automatically when you create events.</p>
+        <div className="text-center py-10 space-y-4">
+          <p className="font-accent text-2xl text-muted-foreground">no one yet</p>
+          <p className="text-sm text-muted-foreground max-w-xs mx-auto">Add all your people at once — the more you tell us about them, the more thoughtful your gift ideas become.</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => setShowImport(true)}
+              className="inline-flex items-center gap-2 bg-moss/15 border border-moss/30 text-moss-dark px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-moss/25 transition-all"
+            >
+              <Upload className="w-4 h-4" /> Import everyone at once
+            </button>
+            <button
+              onClick={() => setShowAdd(true)}
+              className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all"
+            >
+              <Plus className="w-4 h-4" /> Add one person
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-2">

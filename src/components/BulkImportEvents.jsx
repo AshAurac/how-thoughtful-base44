@@ -118,12 +118,18 @@ export default function BulkImportEvents({ onClose }) {
       >
         <div className="p-5 border-b border-sand-200 flex items-center justify-between">
           <div>
-            <h2 className="font-heading font-bold text-lg text-ink">Bulk Import Events</h2>
-            <p className="text-sm text-ink-soft">Upload a CSV or paste data below</p>
+            <h2 className="font-heading font-bold text-lg text-ink">Bulk Import Occasions</h2>
+            <p className="text-sm text-ink-soft">Add everyone at once — never miss a moment</p>
           </div>
           <button onClick={onClose} className="p-2 rounded-full hover:bg-sand-100 transition-all">
             <X className="w-5 h-5 text-ink-soft" />
           </button>
+        </div>
+
+        {/* Benefit banner */}
+        <div className="mx-5 mt-5 bg-moss/10 border border-moss/20 rounded-2xl p-4">
+          <p className="font-heading font-semibold text-sm text-ink mb-1">🎁 Set it up once, stay thoughtful all year</p>
+          <p className="text-xs text-ink-soft leading-relaxed">Import all your important dates in seconds — birthdays, anniversaries, graduations. How Thoughtful will remind you at exactly the right time so you're never caught off guard again.</p>
         </div>
 
         {done ? (

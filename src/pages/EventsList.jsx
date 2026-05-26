@@ -57,9 +57,9 @@ export default function EventsList({ user }) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowImport(true)}
-            className="flex items-center gap-1.5 border border-border text-muted-foreground px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-muted transition-all"
+            className="flex items-center gap-1.5 bg-moss/15 border border-moss/30 text-moss-dark px-3 py-2 rounded-full font-heading font-semibold text-sm hover:bg-moss/25 transition-all"
           >
-            <Upload className="w-4 h-4" /> Import
+            <Upload className="w-4 h-4" /> Import all
           </button>
           <Link
             to="/events/new"
@@ -77,12 +77,20 @@ export default function EventsList({ user }) {
           {[1,2,3].map(i => <div key={i} className="h-20 bg-muted rounded-2xl animate-pulse" />)}
         </div>
       ) : events.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="font-accent text-2xl text-muted-foreground mb-2">nothing yet</p>
-          <p className="text-muted-foreground mb-4">Add your first occasion to get started.</p>
-          <Link to="/events/new" className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5">
-            <Plus className="w-4 h-4" /> Add occasion
-          </Link>
+        <div className="text-center py-10 space-y-4">
+          <p className="font-accent text-2xl text-muted-foreground">nothing yet</p>
+          <p className="text-muted-foreground text-sm">Add your first occasion, or import a bunch at once.</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => setShowImport(true)}
+              className="inline-flex items-center gap-2 bg-moss/15 border border-moss/30 text-moss-dark px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-moss/25 transition-all"
+            >
+              <Upload className="w-4 h-4" /> Import all at once — it's quick!
+            </button>
+            <Link to="/events/new" className="inline-flex items-center gap-2 bg-terracotta text-white px-5 py-2.5 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5">
+              <Plus className="w-4 h-4" /> Add one occasion
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="space-y-3">

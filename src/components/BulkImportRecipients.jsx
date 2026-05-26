@@ -102,11 +102,17 @@ export default function BulkImportRecipients({ onClose }) {
         <div className="p-5 border-b border-border flex items-center justify-between">
           <div>
             <h2 className="font-heading font-bold text-lg text-foreground">Bulk Import People</h2>
-            <p className="text-sm text-muted-foreground">Upload a CSV or paste data below</p>
+            <p className="text-sm text-muted-foreground">Add everyone you care about at once</p>
           </div>
           <button onClick={onClose} className="p-2 rounded-full hover:bg-muted transition-all">
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
+        </div>
+
+        {/* Benefit banner */}
+        <div className="mx-5 mt-5 bg-moss/10 border border-moss/20 rounded-2xl p-4">
+          <p className="font-heading font-semibold text-sm text-foreground mb-1">💛 The most thoughtful 2 minutes you'll spend today</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">Add your family, friends & colleagues all at once. Include their interests, love language & relationship — and How Thoughtful will use it to suggest genuinely personal gift ideas every time.</p>
         </div>
 
         {done ? (

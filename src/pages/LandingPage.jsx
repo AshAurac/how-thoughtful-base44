@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { Link } from 'react-router-dom';
-import { Gift, Calendar, Sparkles, Bell, Heart, Check, Star, ArrowRight, Package, Clock, DollarSign, Smile, BookOpen } from 'lucide-react';
+import { Gift, Calendar, Sparkles, Bell, Heart, Check, Star, ArrowRight, Package, Clock, DollarSign, Smile, BookOpen, Users } from 'lucide-react';
 
 const PAIN_POINTS = [
   { icon: Clock, text: "You remember someone's birthday at 11pm the night before and panic." },
@@ -9,48 +10,116 @@ const PAIN_POINTS = [
   { icon: Package, text: "Gifts arrive late, or not at all, because life got in the way." },
 ];
 
-const FREE_FEATURES = [
-  'Keep track of the people and moments that matter most',
-  'Curated gift ideas — always free, always thoughtful',
-  'Gift checklist & delivery tracker',
-  'Your personal wishlist with a shareable link',
-  'Plan birthdays, anniversaries and special moments ahead of time',
-  'Stay generous without overspending',
-  '3 AI gift ideas each month',
-];
-
-const MONTHLY_FEATURES = [
-  'Everything in Free',
-  'Unlimited AI gift inspiration',
-  'Smart reminders — 30, 14 & 3 days before every occasion',
-  'Gift inspiration based on love languages',
-  'Budget & delivery tracking',
-  'Group gifting & wishlists',
-  'Saved ideas library',
-];
-
-const ANNUAL_FEATURES = [
-  'Everything in Monthly',
-  'Year in Giving — your annual gifting story',
-  'Founding member rate, locked in forever',
-  'All future features included',
-  'Just $2.08/month when split across the year',
-];
-
 const TESTIMONIALS = [
   { quote: "I used to be the person who forgot birthdays. Now I'm the person everyone asks for gift advice.", name: 'Sarah M.' },
   { quote: "The 14-day reminder saved me so many times. I actually feel organised about the people I love now.", name: 'James T.' },
   { quote: "My partner thinks I'm incredibly thoughtful. They don't know about How Thoughtful 😅", name: 'Priya K.' },
 ];
 
-export default function LandingPage() {
-  const handleSignup = () => {
-    base44.auth.redirectToLogin(window.location.origin);
-  };
+const PLANS = [
+  {
+    id: 'free',
+    name: 'Free',
+    tagline: 'Start being thoughtful today.',
+    monthly: { price: '$0', period: 'forever', note: 'No credit card needed.' },
+    annual: { price: '$0', period: 'forever', note: 'No credit card needed.' },
+    features: [
+      'Up to 6 occasions to track',
+      '3 AI gift ideas each month',
+      'Curated gift ideas — always free',
+      'Gift checklist & delivery tracker',
+      'Your personal wishlist with shareable link',
+      'Plan birthdays, anniversaries & special moments',
+    ],
+    cta: 'Start for free',
+    ctaStyle: 'border-2 border-terracotta text-terracotta hover:bg-terracotta hover:text-white',
+    highlight: false,
+  },
+  {
+    id: 'individual',
+    name: 'Individual',
+    tagline: 'For people who want to show up fully.',
+    monthly: { price: '$3.99', period: '/ month AUD', note: 'Cancel any time.', savings: null },
+    annual: { price: '$24.99', period: '/ year AUD', note: 'Just $2.08/month', savings: 'Save 48% ✓' },
+    features: [
+      'Unlimited occasions',
+      '30 personalised AI gift ideas per month',
+      'Smart reminders — 30, 14 & 3 days out',
+      'Full budget & delivery tracking',
+      'Invite 1 collaborator per occasion',
+      'Bulk import occasions & people',
+      'Year in Giving — your annual gifting story',
+      'All future features included',
+    ],
+    cta: 'Get Individual',
+    ctaStyle: 'bg-terracotta text-white hover:bg-terracotta-dark',
+    highlight: true,
+    badge: 'Most Popular',
+  },
+  {
+    id: 'family',
+    name: 'Family',
+    tagline: 'Thoughtfulness, shared across your whole family.',
+    monthly: { price: '$5.99', period: '/ month AUD', note: 'Cancel any time.', savings: null },
+    annual: { price: '$49.99', period: '/ year AUD', note: 'Just $4.17/month', savings: 'Save 30% ✓' },
+    features: [
+      'Everything in Individual',
+      'Up to 6 family member accounts',
+      'Up to 4 kid accounts — learn to be thoughtful',
+      'Shared family occasions & group gifting',
+      'Surprise Protection — recipients can\'t see their gifts',
+      'Invite up to 6 collaborators per occasion',
+      'Family dashboard view',
+    ],
+    cta: 'Get Family',
+    ctaStyle: 'bg-ink text-white hover:bg-ink/90',
+    highlight: false,
+    badge: 'Best for Families',
+  },
+];
 
-  const handleLogin = () => {
-    base44.auth.redirectToLogin(window.location.origin);
-  };
+function PlanCard({ plan, billing, onSignup }) {
+  const price = plan[billing];
+  return (
+    <div className={`relative bg-white rounded-3xl p-7 flex flex-col ${plan.highlight ? 'border-2 border-terracotta' : 'border-2 border-sand-300'}`}>
+      {plan.badge && (
+        <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-white text-xs font-heading font-bold px-4 py-1 rounded-full whitespace-nowrap ${plan.highlight ? 'bg-terracotta' : 'bg-ink'}`}>
+          {plan.badge}
+        </div>
+      )}
+      <div className="mb-5">
+        <p className="font-heading font-bold text-lg text-ink mb-1">{plan.name}</p>
+        <p className="text-xs text-ink-soft mb-3">{plan.tagline}</p>
+        <div className="flex items-baseline gap-1">
+          <span className="font-heading font-bold text-3xl text-ink">{price.price}</span>
+          <span className="text-ink-soft text-sm">{price.period}</span>
+        </div>
+        {price.savings && <p className="text-xs text-moss font-semibold mt-1">{price.savings}</p>}
+        {price.note && <p className="text-xs text-terracotta font-medium mt-0.5">{price.note}</p>}
+      </div>
+      <ul className="space-y-2.5 mb-6 flex-1">
+        {plan.features.map(f => (
+          <li key={f} className="flex items-start gap-2 text-sm text-ink">
+            <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
+            {f}
+          </li>
+        ))}
+      </ul>
+      <button
+        onClick={onSignup}
+        className={`w-full py-3 rounded-full font-heading font-semibold text-sm transition-all hover:-translate-y-0.5 ${plan.ctaStyle}`}
+      >
+        {plan.cta}
+      </button>
+    </div>
+  );
+}
+
+export default function LandingPage() {
+  const [billing, setBilling] = useState('monthly');
+
+  const handleSignup = () => base44.auth.redirectToLogin(window.location.origin);
+  const handleLogin = () => base44.auth.redirectToLogin(window.location.origin);
 
   return (
     <div className="min-h-screen bg-sand-50 font-body">
@@ -65,10 +134,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-3">
             <Link to="/about" className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all hidden sm:block">About</Link>
             <Link to="/contact" className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all hidden sm:block">Contact</Link>
-            <button
-              onClick={handleLogin}
-              className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all"
-            >
+            <button onClick={handleLogin} className="text-ink-soft font-heading font-semibold text-sm hover:text-ink transition-all">
               Log in
             </button>
             <button
@@ -108,7 +174,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Emotional pain points */}
+      {/* Pain points */}
       <section className="px-6 py-14 bg-white border-y border-sand-300">
         <div className="max-w-3xl mx-auto">
           <p className="font-accent text-xl text-center text-ink-soft mb-8">you're not alone in this</p>
@@ -128,7 +194,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How it relieves mental load */}
+      {/* How it helps */}
       <section className="px-6 py-16 max-w-3xl mx-auto text-center">
         <p className="font-accent text-xl text-ink-soft mb-3">how it helps</p>
         <h2 className="font-heading font-bold text-3xl text-ink mb-4">Less mental load. More genuine connection.</h2>
@@ -161,42 +227,12 @@ export default function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              {
-                icon: Calendar,
-                color: 'bg-terracotta/10 text-terracotta',
-                title: 'Never miss a moment',
-                desc: 'Add birthdays, anniversaries, graduations and more. Get reminders at exactly the right time to be ready — not rushed.',
-              },
-              {
-                icon: Sparkles,
-                color: 'bg-moss/15 text-moss-dark',
-                title: 'Thoughtful gift inspiration',
-                desc: 'Personalised ideas based on who they are, what they love, and how they feel cared for. Not generic lists.',
-              },
-              {
-                icon: Heart,
-                color: 'bg-butter/40 text-butter-dark',
-                title: 'Give with intention',
-                desc: 'Track love languages, set a giving intention for the year, and reflect on the moments you created.',
-              },
-              {
-                icon: Bell,
-                color: 'bg-terracotta/10 text-terracotta',
-                title: 'Gentle reminders',
-                desc: "30 days to order online. 14 days to buy locally. 3 days to wrap. You'll always feel prepared, not behind.",
-              },
-              {
-                icon: Package,
-                color: 'bg-moss/15 text-moss-dark',
-                title: 'Track every gift',
-                desc: 'From the idea to delivered. Know exactly where everything is, and never lose track of an order.',
-              },
-              {
-                icon: Gift,
-                color: 'bg-butter/40 text-butter-dark',
-                title: 'Your own wishlist',
-                desc: 'Create a wishlist and share a link with people who love you. No more guessing, no more duplicates.',
-              },
+              { icon: Calendar, color: 'bg-terracotta/10 text-terracotta', title: 'Never miss a moment', desc: 'Add birthdays, anniversaries, graduations and more. Get reminders at exactly the right time to be ready — not rushed.' },
+              { icon: Sparkles, color: 'bg-moss/15 text-moss-dark', title: 'Thoughtful gift inspiration', desc: 'Personalised ideas based on who they are, what they love, and how they feel cared for. Not generic lists.' },
+              { icon: Heart, color: 'bg-butter/40 text-butter-dark', title: 'Give with intention', desc: 'Track love languages, set a giving intention for the year, and reflect on the moments you created.' },
+              { icon: Bell, color: 'bg-terracotta/10 text-terracotta', title: 'Gentle reminders', desc: "30 days to order online. 14 days to buy locally. 3 days to wrap. You'll always feel prepared, not behind." },
+              { icon: Package, color: 'bg-moss/15 text-moss-dark', title: 'Track every gift', desc: 'From the idea to delivered. Know exactly where everything is, and never lose track of an order.' },
+              { icon: Users, color: 'bg-butter/40 text-butter-dark', title: 'Family & group gifting', desc: 'Invite the family, plan together, keep surprises secret. Up to 6 accounts and surprise protection built in.' },
             ].map(({ icon: Icon, color, title, desc }) => (
               <div key={title} className="bg-sand-50 border border-sand-300 rounded-2xl p-6 hover:border-terracotta/30 hover:-translate-y-1 transition-all">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${color}`}>
@@ -211,88 +247,36 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing */}
-      <section className="px-6 py-20 max-w-4xl mx-auto" id="pricing">
-        <div className="text-center mb-12">
+      <section className="px-6 py-20 max-w-5xl mx-auto" id="pricing">
+        <div className="text-center mb-10">
           <p className="font-accent text-xl text-ink-soft mb-2">simple, fair pricing</p>
           <h2 className="font-heading font-bold text-3xl text-ink">Start for free. Stay as long as you like.</h2>
           <p className="text-ink-soft mt-3 max-w-md mx-auto">No pressure. The free plan is genuinely useful. Upgrade when it feels right.</p>
+
+          {/* Billing toggle */}
+          <div className="inline-flex bg-sand-200 rounded-full p-1 mt-6">
+            <button
+              onClick={() => setBilling('monthly')}
+              className={`px-5 py-2 rounded-full text-sm font-heading font-semibold transition-all ${billing === 'monthly' ? 'bg-white text-ink shadow-sm' : 'text-ink-soft hover:text-ink'}`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBilling('annual')}
+              className={`px-5 py-2 rounded-full text-sm font-heading font-semibold transition-all ${billing === 'annual' ? 'bg-white text-ink shadow-sm' : 'text-ink-soft hover:text-ink'}`}
+            >
+              Annual <span className="text-moss font-bold ml-1">Save 30–48%</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {/* Free */}
-          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-ink mb-1">Free</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-ink">$0</span>
-                <span className="text-ink-soft text-sm">forever</span>
-              </div>
-              <p className="text-xs text-ink-soft mt-2">Start being more thoughtful today — no commitment needed.</p>
-            </div>
-            <ul className="space-y-2.5 mb-6">
-              {FREE_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
-              Start for free
-            </button>
-          </div>
-
-          {/* Monthly */}
-          <div className="bg-white border-2 border-sand-300 rounded-3xl p-7">
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-ink mb-1">Monthly</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-ink">$3.99</span>
-                <span className="text-ink-soft text-sm">AUD / month</span>
-              </div>
-              <p className="text-xs text-ink-soft mt-2">Flexible, cancel any time.</p>
-            </div>
-            <ul className="space-y-2.5 mb-6">
-              {MONTHLY_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full border-2 border-terracotta text-terracotta py-3 rounded-full font-heading font-semibold hover:bg-terracotta hover:text-white transition-all text-sm">
-              Start Monthly
-            </button>
-          </div>
-
-          {/* Annual */}
-          <div className="bg-white border-2 border-terracotta rounded-3xl p-7 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-terracotta text-white text-xs font-heading font-bold px-3 py-1 rounded-full whitespace-nowrap">
-              Recommended
-            </div>
-            <div className="mb-5">
-              <p className="font-heading font-bold text-lg text-ink mb-1">Annual</p>
-              <div className="flex items-baseline gap-1">
-                <span className="font-heading font-bold text-3xl text-ink">$24.99</span>
-                <span className="text-ink-soft text-sm">AUD / year</span>
-              </div>
-              <p className="text-xs text-moss font-medium mt-1">Save 48% vs monthly ✓</p>
-              <p className="text-xs text-terracotta font-medium">Just $2.08/month ☕</p>
-            </div>
-            <ul className="space-y-2.5 mb-6">
-              {ANNUAL_FEATURES.map(f => (
-                <li key={f} className="flex items-start gap-2 text-sm text-ink">
-                  <Check className="w-4 h-4 text-moss mt-0.5 flex-shrink-0" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleSignup} className="w-full bg-terracotta text-white py-3 rounded-full font-heading font-semibold hover:bg-terracotta-dark transition-all hover:-translate-y-0.5 text-sm">
-              Get Annual — Best Value
-            </button>
-            <p className="text-center text-xs text-ink-soft mt-3">Cancel any time. No questions asked.</p>
-          </div>
+          {PLANS.map(plan => (
+            <PlanCard key={plan.id} plan={plan} billing={billing} onSignup={handleSignup} />
+          ))}
         </div>
+
+        <p className="text-center text-sm text-ink-soft mt-6">All plans include curated gift ideas — free forever.</p>
       </section>
 
       {/* Testimonials */}
@@ -315,13 +299,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Soft CTA */}
+      {/* CTA */}
       <section className="px-6 py-20 bg-sand-100">
         <div className="max-w-2xl mx-auto text-center">
           <p className="font-accent text-2xl text-ink-soft mb-3">ready to show up for the people you love?</p>
-          <h2 className="font-heading font-bold text-4xl text-ink mb-5">
-            Thoughtfulness, remembered.
-          </h2>
+          <h2 className="font-heading font-bold text-4xl text-ink mb-5">Thoughtfulness, remembered.</h2>
           <p className="text-ink-soft text-lg mb-10 leading-relaxed">
             Join people who've stopped stressing about gifts and started giving with genuine care — one occasion at a time.
           </p>
