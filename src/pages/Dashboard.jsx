@@ -81,9 +81,14 @@ function UpcomingByMonth({ upcoming }) {
                   className="flex items-center gap-3 bg-card px-4 py-3 hover:bg-muted transition-all"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                       <span className="font-heading font-semibold text-foreground truncate">{event.recipient_name}</span>
-                      <PriorityBadge priority={event.priority} />
+                      <div className="flex items-center gap-2">
+                        <PriorityBadge priority={event.priority} />
+                        {event.budget && (
+                          <span className="text-xs text-muted-foreground">${event.budget.toFixed(2)}</span>
+                        )}
+                      </div>
                     </div>
                     <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
                   </div>
