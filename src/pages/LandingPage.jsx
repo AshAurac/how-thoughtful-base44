@@ -59,9 +59,7 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-sand-50/90 backdrop-blur-xl border-b border-sand-300 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" />
-            </div>
+            <img src="https://media.base44.com/images/public/6a1188b0e669a81e5b3530ea/5247e49c3_RealLogo.png" alt="How Thoughtful" className="w-8 h-8" />
             <span className="font-heading font-bold text-ink">How Thoughtful</span>
           </div>
           <div className="flex items-center gap-3">
@@ -340,9 +338,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="px-6 py-8 bg-ink text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <div className="w-6 h-6 rounded-full bg-terracotta flex items-center justify-center">
-            <Heart className="w-3 h-3 text-white" />
-          </div>
+          <img src="https://media.base44.com/images/public/6a1188b0e669a81e5b3530ea/5247e49c3_RealLogo.png" alt="How Thoughtful" className="w-6 h-6" />
           <span className="font-heading font-bold text-white text-sm">How Thoughtful</span>
         </div>
         <div className="flex items-center justify-center gap-4 mt-3 mb-2">
