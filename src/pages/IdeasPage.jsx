@@ -134,16 +134,42 @@ export default function IdeasPage({ user }) {
 
     setLoading(true);
     try {
-      const prompt = `You are a thoughtful gift recommendation expert. 
-Recipient: ${recipient || 'a friend'}, Occasion: ${occasion}, Budget: $${budget || 50}.
-Skills I have: ${profile?.skills?.join(', ') || 'none listed'}.
-My intention this year: ${profile?.intention || 'be more thoughtful'}.
+      // Build recipient context from saved profile if available
+      const recipientProfile = selectedRecipientId
+        ? recipients.find(r => r.id === selectedRecipientId)
+        : null;
 
-Suggest exactly 6 specific, creative, intentional gift ideas. 
+      const recipientLines = [];
+      if (recipientProfile?.age) recipientLines.push(`Age: ${recipientProfile.age}`);
+      if (recipientProfile?.relationship) recipientLines.push(`Relationship to giver: ${recipientProfile.relationship}`);
+      if (recipientProfile?.interests?.length) recipientLines.push(`Known interests & hobbies: ${recipientProfile.interests.join(', ')}`);
+      if (recipientProfile?.notes) recipientLines.push(`Personal notes about them: ${recipientProfile.notes}`);
+      if (recipientProfile?.love_language) recipientLines.push(`Their love language: ${recipientProfile.love_language.replace(/_/g, ' ')}`);
+
+      const giverLines = [];
+      if (profile?.skills?.length) giverLines.push(`Giver's skills (for handmade/personal ideas): ${profile.skills.join(', ')}`);
+      if (profile?.intention) giverLines.push(`Giver's intention this gifting season: ${profile.intention}`);
+      if (profile?.personality) giverLines.push(`Giver's personality/style: ${profile.personality}`);
+
+      const prompt = `You are a thoughtful gift recommendation expert. Prioritise ideas in this order:
+
+1. MOST IMPORTANT — The recipient as a person:
+   Name: ${recipient || 'a friend'}
+   ${recipientLines.length ? recipientLines.join('\n   ') : 'No profile saved — use the occasion and trends to guide ideas.'}
+
+2. The occasion: ${occasion.replace(/_/g, ' ')} — consider what would feel meaningful and appropriate for this milestone.
+
+3. Current gift trends — check what is popular and well-reviewed right now that would genuinely fit this person's interests. Do not suggest generic trending gifts if they don't match the recipient.
+
+4. LEAST IMPORTANT — The giver's context:
+   ${giverLines.length ? giverLines.join('\n   ') : 'No giver profile.'}
+
+Budget: $${budget || 50}. Vary price points within budget.
+
+Suggest exactly 6 specific, creative, intentional gift ideas. Ideas should feel like they were chosen FOR THIS PERSON, not generic.
 Return STRICT JSON only — no prose, no markdown — as:
-{"ideas":[{"name":"...","description":"...","estimated_price":"$XX","why_it_works":"..."}]}
-Be specific (real product categories, not generic). Vary price points within the budget. 
-CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act, skill, or gift of time. Set estimated_price to '$0' for that idea.`;
+{"ideas":[{"name":"...","description":"...","estimated_price":"$XX","why_it_works":"one sentence on why this suits them specifically"}]}
+CRUCIAL: at least ONE idea MUST be free ($0) — a personal act, skill, or gift of time that suits the recipient.`;
 
       const result = await base44.integrations.Core.InvokeLLM({
         prompt,
@@ -195,7 +221,15 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
   };
 
   const handleGetCurated = () => {
-    const { ideas: curatedIdeas } = getCuratedIdeas(profile?.skills || [], occasion);
+    const recipientProfile = selectedRecipientId
+      ? recipients.find(r => r.id === selectedRecipientId)
+      : null;
+    const { ideas: curatedIdeas } = getCuratedIdeas(
+      profile?.skills || [],
+      recipientProfile?.love_language || null,
+      recipientProfile?.interests || [],
+      occasion
+    );
     setIdeas(curatedIdeas);
   };
 

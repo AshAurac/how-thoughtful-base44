@@ -165,24 +165,45 @@ export const LOVE_LANGUAGES = [
   { value: "physical_touch", label: "Physical Touch" },
 ];
 
-export function getCuratedIdeas(skills = [], loveLanguage = null) {
+export function getCuratedIdeas(skills = [], loveLanguage = null, recipientInterests = [], occasion = null) {
   const ideas = [];
   const seen = new Set();
 
-  // Add skill-based ideas
+  // First: match giver skills to recipient interests where possible
+  // (skills the giver has that relate to something the recipient enjoys)
   for (const skill of skills) {
     const normalized = SKILL_ALIASES[skill.toLowerCase()] || skill.toLowerCase();
     const skillIdeas = FREE_GIFTS_BY_SKILL[normalized] || [];
     for (const idea of skillIdeas) {
       if (!seen.has(idea)) {
         seen.add(idea);
-        ideas.push({ name: idea, estimated_price: '$0', why_it_works: 'Uses your unique skill', is_free: true });
+        const interestMatch = recipientInterests.some(interest =>
+          idea.toLowerCase().includes(interest.toLowerCase()) ||
+          interest.toLowerCase().includes(normalized)
+        );
+        ideas.push({
+          name: idea,
+          estimated_price: '$0',
+          why_it_works: interestMatch
+            ? 'Combines your skill with something they love'
+            : 'Uses your unique skill',
+          is_free: true,
+        });
       }
     }
   }
 
-  // Fill with universal free
-  for (const idea of UNIVERSAL_FREE) {
+  // Second: universal free ideas, prioritised by love language feel
+  const loveLanguageFirst = loveLanguage === 'quality_time'
+    ? UNIVERSAL_FREE.filter(i => i.toLowerCase().includes('together') || i.toLowerCase().includes('afternoon') || i.toLowerCase().includes('walk'))
+    : loveLanguage === 'words_of_affirmation'
+      ? UNIVERSAL_FREE.filter(i => i.toLowerCase().includes('letter') || i.toLowerCase().includes('write') || i.toLowerCase().includes('note') || i.toLowerCase().includes('voice'))
+      : [];
+
+  const rest = UNIVERSAL_FREE.filter(i => !loveLanguageFirst.includes(i));
+  const orderedUniversal = [...loveLanguageFirst, ...rest];
+
+  for (const idea of orderedUniversal) {
     if (ideas.length >= 12) break;
     if (!seen.has(idea)) {
       seen.add(idea);
@@ -190,7 +211,6 @@ export function getCuratedIdeas(skills = [], loveLanguage = null) {
     }
   }
 
-  // Add love language boosters
   const boosters = loveLanguage ? THOUGHTFULNESS_BOOSTERS[loveLanguage] || [] : UNIVERSAL_BOOSTERS;
   return { ideas: ideas.slice(0, 8), boosters };
 }
