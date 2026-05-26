@@ -70,7 +70,7 @@ const CHECKLISTS = {
 
 export default function EventChecklist({ occasion }) {
   const [checked, setChecked] = useState({});
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const items = CHECKLISTS[occasion] || CHECKLISTS.other;
   const doneCount = Object.values(checked).filter(Boolean).length;

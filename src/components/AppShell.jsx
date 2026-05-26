@@ -125,7 +125,7 @@ export default function AppShell({ children, user }) {
         className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border select-none"
         style={{ paddingTop: 'var(--safe-top)', paddingLeft: 'var(--safe-left)', paddingRight: 'var(--safe-right)' }}
       >
-        <div className="max-w-3xl mx-auto relative flex items-center justify-between px-4 py-3">
+        <div className="max-w-3xl mx-auto relative flex items-center justify-between px-4 py-3 md:py-4">
           {isRoot ? (
             <>
               <Link
@@ -134,7 +134,7 @@ export default function AppShell({ children, user }) {
                 onClick={e => handleNavClick('/', e)}
               >
                 <img src="https://media.base44.com/images/public/6a1188b0e669a81e5b3530ea/5247e49c3_RealLogo.png" alt="How Thoughtful" className="w-8 h-8" />
-                <span className="font-heading font-bold text-foreground text-sm">How Thoughtful</span>
+                <span className="font-heading font-bold text-foreground text-sm md:text-base">How Thoughtful</span>
               </Link>
               <div className="flex items-center gap-2">
                 {!isPremium && (
@@ -149,7 +149,7 @@ export default function AppShell({ children, user }) {
                   to="/profile"
                   className="flex items-center gap-1.5 min-h-[44px] px-2 rounded-full hover:bg-muted transition-all group"
                 >
-                  <span className="font-accent text-lg text-muted-foreground group-hover:text-foreground transition-colors">hi, {firstName}</span>
+                  <span className="font-accent text-lg md:text-xl text-muted-foreground group-hover:text-foreground transition-colors">hi, {firstName}</span>
                   <Settings className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                 </Link>
               </div>
@@ -174,7 +174,7 @@ export default function AppShell({ children, user }) {
 
       {/* Main content — overscroll none */}
       <main
-        className="max-w-3xl mx-auto px-4 py-6 overscroll-none"
+        className="max-w-3xl mx-auto px-4 py-6 md:py-10 overscroll-none"
         style={{ paddingLeft: 'calc(1rem + var(--safe-left))', paddingRight: 'calc(1rem + var(--safe-right))' }}
       >
         <PageTransition>

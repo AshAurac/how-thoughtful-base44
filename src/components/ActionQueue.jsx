@@ -29,7 +29,7 @@ function getNextAction(days, gifts = []) {
   if (allSent) return { label: 'All done ✓', urgent: false };
   if (allBought && days <= 7) return { label: 'Wrap & send', urgent: days <= 3 };
   if (days <= 7) return { label: 'Buy now', urgent: true };
-  if (days <= 14) return { label: 'Buy soon', urgent: false };
+  if (days <= 14) return { label: 'Buy gift now', urgent: true };
   if (days <= 28) return { label: 'Plan gift', urgent: false };
   return { label: 'On horizon', urgent: false };
 }
@@ -113,7 +113,7 @@ export default function ActionQueue({ events, gifts }) {
                         {event.recipient_name}
                       </span>
                       <span className={`text-xs font-medium capitalize ${isTop ? 'text-white/90' : labelColor}`}>
-                        {priority} priority
+                        {priority === 'free' ? 'Free' : priority}
                       </span>
                     </div>
                     <p className={`text-sm mt-0.5 capitalize ${isTop ? 'text-white/85' : 'text-muted-foreground'}`}>

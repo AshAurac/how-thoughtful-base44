@@ -13,6 +13,7 @@ const PRIORITIES = ['free','low','medium','high'];
 import EventChecklist from '@/components/EventChecklist';
 import GiftBounceAnimation from '@/components/GiftBounceAnimation';
 import ShareEventButton from '@/components/ShareEventButton';
+import GiftTimeline from '@/components/GiftTimeline';
 
 function GiftCheckbox({ checked, onChange, label }) {
   return (
@@ -220,12 +221,7 @@ export default function EventDetail() {
               >
                 <Pencil className="w-4 h-4" />
               </button>
-              <button
-                onClick={() => setConfirmDelete(true)}
-                className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-terracotta transition-all"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+
               </div>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <PriorityBadge priority={event.priority} />
@@ -243,6 +239,22 @@ export default function EventDetail() {
           )}
         </div>
       </div>
+
+      {/* Gift journey timeline */}
+      {!editingEvent && (
+        <GiftTimeline daysLeft={days !== null ? days : 999} />
+      )}
+
+      {/* Delete occasion */}
+      {!editingEvent && (
+        <button
+          onClick={() => setConfirmDelete(true)}
+          className="w-full flex items-center justify-center gap-2 border border-destructive/40 text-destructive py-3 rounded-2xl font-heading font-semibold text-sm hover:bg-destructive/5 transition-all"
+        >
+          <Trash2 className="w-4 h-4" />
+          Delete this occasion
+        </button>
+      )}
 
       {/* Buy-by timeline */}
       {timeline.length > 0 && (

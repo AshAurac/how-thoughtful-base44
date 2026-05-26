@@ -1,5 +1,5 @@
 const configs = {
-  free: { label: 'Free gift', className: 'bg-moss/20 text-moss-dark' },
+  free: { label: 'Free', className: 'bg-moss/20 text-moss-dark' },
   low: { label: 'Low', className: 'bg-sand-200 text-ink-soft' },
   medium: { label: 'Medium', className: 'bg-butter/40 text-butter-dark' },
   high: { label: 'High', className: 'bg-terracotta/20 text-terracotta-dark' },
