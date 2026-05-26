@@ -13,7 +13,7 @@ export default function RecipientsPage({ user }) {
   const queryClient = useQueryClient();
   const [showAdd, setShowAdd] = useState(false);
   const [showImport, setShowImport] = useState(false);
-  const [form, setForm] = useState({ name: '', relationship: '', love_language: '', interests: '', notes: '' });
+  const [form, setForm] = useState({ name: '', age: '', relationship: '', love_language: '', interests: '', notes: '' });
 
   const { data: recipients = [], isLoading } = useQuery({
     queryKey: ['recipients', user?.email],
@@ -28,12 +28,13 @@ export default function RecipientsPage({ user }) {
   const addMutation = useMutation({
     mutationFn: (data) => base44.entities.Recipient.create({
       ...data,
+      age: data.age ? parseInt(data.age) : undefined,
       interests: data.interests ? data.interests.split(',').map(s => s.trim()).filter(Boolean) : [],
     }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recipients'] });
       setShowAdd(false);
-      setForm({ name: '', relationship: '', love_language: '', interests: '', notes: '' });
+      setForm({ name: '', age: '', relationship: '', love_language: '', interests: '', notes: '' });
       toast.success('Person added');
     },
   });
@@ -80,13 +81,22 @@ export default function RecipientsPage({ user }) {
             <h3 className="font-heading font-semibold text-foreground">Add person</h3>
             <button type="button" onClick={() => setShowAdd(false)}><X className="w-4 h-4 text-muted-foreground" /></button>
           </div>
-          <input
-            value={form.name}
-            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-            placeholder="Name *"
-            required
-            className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
-          />
+          <div className="grid grid-cols-3 gap-2">
+            <input
+              value={form.name}
+              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+              placeholder="Name *"
+              required
+              className="col-span-2 border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            />
+            <input
+              type="number"
+              value={form.age}
+              onChange={e => setForm(f => ({ ...f, age: e.target.value }))}
+              placeholder="Age"
+              className="border border-border rounded-xl px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            />
+          </div>
           <div className="grid grid-cols-2 gap-2">
             <input
               value={form.relationship}
@@ -136,11 +146,18 @@ export default function RecipientsPage({ user }) {
                 <p className="font-heading font-semibold text-foreground">{r.name}</p>
                 {r.relationship && <p className="text-sm text-muted-foreground capitalize">{r.relationship}</p>}
               </div>
-              {r.love_language && (
-                <span className="text-xs bg-secondary text-muted-foreground px-2.5 py-1 rounded-full">
-                  {r.love_language.replace(/_/g, ' ')}
-                </span>
-              )}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {r.age && (
+                  <span className="text-xs bg-secondary text-muted-foreground px-2.5 py-1 rounded-full">
+                    age {r.age}
+                  </span>
+                )}
+                {r.love_language && (
+                  <span className="text-xs bg-secondary text-muted-foreground px-2.5 py-1 rounded-full">
+                    {r.love_language.replace(/_/g, ' ')}
+                  </span>
+                )}
+              </div>
             </Link>
           ))}
         </div>
