@@ -8,6 +8,10 @@
     "recipient_name": {
       "type": "string"
     },
+    "giver_name": {
+      "type": "string",
+      "description": "Who is giving the gift \u2014 leave blank if it's the logged-in user themselves"
+    },
     "title": {
       "type": "string"
     },

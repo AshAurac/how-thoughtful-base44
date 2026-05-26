@@ -186,6 +186,21 @@ export default function EventDetail() {
                 placeholder="Budget ($)"
                 className="w-full border border-border rounded-xl px-3 py-2 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50"
               />
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="number"
+                  value={editForm.age_or_years}
+                  onChange={e => setEditForm(f => ({ ...f, age_or_years: e.target.value }))}
+                  placeholder={editForm.occasion === 'anniversary' ? 'Years together' : 'Age turning'}
+                  className="border border-border rounded-xl px-3 py-2 text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+                />
+                <input
+                  value={editForm.giver_name}
+                  onChange={e => setEditForm(f => ({ ...f, giver_name: e.target.value }))}
+                  placeholder="Gift from (optional)"
+                  className="border border-border rounded-xl px-3 py-2 text-sm text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+                />
+              </div>
               <textarea
                 value={editForm.notes}
                 onChange={e => setEditForm(f => ({ ...f, notes: e.target.value }))}
@@ -197,7 +212,7 @@ export default function EventDetail() {
                 <button
                   onClick={() => {
                     const buyDates = editForm.event_date ? computeBuyDates(editForm.event_date) : {};
-                    updateEventMutation.mutate({ ...editForm, budget: editForm.budget ? parseFloat(editForm.budget) : 0, ...buyDates });
+                    updateEventMutation.mutate({ ...editForm, budget: editForm.budget ? parseFloat(editForm.budget) : 0, age_or_years: editForm.age_or_years ? parseInt(editForm.age_or_years) : null, ...buyDates });
                     setEditingEvent(false);
                     toast.success('Occasion updated');
                   }}
@@ -213,10 +228,13 @@ export default function EventDetail() {
           ) : (
             <>
               <p className="font-accent text-muted-foreground text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
+              {event.giver_name && (
+                <p className="text-xs text-muted-foreground mb-0.5">From <span className="font-semibold text-foreground">{event.giver_name}</span></p>
+              )}
               <div className="flex items-center gap-2">
               <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
               <button
-                onClick={() => { setEditForm({ recipient_name: event.recipient_name, occasion: event.occasion, event_date: event.event_date, priority: event.priority, budget: event.budget || '', notes: event.notes || '' }); setEditingEvent(true); }}
+                onClick={() => { setEditForm({ recipient_name: event.recipient_name, giver_name: event.giver_name || '', occasion: event.occasion, event_date: event.event_date, priority: event.priority, budget: event.budget || '', age_or_years: event.age_or_years || '', notes: event.notes || '' }); setEditingEvent(true); }}
                 className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
               >
                 <Pencil className="w-4 h-4" />

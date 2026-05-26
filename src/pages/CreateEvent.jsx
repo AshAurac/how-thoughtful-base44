@@ -11,15 +11,26 @@ import NativePicker from '@/components/NativePicker';
 const OCCASIONS = ['birthday','anniversary','holiday','graduation','baby_shower','wedding','housewarming','thank_you','just_because','other'];
 const PRIORITIES = ['free','low','medium','high'];
 
+// Returns a contextual label for the age/years field
+function ageLabel(occasion) {
+  if (occasion === 'birthday') return 'Age they\'re turning';
+  if (occasion === 'anniversary') return 'Years together';
+  if (occasion === 'wedding') return 'Years married';
+  if (occasion === 'graduation') return 'Years of study';
+  if (occasion === 'baby_shower') return 'Weeks along (optional)';
+  return 'Age / Years (optional)';
+}
+
 export default function CreateEvent() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [form, setForm] = useState({
-    recipient_name: '', occasion: 'birthday', event_date: '',
+    recipient_name: '', giver_name: '', occasion: 'birthday', event_date: '',
     budget: '', priority: 'medium', recurring: false,
     notes: '', reflection: '', love_language: '', age_or_years: '',
   });
   const [showRecipientPicker, setShowRecipientPicker] = useState(false);
+  const [showGiverPicker, setShowGiverPicker] = useState(false);
   const [selectedRecipientId, setSelectedRecipientId] = useState(null);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -175,7 +186,7 @@ export default function CreateEvent() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-foreground mb-1">Age / Years</label>
+            <label className="block text-sm font-medium text-foreground mb-1">{ageLabel(form.occasion)}</label>
             <input
               type="number"
               value={form.age_or_years}
@@ -183,6 +194,57 @@ export default function CreateEvent() {
               placeholder="Optional"
               className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
             />
+          </div>
+        </div>
+
+        {/* Gifting on behalf of */}
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">
+            Gift is from <span className="text-muted-foreground font-normal">(optional — leave blank if it's from you)</span>
+          </label>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowGiverPicker(v => !v)}
+              className="w-full flex items-center justify-between border border-border rounded-2xl px-4 py-3 bg-card text-left focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            >
+              <span className={form.giver_name ? 'text-foreground font-body' : 'text-muted-foreground font-body'}>
+                {form.giver_name || 'e.g. your son, your partner…'}
+              </span>
+              <div className="flex items-center gap-1">
+                {form.giver_name && (
+                  <button type="button" onClick={e => { e.stopPropagation(); set('giver_name', ''); }} className="p-1 rounded-full hover:bg-muted">
+                    <X className="w-3 h-3 text-muted-foreground" />
+                  </button>
+                )}
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </div>
+            </button>
+            {showGiverPicker && (
+              <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+                {recipients.map(r => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => { set('giver_name', r.name); setShowGiverPicker(false); }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all text-left"
+                  >
+                    <span className="font-body text-sm text-foreground">{r.name}</span>
+                    {r.relationship && <span className="text-xs text-muted-foreground">{r.relationship}</span>}
+                  </button>
+                ))}
+                <div className="border-t border-border px-4 py-2">
+                  <input
+                    autoFocus
+                    value={form.giver_name}
+                    onChange={e => set('giver_name', e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') setShowGiverPicker(false); }}
+                    placeholder="Or type a name…"
+                    className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none py-1 font-body"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
