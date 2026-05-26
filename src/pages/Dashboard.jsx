@@ -9,6 +9,14 @@ import PriorityBadge from '@/components/PriorityBadge';
 import ProfileNudge from '@/components/ProfileNudge';
 import ActionQueue from '@/components/ActionQueue';
 
+function getNextActionLabel(days) {
+  if (days <= 0) return { label: 'Today!', urgent: true };
+  if (days <= 7) return { label: 'Buy now', urgent: true };
+  if (days <= 14) return { label: 'Buy gift now', urgent: true };
+  if (days <= 28) return { label: 'Plan gift', urgent: false };
+  return null;
+}
+
 function groupByMonth(events) {
   const groups = {};
   events.forEach(event => {
@@ -93,10 +101,19 @@ function UpcomingByMonth({ upcoming }) {
                     <span className="text-sm text-muted-foreground capitalize">{event.occasion?.replace(/_/g, ' ')}</span>
                   </div>
                   <div className="text-right">
-                    <span className={`text-sm font-medium ${urgencyColor(days)}`}>
-                      {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
-                    </span>
-                    <div className="text-xs text-muted-foreground">{formatEventDate(event.event_date)}</div>
+                    {(() => {
+                      const act = getNextActionLabel(days);
+                      return act ? (
+                        <span className={`text-xs font-heading font-semibold px-2 py-0.5 rounded-full ${act.urgent ? 'bg-terracotta/10 text-terracotta' : 'bg-muted text-muted-foreground'}`}>
+                          {act.label}
+                        </span>
+                      ) : (
+                        <span className={`text-sm font-medium ${urgencyColor(days)}`}>
+                          {days === 0 ? 'Today!' : days < 0 ? 'Past' : `${days}d`}
+                        </span>
+                      );
+                    })()}
+                    <div className="text-xs text-muted-foreground mt-0.5">{formatEventDate(event.event_date)}</div>
                   </div>
                 </Link>
               );

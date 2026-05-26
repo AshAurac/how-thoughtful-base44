@@ -1,13 +1,4 @@
-/**
- * Horizontal progress timeline for a gift occasion.
- * Milestones (from furthest to closest):
- *   30d — Plan gift
- *   20d — Order online
- *    7d — Buy in store
- *    3d — Wrap & write card
- *    1d — Final summary / celebrate
- *    0d — Day of!
- */
+import { useState } from 'react';
 
 const MILESTONES = [
   { days: 30, label: 'Plan', emoji: '📋' },
@@ -18,19 +9,39 @@ const MILESTONES = [
   { days: 0,  label: 'Give!', emoji: '🎉' },
 ];
 
-function getCurrentStep(daysLeft) {
+function getAutoStep(daysLeft) {
   if (daysLeft <= 0) return 5;
   if (daysLeft <= 1) return 4;
   if (daysLeft <= 3) return 3;
   if (daysLeft <= 7) return 2;
   if (daysLeft <= 20) return 1;
   if (daysLeft <= 30) return 0;
-  return -1; // before planning window
+  return -1;
 }
 
 export default function GiftTimeline({ daysLeft }) {
-  const currentStep = getCurrentStep(daysLeft);
-  const isBeforeWindow = daysLeft > 30;
+  const autoStep = getAutoStep(daysLeft);
+  // Manual ticks: user can tick any step regardless of days
+  const [ticked, setTicked] = useState(() => {
+    // Pre-tick all steps that are auto-completed
+    const t = new Set();
+    for (let i = 0; i < autoStep; i++) t.add(i);
+    return t;
+  });
+
+  const toggleTick = (i) => {
+    setTicked(prev => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  };
+
+  // Highest contiguous completed step for progress bar
+  const highestDone = MILESTONES.reduce((acc, _, i) => ticked.has(i) ? i : acc, -1);
+  const progressPct = highestDone < 0 ? 0 : ((highestDone + 1) / MILESTONES.length) * 100;
+  const allDone = ticked.size === MILESTONES.length;
 
   return (
     <div className="bg-card border border-border rounded-2xl p-4">
@@ -46,53 +57,53 @@ export default function GiftTimeline({ daysLeft }) {
         <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500 bg-gradient-to-r from-moss to-terracotta"
-            style={{
-              width: isBeforeWindow
-                ? '0%'
-                : currentStep >= 5
-                  ? '100%'
-                  : `${(currentStep / (MILESTONES.length - 1)) * 100}%`
-            }}
+            style={{ width: `${progressPct}%` }}
           />
         </div>
       </div>
 
-      {/* Milestone dots */}
+      {/* Milestone dots — tappable */}
       <div className="flex items-start justify-between">
         {MILESTONES.map((m, i) => {
-          const done = currentStep > i;
-          const active = currentStep === i;
+          const done = ticked.has(i);
+          const isActive = !done && i === autoStep && !ticked.has(i);
           return (
-            <div key={m.days} className="flex flex-col items-center gap-1" style={{ flex: 1 }}>
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all ${
+            <button
+              key={m.days}
+              type="button"
+              onClick={() => toggleTick(i)}
+              className="flex flex-col items-center gap-1 focus:outline-none"
+              style={{ flex: 1 }}
+            >
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-all active:scale-90 ${
                 done
                   ? 'bg-moss text-white'
-                  : active
+                  : isActive
                     ? 'bg-terracotta text-white ring-2 ring-terracotta/30'
                     : 'bg-muted text-muted-foreground'
               }`}>
                 {done ? '✓' : m.emoji}
               </div>
-              <span className={`text-center leading-tight font-body ${active ? 'text-terracotta font-semibold' : 'text-muted-foreground'}`}
+              <span className={`text-center leading-tight font-body ${done ? 'text-moss font-semibold' : isActive ? 'text-terracotta font-semibold' : 'text-muted-foreground'}`}
                 style={{ fontSize: '9px' }}>
                 {m.label}
               </span>
               <span className="text-muted-foreground" style={{ fontSize: '8px' }}>
                 {m.days === 0 ? 'Day' : `${m.days}d`}
               </span>
-            </div>
+            </button>
           );
         })}
       </div>
 
       {/* Contextual tip */}
-      {currentStep === 4 && (
+      {autoStep === 4 && !allDone && (
         <div className="mt-3 bg-terracotta/10 rounded-xl px-3 py-2">
           <p className="text-xs text-terracotta font-heading font-semibold">Pause and enjoy giving 🎁</p>
           <p className="text-xs text-muted-foreground mt-0.5">The thoughtfulness is already there. Tomorrow, just be present and grateful. This moment builds memories for next year's celebration too.</p>
         </div>
       )}
-      {currentStep === 5 && (
+      {autoStep === 5 && (
         <div className="mt-3 bg-moss/10 rounded-xl px-3 py-2">
           <p className="text-xs text-moss font-heading font-semibold">🎉 It's the big day!</p>
           <p className="text-xs text-muted-foreground mt-0.5">Be fully present. Put your phone away. They'll remember how you made them feel.</p>

@@ -5,14 +5,6 @@ import { parseISO } from 'date-fns';
 // Priority weights: higher = more urgent to act on
 const PRIORITY_WEIGHT = { high: 3, medium: 2, low: 1, free: 0 };
 
-// Colors per priority for the bar
-const PRIORITY_BAR = {
-  high: 'bg-terracotta',
-  medium: 'bg-butter-dark',
-  low: 'bg-moss',
-  free: 'bg-sand-300',
-};
-
 const PRIORITY_LABEL_COLOR = {
   high: 'text-terracotta',
   medium: 'text-butter-dark',
@@ -43,16 +35,6 @@ function computeScore(event) {
   return days / (weight + 0.5);
 }
 
-// How far along is this event's readiness? (based on days + gifts done)
-function readiness(days) {
-  if (days === null || days < 0) return 100;
-  if (days === 0) return 95;
-  if (days <= 7) return 70;
-  if (days <= 14) return 45;
-  if (days <= 30) return 25;
-  if (days <= 60) return 10;
-  return 5;
-}
 
 export default function ActionQueue({ events, gifts }) {
   // Only show future events (within 90 days)
@@ -84,9 +66,7 @@ export default function ActionQueue({ events, gifts }) {
           const days = daysUntil(event.event_date);
           const evtGifts = giftsByEvent[event.id] || [];
           const action = getNextAction(days, evtGifts);
-          const ready = readiness(days);
           const priority = event.priority || 'medium';
-          const barColor = PRIORITY_BAR[priority];
           const labelColor = PRIORITY_LABEL_COLOR[priority];
           const isTop = idx === 0;
 
@@ -134,17 +114,7 @@ export default function ActionQueue({ events, gifts }) {
                   </div>
                 </div>
 
-                {/* Progress bar */}
-                <div className={`h-1.5 rounded-full overflow-hidden ${isTop ? 'bg-white/20' : 'bg-muted'}`}>
-                  <div
-                    className={`h-full rounded-full transition-all ${isTop ? 'bg-white' : barColor}`}
-                    style={{ width: `${ready}%` }}
-                  />
-                </div>
-                <div className="flex justify-between mt-1">
-                  <span className={`text-xs ${isTop ? 'text-white/75' : 'text-muted-foreground'}`}>readiness</span>
-                  <span className={`text-xs font-medium ${isTop ? 'text-white/90' : 'text-muted-foreground'}`}>{ready}%</span>
-                </div>
+
               </div>
             </Link>
           );

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { Sparkles, Lightbulb, Bookmark, BookmarkCheck, ExternalLink } from 'lucide-react';
+import { Sparkles, Lightbulb, Bookmark, BookmarkCheck, ExternalLink, ChevronDown, X } from 'lucide-react';
 import { getCuratedIdeas } from '@/lib/catalogs';
 import PaywallModal from '@/components/PaywallModal';
 import NativePicker from '@/components/NativePicker';
@@ -65,6 +65,8 @@ export default function IdeasPage({ user }) {
   const [loading, setLoading] = useState(false);
   const [paywallReason, setPaywallReason] = useState(null);
   const [recipient, setRecipient] = useState(urlParams.get('recipient') || '');
+  const [selectedRecipientId, setSelectedRecipientId] = useState(null);
+  const [showRecipientPicker, setShowRecipientPicker] = useState(false);
   const [occasion, setOccasion] = useState('birthday');
   const [budget, setBudget] = useState('50');
   const [savedIds, setSavedIds] = useState(new Set());
@@ -88,6 +90,12 @@ export default function IdeasPage({ user }) {
   const { data: savedIdeas = [] } = useQuery({
     queryKey: ['savedIdeas'],
     queryFn: () => base44.entities.SavedIdea.list(),
+  });
+
+  const { data: recipients = [] } = useQuery({
+    queryKey: ['recipients'],
+    queryFn: () => base44.entities.Recipient.list(),
+    enabled: !!user,
   });
 
   useEffect(() => {
@@ -202,6 +210,7 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
       estimated_price: idea.estimated_price || '',
       why_it_works: idea.why_it_works || '',
       recipient_name: recipient,
+      event_id: urlParams.get('event_id') || undefined,
     });
     setSavedIds(s => new Set([...s, idea.name]));
     queryClient.invalidateQueries({ queryKey: ['savedIdeas'] });
@@ -242,12 +251,56 @@ CRUCIAL: at least ONE of the 6 ideas MUST be free / no-money — a personal act,
 
       {/* Form */}
       <div className="space-y-3">
-        <input
-          value={recipient}
-          onChange={e => setRecipient(e.target.value)}
-          placeholder="Who is this for?"
-          className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
-        />
+        {/* Recipient picker */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowRecipientPicker(v => !v)}
+            className="w-full flex items-center justify-between border border-border rounded-2xl px-4 py-3 bg-card text-left focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+          >
+            <span className={recipient ? 'text-foreground font-body' : 'text-muted-foreground font-body'}>
+              {recipient || 'Who is this for?'}
+            </span>
+            <div className="flex items-center gap-2">
+              {recipient && (
+                <button
+                  type="button"
+                  onClick={e => { e.stopPropagation(); setRecipient(''); setSelectedRecipientId(null); }}
+                  className="p-1 rounded-full hover:bg-muted"
+                >
+                  <X className="w-3 h-3 text-muted-foreground" />
+                </button>
+              )}
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            </div>
+          </button>
+
+          {showRecipientPicker && (
+            <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+              {recipients.map(r => (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => { setRecipient(r.name); setSelectedRecipientId(r.id); setShowRecipientPicker(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all text-left"
+                >
+                  <span className="font-body text-sm text-foreground">{r.name}</span>
+                  {r.relationship && <span className="text-xs text-muted-foreground">{r.relationship}</span>}
+                </button>
+              ))}
+              <div className="border-t border-border px-4 py-2">
+                <input
+                  autoFocus
+                  value={recipient}
+                  onChange={e => { setRecipient(e.target.value); setSelectedRecipientId(null); }}
+                  onKeyDown={e => { if (e.key === 'Enter') setShowRecipientPicker(false); }}
+                  placeholder="Or type a name…"
+                  className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none py-1 font-body"
+                />
+              </div>
+            </div>
+          )}
+        </div>
         <div className="grid grid-cols-2 gap-3">
           <NativePicker
             label="Occasion"
