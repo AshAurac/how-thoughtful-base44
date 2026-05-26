@@ -88,8 +88,8 @@ export default function GiftTimeline({ daysLeft }) {
       {/* Contextual tip */}
       {currentStep === 4 && (
         <div className="mt-3 bg-terracotta/10 rounded-xl px-3 py-2">
-          <p className="text-xs text-terracotta font-heading font-semibold">Tomorrow's the day!</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Think about what they'd most appreciate hearing from you. A heartfelt note goes a long way.</p>
+          <p className="text-xs text-terracotta font-heading font-semibold">Pause and enjoy giving 🎁</p>
+          <p className="text-xs text-muted-foreground mt-0.5">The thoughtfulness is already there. Tomorrow, just be present and grateful. This moment builds memories for next year's celebration too.</p>
         </div>
       )}
       {currentStep === 5 && (
