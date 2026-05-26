@@ -48,6 +48,7 @@ export default function EventDetail() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showGiftWrap, setShowGiftWrap] = useState(false);
+  const [journeyComplete, setJourneyComplete] = useState(false);
 
   const { data: event, isLoading: loadingEvent } = useQuery({
     queryKey: ['event', id],
@@ -291,9 +292,25 @@ export default function EventDetail() {
         </div>
       </div>
 
+      {/* Gift Given — shown at top when journey is complete */}
+      {journeyComplete && !editingEvent && (
+        <button
+          onClick={handleGiftGiven}
+          disabled={saveToHistoryMutation.isPending}
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-terracotta to-moss text-white py-4 rounded-2xl font-heading font-bold text-base hover:opacity-90 transition-all hover:-translate-y-0.5 shadow-md disabled:opacity-60"
+        >
+          {saveToHistoryMutation.isPending ? (
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : (
+            <span className="text-xl">🎁</span>
+          )}
+          I gave this gift!
+        </button>
+      )}
+
       {/* Gift journey timeline */}
       {!editingEvent && (
-        <GiftTimeline daysLeft={days !== null ? days : 999} />
+        <GiftTimeline daysLeft={days !== null ? days : 999} onAllDone={() => setJourneyComplete(true)} />
       )}
 
       {/* Buy-by timeline */}
@@ -475,22 +492,6 @@ export default function EventDetail() {
           </div>
         )}
       </div>
-      {/* Gift Given button */}
-      {!editingEvent && (
-        <button
-          onClick={handleGiftGiven}
-          disabled={saveToHistoryMutation.isPending}
-          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-terracotta to-moss text-white py-4 rounded-2xl font-heading font-bold text-base hover:opacity-90 transition-all hover:-translate-y-0.5 shadow-md disabled:opacity-60"
-        >
-          {saveToHistoryMutation.isPending ? (
-            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : (
-            <span className="text-xl">🎁</span>
-          )}
-          I gave this gift!
-        </button>
-      )}
-
       {/* Delete occasion */}
       {!editingEvent && (
         <button

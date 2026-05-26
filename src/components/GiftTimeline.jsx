@@ -19,7 +19,7 @@ function getAutoStep(daysLeft) {
   return -1;
 }
 
-export default function GiftTimeline({ daysLeft }) {
+export default function GiftTimeline({ daysLeft, onAllDone }) {
   const autoStep = getAutoStep(daysLeft);
   // Manual ticks: user can tick any step regardless of days
   const [ticked, setTicked] = useState(() => {
@@ -34,6 +34,8 @@ export default function GiftTimeline({ daysLeft }) {
       const next = new Set(prev);
       if (next.has(i)) next.delete(i);
       else next.add(i);
+      const nowAllDone = next.size === MILESTONES.length;
+      if (nowAllDone) onAllDone?.();
       return next;
     });
   };
