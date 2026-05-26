@@ -251,6 +251,7 @@ export default function AppShell({ children, user }) {
             })}
 
             <button
+              data-nav="more"
               onClick={() => setShowMore(true)}
               className={`flex flex-col items-center px-3 min-w-[56px] min-h-[44px] justify-center rounded-full transition-all select-none ${
                 activeMoreItem ? 'text-terracotta' : 'text-muted-foreground hover:text-foreground hover:bg-muted'

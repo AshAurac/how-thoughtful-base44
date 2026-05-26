@@ -1,0 +1,66 @@
+{
+  "name": "GiftHistory",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "recipient_id": {
+      "type": "string"
+    },
+    "occasion": {
+      "type": "string"
+    },
+    "event_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "year": {
+      "type": "number"
+    },
+    "budget": {
+      "type": "number"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "reflection": {
+      "type": "string"
+    },
+    "gifts_given": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "total_spent": {
+      "type": "number"
+    },
+    "love_language": {
+      "type": "string"
+    },
+    "giver_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "recipient_name",
+    "occasion",
+    "event_date",
+    "year"
+  ]
+}

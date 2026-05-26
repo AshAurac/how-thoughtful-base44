@@ -14,6 +14,7 @@ import EventChecklist from '@/components/EventChecklist';
 import GiftBounceAnimation from '@/components/GiftBounceAnimation';
 import ShareEventButton from '@/components/ShareEventButton';
 import GiftTimeline from '@/components/GiftTimeline';
+import GiftWrapAnimation from '@/components/GiftWrapAnimation';
 
 function GiftCheckbox({ checked, onChange, label }) {
   return (
@@ -46,6 +47,7 @@ export default function EventDetail() {
   const [editForm, setEditForm] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
+  const [showGiftWrap, setShowGiftWrap] = useState(false);
 
   const { data: event, isLoading: loadingEvent } = useQuery({
     queryKey: ['event', id],
@@ -106,6 +108,30 @@ export default function EventDetail() {
     },
   });
 
+  const saveToHistoryMutation = useMutation({
+    mutationFn: (historyData) => base44.entities.GiftHistory.create(historyData),
+  });
+
+  const handleGiftGiven = async () => {
+    const totalSpent = gifts.reduce((s, g) => s + (g.price || 0), 0);
+    await saveToHistoryMutation.mutateAsync({
+      event_id: event.id,
+      recipient_name: event.recipient_name,
+      recipient_id: event.recipient_id || null,
+      occasion: event.occasion,
+      event_date: event.event_date,
+      year: new Date(event.event_date).getFullYear(),
+      budget: event.budget || 0,
+      notes: event.notes || '',
+      reflection: event.reflection || '',
+      giver_name: event.giver_name || '',
+      love_language: event.love_language || '',
+      total_spent: totalSpent,
+      gifts_given: gifts.map(g => ({ name: g.name, price: g.price || 0, description: g.description || '' })),
+    });
+    setShowGiftWrap(true);
+  };
+
   if (loadingEvent) {
     return <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-20 bg-muted rounded-2xl animate-pulse" />)}</div>;
   }
@@ -146,6 +172,12 @@ export default function EventDetail() {
     <div className="space-y-5 max-w-lg mx-auto">
       {celebratingGift && (
         <GiftBounceAnimation onComplete={() => handleCelebrationDone(gifts.find(g => g.id === celebratingGift))} />
+      )}
+      {showGiftWrap && (
+        <GiftWrapAnimation
+          recipientName={event?.recipient_name}
+          onComplete={() => { setShowGiftWrap(false); navigate('/year-in-giving'); }}
+        />
       )}
       {/* Header */}
       <div className="flex items-start gap-3">
@@ -443,6 +475,22 @@ export default function EventDetail() {
           </div>
         )}
       </div>
+      {/* Gift Given button */}
+      {!editingEvent && (
+        <button
+          onClick={handleGiftGiven}
+          disabled={saveToHistoryMutation.isPending}
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-terracotta to-moss text-white py-4 rounded-2xl font-heading font-bold text-base hover:opacity-90 transition-all hover:-translate-y-0.5 shadow-md disabled:opacity-60"
+        >
+          {saveToHistoryMutation.isPending ? (
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+          ) : (
+            <span className="text-xl">🎁</span>
+          )}
+          I gave this gift!
+        </button>
+      )}
+
       {/* Delete occasion */}
       {!editingEvent && (
         <button

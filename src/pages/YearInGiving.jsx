@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { format, parseISO, isValid, getMonth } from 'date-fns';
+import { ChevronDown } from 'lucide-react';
 
 const HEARTS = Array.from({ length: 16 });
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -25,6 +27,71 @@ function StatCard({ eyebrow, value, label, delay }) {
       <p className="font-accent text-muted-foreground text-base mb-1">{eyebrow}</p>
       <p className="font-heading font-bold text-3xl text-foreground">{value}</p>
       <p className="text-sm text-muted-foreground mt-0.5">{label}</p>
+    </div>
+  );
+}
+
+function PersonHistoryCard({ name, entries }) {
+  const [open, setOpen] = useState(false);
+  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+  return (
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center gap-3 px-4 py-3 text-left"
+      >
+        <div className="w-9 h-9 rounded-full bg-terracotta/10 text-terracotta font-heading font-bold text-sm flex items-center justify-center flex-shrink-0">
+          {initials}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-heading font-semibold text-foreground">{name}</p>
+          <p className="text-xs text-muted-foreground">{entries.length} gift{entries.length !== 1 ? 's' : ''} given</p>
+        </div>
+        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+
+      {open && (
+        <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
+          {entries.map((entry, i) => (
+            <div key={i} className="bg-muted rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-heading font-semibold text-sm text-foreground capitalize">
+                  {entry.occasion?.replace(/_/g, ' ')}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {entry.event_date ? format(parseISO(entry.event_date), 'MMM d, yyyy') : entry.year}
+                </span>
+              </div>
+
+              {entry.gifts_given?.length > 0 && (
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Gifts given:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {entry.gifts_given.map((g, gi) => (
+                      <span key={gi} className="text-xs bg-card border border-border rounded-full px-2 py-0.5 text-foreground">
+                        {g.name}{g.price ? ` · $${g.price}` : ''}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {entry.total_spent > 0 && (
+                <p className="text-xs text-muted-foreground">Total spent: <span className="text-foreground font-medium">${entry.total_spent}</span></p>
+              )}
+
+              {entry.reflection && (
+                <p className="text-xs text-moss-dark italic">"{entry.reflection}"</p>
+              )}
+
+              {entry.notes && (
+                <p className="text-xs text-muted-foreground">Notes: {entry.notes}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -78,6 +145,19 @@ export default function YearInGiving({ user }) {
   const busiestMonth = monthCount[busiestMonthIdx] > 0 ? MONTHS[busiestMonthIdx] : '—';
 
   const firstName = user?.full_name?.split(' ')[0] || 'you';
+
+  const { data: giftHistory = [] } = useQuery({
+    queryKey: ['giftHistory'],
+    queryFn: () => base44.entities.GiftHistory.list('-created_date'),
+  });
+
+  // Group history by recipient
+  const historyByRecipient = giftHistory.reduce((acc, h) => {
+    const key = h.recipient_name;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(h);
+    return acc;
+  }, {});
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -143,10 +223,22 @@ export default function YearInGiving({ user }) {
           </div>
         )}
 
+        {/* Gift History by Person */}
+        {giftHistory.length > 0 && (
+          <div className="animate-fade-up" style={{ animationDelay: '2000ms' }}>
+            <h2 className="font-heading font-bold text-xl text-foreground mb-3">Gift History</h2>
+            <div className="space-y-3">
+              {Object.entries(historyByRecipient).map(([name, entries]) => (
+                <PersonHistoryCard key={name} name={name} entries={entries} />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Closing quote */}
         <div
           className="text-center py-6 animate-fade-up"
-          style={{ animationDelay: '1900ms' }}
+          style={{ animationDelay: '2100ms' }}
         >
           <p className="font-accent text-xl text-muted-foreground leading-relaxed">
             "Thank you for being thoughtful."
