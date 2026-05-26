@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
-import { Plus, Trash2, Share2, ExternalLink, Upload } from 'lucide-react';
+import { Plus, Trash2, Share2, ExternalLink, Upload, Check } from 'lucide-react';
 import NativePicker from '@/components/NativePicker';
 import BulkImportWishlist from '@/components/BulkImportWishlist';
 
@@ -15,6 +15,7 @@ export default function WishlistPage({ user }) {
   const [showAdd, setShowAdd] = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', description: '', link: '', price: '', priority: 'medium' });
+  const [copied, setCopied] = useState(false);
 
   const { data: wishlist } = useQuery({
     queryKey: ['wishlist'],
@@ -70,7 +71,9 @@ export default function WishlistPage({ user }) {
   const copyShare = () => {
     if (shareUrl) {
       navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
       toast.success('Link copied!');
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
@@ -82,11 +85,11 @@ export default function WishlistPage({ user }) {
           <h1 className="font-heading font-bold text-2xl text-foreground">My Wishlist</h1>
         </div>
         <div className="flex gap-2">
-          {shareUrl && (
-            <button onClick={copyShare} className="p-2 rounded-full bg-muted hover:bg-secondary transition-all" title="Copy share link">
-              <Share2 className="w-4 h-4 text-foreground" />
-            </button>
-          )}
+           {shareUrl && (
+             <button onClick={copyShare} className={`p-2 rounded-full transition-all ${copied ? 'bg-moss text-white' : 'bg-muted hover:bg-secondary'}`} title="Copy share link">
+               {copied ? <Check className="w-4 h-4" /> : <Share2 className="w-4 h-4 text-foreground" />}
+             </button>
+           )}
           <button
             onClick={() => setShowImport(true)}
             className="flex items-center gap-1.5 border border-border text-muted-foreground px-3 py-2 rounded-full text-sm font-heading font-semibold hover:bg-muted transition-all"
@@ -108,7 +111,9 @@ export default function WishlistPage({ user }) {
         <div className="bg-muted border border-border rounded-2xl p-3 flex items-center gap-2">
           <Share2 className="w-4 h-4 text-moss flex-none" />
           <p className="text-xs text-muted-foreground flex-1 truncate">Share: {shareUrl}</p>
-          <button onClick={copyShare} className="text-xs text-terracotta font-medium shrink-0">Copy</button>
+          <button onClick={copyShare} className={`text-xs font-medium shrink-0 transition-all ${copied ? 'text-moss' : 'text-terracotta hover:text-terracotta-dark'}`}>
+            {copied ? '✓ Copied' : 'Copy'}
+          </button>
         </div>
       )}
 
