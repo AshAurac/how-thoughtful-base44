@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown, X } from 'lucide-react';
 import { computeBuyDates } from '@/lib/dateUtils';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
@@ -19,13 +19,31 @@ export default function CreateEvent() {
     budget: '', priority: 'medium', recurring: false,
     notes: '', reflection: '', love_language: '', age_or_years: '',
   });
+  const [showRecipientPicker, setShowRecipientPicker] = useState(false);
+  const [selectedRecipientId, setSelectedRecipientId] = useState(null);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const { data: recipients = [] } = useQuery({
+    queryKey: ['recipients'],
+    queryFn: () => base44.entities.Recipient.list(),
+  });
 
   const mutation = useMutation({
     mutationFn: async (data) => {
       const buyDates = data.event_date ? computeBuyDates(data.event_date) : {};
-      return base44.entities.Event.create({ ...data, ...buyDates, reminders_sent: [] });
+      const event = await base44.entities.Event.create({ ...data, ...buyDates, reminders_sent: [] });
+
+      // Auto-create recipient if not already linked
+      if (!selectedRecipientId && data.recipient_name) {
+        const existing = recipients.find(r => r.name.toLowerCase() === data.recipient_name.toLowerCase());
+        if (!existing) {
+          await base44.entities.Recipient.create({ name: data.recipient_name });
+          queryClient.invalidateQueries({ queryKey: ['recipients'] });
+        }
+      }
+
+      return event;
     },
     onSuccess: (event) => {
       queryClient.invalidateQueries({ queryKey: ['events'] });
@@ -62,13 +80,55 @@ export default function CreateEvent() {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-foreground mb-1">Who is this for? *</label>
-          <input
-            value={form.recipient_name}
-            onChange={e => set('recipient_name', e.target.value)}
-            placeholder="e.g. Mom, Alex, Sarah"
-            className="w-full border border-border rounded-2xl px-4 py-3 text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-terracotta/50 font-body"
-            required
-          />
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowRecipientPicker(v => !v)}
+              className="w-full flex items-center justify-between border border-border rounded-2xl px-4 py-3 bg-card text-left focus:outline-none focus:ring-2 focus:ring-terracotta/50"
+            >
+              <span className={form.recipient_name ? 'text-foreground font-body' : 'text-muted-foreground font-body'}>
+                {form.recipient_name || 'e.g. Mom, Alex, Sarah'}
+              </span>
+              <div className="flex items-center gap-1">
+                {form.recipient_name && (
+                  <button type="button" onClick={e => { e.stopPropagation(); set('recipient_name', ''); setSelectedRecipientId(null); }} className="p-1 rounded-full hover:bg-muted">
+                    <X className="w-3 h-3 text-muted-foreground" />
+                  </button>
+                )}
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </div>
+            </button>
+
+            {showRecipientPicker && (
+              <div className="absolute top-full left-0 right-0 z-20 mt-1 bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+                {recipients.map(r => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => {
+                      set('recipient_name', r.name);
+                      setSelectedRecipientId(r.id);
+                      setShowRecipientPicker(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-muted transition-all text-left"
+                  >
+                    <span className="font-body text-sm text-foreground">{r.name}</span>
+                    {r.relationship && <span className="text-xs text-muted-foreground">{r.relationship}</span>}
+                  </button>
+                ))}
+                <div className="border-t border-border px-4 py-2">
+                  <input
+                    autoFocus
+                    value={form.recipient_name}
+                    onChange={e => { set('recipient_name', e.target.value); setSelectedRecipientId(null); }}
+                    onKeyDown={e => { if (e.key === 'Enter') setShowRecipientPicker(false); }}
+                    placeholder="Or type a new name…"
+                    className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none py-1 font-body"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3">

@@ -74,6 +74,22 @@ export default function SharedListsPage() {
         </button>
       </div>
 
+      {/* Type explainer cards */}
+      {!showForm && (
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-card border border-border rounded-2xl p-4 space-y-1.5">
+            <div className="text-2xl">🎁</div>
+            <p className="font-heading font-semibold text-sm text-foreground">Group Gift List</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">Everyone collaborates on ideas for one person. No double-ups — anyone can claim an item so others know it's covered. Great for birthdays or big occasions.</p>
+          </div>
+          <div className="bg-card border border-border rounded-2xl p-4 space-y-1.5">
+            <div className="text-2xl">🎅</div>
+            <p className="font-heading font-semibold text-sm text-foreground">Secret Santa</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">Each participant is secretly assigned someone to buy for. They can browse that person's wishlist without revealing who they are. Perfect for group draws.</p>
+          </div>
+        </div>
+      )}
+
       {showForm && (
         <div className="bg-card border border-border rounded-2xl p-5 space-y-3">
           <h2 className="font-heading font-semibold text-foreground">Create a group list</h2>
