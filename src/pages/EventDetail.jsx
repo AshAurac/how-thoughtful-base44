@@ -43,6 +43,7 @@ export default function EventDetail() {
   const [celebratingGift, setCelebratingGift] = useState(null);
   const [editingEvent, setEditingEvent] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const { data: event, isLoading: loadingEvent } = useQuery({
     queryKey: ['event', id],
@@ -91,6 +92,15 @@ export default function EventDetail() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['gifts', id] });
       toast.success('Gift removed');
+    },
+  });
+
+  const deleteEventMutation = useMutation({
+    mutationFn: () => base44.entities.Event.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      toast.success('Occasion deleted');
+      navigate('/');
     },
   });
 
@@ -203,13 +213,19 @@ export default function EventDetail() {
             <>
               <p className="font-accent text-muted-foreground text-lg">{event.occasion?.replace(/_/g, ' ')}</p>
               <div className="flex items-center gap-2">
-                <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
-                <button
-                  onClick={() => { setEditForm({ recipient_name: event.recipient_name, occasion: event.occasion, event_date: event.event_date, priority: event.priority, budget: event.budget || '', notes: event.notes || '' }); setEditingEvent(true); }}
-                  className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
+              <h1 className="font-heading font-bold text-2xl text-foreground">{event.recipient_name}</h1>
+              <button
+                onClick={() => { setEditForm({ recipient_name: event.recipient_name, occasion: event.occasion, event_date: event.event_date, priority: event.priority, budget: event.budget || '', notes: event.notes || '' }); setEditingEvent(true); }}
+                className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-all"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-terracotta transition-all"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
               </div>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <PriorityBadge priority={event.priority} />
@@ -389,6 +405,36 @@ export default function EventDetail() {
           </div>
         )}
       </div>
+      {/* Delete confirmation sheet */}
+      {confirmDelete && (
+        <div className="fixed inset-0 z-50 flex items-end" onClick={() => setConfirmDelete(false)}>
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+          <div
+            className="relative w-full bg-card rounded-t-3xl shadow-2xl px-6 py-6 space-y-4"
+            style={{ paddingBottom: 'calc(1.5rem + var(--safe-bottom))' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex justify-center">
+              <div className="w-10 h-1 rounded-full bg-border" />
+            </div>
+            <h3 className="font-heading font-bold text-foreground text-xl text-center">Delete this occasion?</h3>
+            <p className="text-sm text-muted-foreground text-center">This will permanently delete the occasion and all its gifts. This cannot be undone.</p>
+            <button
+              onClick={() => deleteEventMutation.mutate()}
+              disabled={deleteEventMutation.isPending}
+              className="w-full bg-destructive text-destructive-foreground py-4 rounded-full font-heading font-semibold hover:opacity-90 transition-all min-h-[44px]"
+            >
+              {deleteEventMutation.isPending ? 'Deleting…' : 'Yes, delete'}
+            </button>
+            <button
+              onClick={() => setConfirmDelete(false)}
+              className="w-full border border-border text-foreground py-4 rounded-full font-heading font-semibold hover:bg-muted transition-all min-h-[44px]"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
