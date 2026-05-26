@@ -42,12 +42,20 @@ export function urgencyColor(daysAway) {
 }
 
 export function getUpcomingEvents(events, days = 30) {
-  const now = new Date();
-  const cutoff = addDays(now, days);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // compare date-only, avoids UTC offset issues
+  const cutoff = addDays(today, days);
   return events
     .filter(e => {
-      const d = parseISO(e.event_date);
-      return isValid(d) && d >= now && d <= cutoff;
+      if (!e.event_date) return false;
+      // Parse YYYY-MM-DD as local date to avoid UTC offset shifting the day
+      const [y, m, d] = e.event_date.split('-').map(Number);
+      const date = new Date(y, m - 1, d);
+      return isValid(date) && date >= today && date <= cutoff;
     })
-    .sort((a, b) => parseISO(a.event_date) - parseISO(b.event_date));
+    .sort((a, b) => {
+      const [ay, am, ad] = a.event_date.split('-').map(Number);
+      const [by, bm, bd] = b.event_date.split('-').map(Number);
+      return new Date(ay, am - 1, ad) - new Date(by, bm - 1, bd);
+    });
 }
