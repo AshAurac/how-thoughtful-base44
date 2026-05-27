@@ -34,6 +34,7 @@ import PublicGroupList from './pages/PublicGroupList';
 import JoinEventPage from './pages/JoinEventPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import LoginPage from './pages/LoginPage';
 
 // Layout
 import AppShell from './components/AppShell';
@@ -87,6 +88,7 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Public routes — no auth needed */}
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/w/:token" element={<PublicWishlist />} />
       <Route path="/group/:token" element={<PublicGroupList />} />
       <Route path="/join-event/:token" element={<JoinEventPage />} />
