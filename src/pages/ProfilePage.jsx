@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { LOVE_LANGUAGES } from '@/lib/catalogs';
 import NativePicker from '@/components/NativePicker';
 import { useFeatureFlags, FEATURES } from '@/hooks/useFeatureFlags';
+import FeedbackCard from '@/components/FeedbackCard';
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
@@ -361,6 +362,8 @@ export default function ProfilePage({ user }) {
           <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${isDark ? 'translate-x-5' : 'translate-x-0'}`} />
         </button>
       </div>
+
+      <FeedbackCard user={user} />
 
       <button
         onClick={() => base44.auth.logout('/')}
