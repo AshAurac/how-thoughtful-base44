@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Instagram, Twitter, Send } from 'lucide-react';
+import { Instagram, Send } from 'lucide-react';
+import { Facebook } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 export default function ContactPage() {
@@ -113,20 +114,6 @@ export default function ContactPage() {
           )}
         </div>
 
-        {/* Direct email */}
-        <div className="bg-white border border-sand-300 rounded-3xl p-8">
-          <h2 className="font-heading font-semibold text-ink text-lg mb-4">Other ways to reach us</h2>
-          <a
-            href="mailto:hello@howthoughtful.app"
-            className="flex items-center gap-3 group"
-          >
-            <div className="w-9 h-9 rounded-xl bg-terracotta/10 flex items-center justify-center flex-shrink-0">
-              <Mail className="w-4 h-4 text-terracotta" />
-            </div>
-            <span className="text-sm text-ink group-hover:text-terracotta transition-all">hello@howthoughtful.app</span>
-          </a>
-        </div>
-
         {/* Social links */}
         <div className="bg-white border border-sand-300 rounded-3xl p-8">
           <h2 className="font-heading font-semibold text-ink text-lg mb-4">Follow along</h2>
@@ -140,12 +127,12 @@ export default function ContactPage() {
               <Instagram className="w-4 h-4" /> Instagram
             </a>
             <a
-              href="https://twitter.com/howthoughtful"
+              href="https://facebook.com/howthoughtfulapp"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-2.5 border border-sand-300 rounded-full text-sm font-heading font-semibold text-ink-soft hover:text-ink hover:border-ink transition-all"
             >
-              <Twitter className="w-4 h-4" /> Twitter / X
+              <Facebook className="w-4 h-4" /> Facebook
             </a>
           </div>
         </div>
