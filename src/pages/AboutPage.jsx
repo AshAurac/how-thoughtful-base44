@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Heart, Sparkles, Bell, Users } from 'lucide-react';
+import { Sparkles, Bell, Users } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 export default function AboutPage() {
@@ -9,20 +9,18 @@ export default function AboutPage() {
       {/* Nav */}
       <nav className="sticky top-0 z-50 bg-sand-50/90 backdrop-blur-xl border-b border-sand-300 px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <Link to="/welcome" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-terracotta flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" />
-            </div>
+          <Link to="/welcome" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <img src="https://media.base44.com/images/public/6a1188b0e669a81e5b3530ea/5247e49c3_RealLogo.png" alt="How Thoughtful" className="w-8 h-8" />
             <span className="font-heading font-bold text-ink">How Thoughtful</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link to="/about" className="text-sm font-heading font-semibold text-ink">About</Link>
-            <Link to="/contact" className="text-sm font-heading font-semibold text-ink-soft hover:text-ink transition-all">Contact</Link>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link to="/about" className="text-xs sm:text-sm font-heading font-semibold text-ink">About</Link>
+            <Link to="/contact" className="text-xs sm:text-sm font-heading font-semibold text-ink-soft hover:text-ink transition-all">Contact</Link>
             <button
               onClick={() => base44.auth.redirectToLogin(window.location.origin)}
-              className="bg-terracotta text-white px-5 py-2 rounded-full font-heading font-semibold text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
+              className="bg-terracotta text-white px-3 sm:px-5 py-2 rounded-full font-heading font-semibold text-xs sm:text-sm hover:bg-terracotta-dark transition-all hover:-translate-y-0.5"
             >
-              Start for free
+              Log in
             </button>
           </div>
         </div>
@@ -80,9 +78,7 @@ export default function AboutPage() {
       {/* Footer */}
       <footer className="px-6 py-8 bg-ink text-center">
         <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="w-6 h-6 rounded-full bg-terracotta flex items-center justify-center">
-            <Heart className="w-3 h-3 text-white" />
-          </div>
+          <img src="https://media.base44.com/images/public/6a1188b0e669a81e5b3530ea/5247e49c3_RealLogo.png" alt="How Thoughtful" className="w-6 h-6" />
           <span className="font-heading font-bold text-white text-sm">How Thoughtful</span>
         </div>
         <div className="flex items-center justify-center gap-4 mb-3">
